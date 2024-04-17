@@ -4,6 +4,8 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 **NOTE:** This is **Work In Progress** mod, so things may improve in the future.
 
+![Advanced Path Tracing Menu](/menu.png?raw=true)
+
 ## Features
 
 - Control Path Tracing with the following modes:
