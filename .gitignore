@@ -1,3 +1,4 @@
+/dist
 settings.json
 *.log
 *.sqlite3

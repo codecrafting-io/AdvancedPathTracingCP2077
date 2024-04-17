@@ -1,6 +1,6 @@
 # Advanced Path Tracing for Cyberpunk 2077
 
-This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). This mod has key hidden controls for the game, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
+This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). This mod enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
 
 **NOTE:** This is **Work In Progress** mod, so things may improve in the future.
 
@@ -22,7 +22,9 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 - Control number of rays per pixel and rays per bounce when using **ReSTIR DI** mode
 - Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
-- Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds
+- Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. This is disabled by default
+
+**NOTE:** ReGIR DI/GI mode on Cyberpunk 2077 has activation issues, requiring multiple enable/disable timed cycles, and performance takes up to 30s to stabilize if not reloading the save or game, especially after powering off. Using Auto Refresh Game may help
 
 ## Installation
 
@@ -40,7 +42,7 @@ The mod save your preferences in the `settings.json` file.
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
 | fastTimeout | int | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | int | 30.0 | Timeout used in enableNRDControl |
-| refreshGame | int | true | Wheter or not Auto Refresh Game |
+| refreshGame | int | false | Wheter or not Auto Refresh Game |
 | refreshTimeout | int | 5.0 | Wether or not to Auto Refresh the Game |
 | enableDLSSDParticles | boolean | true | Wether or not enable DLSS Ray Reconstruction particles |
 | ptModeIndex | int | 1 | Path Tracing mode |

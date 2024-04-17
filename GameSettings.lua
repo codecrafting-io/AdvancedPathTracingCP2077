@@ -77,6 +77,10 @@ end
 function GameSettings.HasDLSSD()
     return Game.GetSettingsSystem():GetVar("/graphics/presets", "DLSS_D"):GetValue()
 end
---]]
+
+function GameSettings.HasPathTracing()
+    return GameSettings.Get("/graphics/raytracing", "RayTracedPathTracing")
+end
+
 return GameSettings
 

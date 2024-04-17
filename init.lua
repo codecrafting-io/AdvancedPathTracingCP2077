@@ -82,14 +82,15 @@ local function pushChanges()
     end)
 end
 
-local function restartDLSSD()
+local function refreshDLSSD()
     local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
 
-    Utils.DebugMessage("Re-enabling DLSS Ray Reconstruction - " .. dlssPresetName)
-    GameSettings.Set("/graphics/presets", "DLSS_D", false)
-    GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
-    pushChanges()
+    --Takes longer to recover
+    --Utils.DebugMessage("Re-enabling DLSS Ray Reconstruction - " .. dlssPresetName)
+    --GameSettings.Set("/graphics/presets", "DLSS_D", false)
+    --GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
+    --pushChanges()
     Cron.After(settings.fastTimeout, function()
         GameSettings.Set("Developer/FeatureToggles", "DLSSD", "true")
         GameSettings.Set("/graphics/presets", "DLSS_D", true)
@@ -175,7 +176,7 @@ local function setReSTIR()
             GameSettings.Set("Editor/RTXDI", "BiasCorrectionMode", diBiasMode)
             GameSettings.Set("Editor/ReSTIRGI", "BiasCorrectionMode", giBiasMode)
             if runtime.hasDLSSD then
-                restartDLSSD()
+                refreshDLSSD()
             end
         end)
     end)
@@ -214,7 +215,6 @@ local function setPTMode(modeIndex)
         settings.enableNRDControl = false
 
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
-        GameSettings.Set("RayTracing", "EnableNRD", "true")
     end
 end
 
@@ -260,7 +260,7 @@ local function setModMenu()
     optionsUI["PT_MODE"] = NativeSettings.addSelectorString(
         "/AdvancedPathTracing/path_tracing",
         "Mode",
-        "Changes Path Tracing algorithm mode\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light samples on top of ReSTIR.\n\nReSTIR GI - Reservoir SpatioTemporal Importance Resampling for Global Illumination, is a screen space light samples used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI is the older PT from update 2.0, only used for DI. Enables control of rays per pixel and bounces per ray",
+        "Changes Path Tracing mode\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.\n\nReSTIR GI - Reservoir SpatioTemporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI is the older PT from update 2.0, only used for DI. Enables control of rays per pixel and bounces per ray",
         ptMode,
         settings.ptModeIndex,
         defaults.ptModeIndex,
@@ -271,7 +271,7 @@ local function setModMenu()
     optionsUI["PT_QUALITY"] = NativeSettings.addSelectorString(
         "/AdvancedPathTracing/path_tracing",
         "Quality",
-        "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance a little\n\nQuality: Heavy but less noise and higher quality\n\nPsycho: Flatline your GPU",
+        "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality\n\nPsycho: Flatline your GPU",
         ptQuality,
         settings.ptQualityIndex,
         defaults.ptQualityIndex,
@@ -282,7 +282,7 @@ local function setModMenu()
     optionsUI["PT_OPTIMIZATION"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
         "Optimizations",
-        "Enables small path tracing optimizations internal settings without relevant loss of quality",
+        "Enables small path tracing optimizations without relevant loss of quality or performance",
         settings.ptOptimizationsIndex == 2,
         defaults.ptOptimizationsIndex == 2,
         function(state)
@@ -303,7 +303,7 @@ local function setModMenu()
     optionsUI["RAY_BOUNCE"] = NativeSettings.addRangeInt(
         "/AdvancedPathTracing/path_tracing",
         "Bounces Per Ray",
-        "Number of bounces per ray. Only works when disabling ReSTIR",
+        "Number of bounces per ray. Only works when using ReSTIR DI mode",
         0, 8, 1,
         settings.rayBounce,
         defaults.rayBounce,
@@ -313,8 +313,8 @@ local function setModMenu()
 
     optionsUI["DLSSD_PARTICLE"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
-        "Ray Reconstruction Particle",
-        "Enables particles not be separated in Ray Reconstruction, when it's not raining or indoors",
+        "Ray Reconstruction Particles",
+        "Enables particles to not be separated in Ray Reconstruction, when it's not raining or indoors",
         settings.enableDLSSDParticles,
         defaults.enableDLSSDParticles,
         function(state)
@@ -340,6 +340,9 @@ local function setModMenu()
         defaults.enableNRDControl,
         function(state)
             settings.enableNRDControl = state
+            if not GameSettings.HasPathTracing() then
+                settings.enableNRDControl = false
+            end
 
             if not runtime.nrdTimer and settings.enableNRDControl then
                 setNRDControl()
@@ -348,7 +351,10 @@ local function setModMenu()
             if settings.enableNRDControl then
                 Cron.Resume(runtime.nrdTimer)
             else
-                Cron.Pause(runtime.nrdTimer)
+                if runtime.nrdTimer then
+                    Cron.Pause(runtime.nrdTimer)
+                end
+                GameSettings.Set("RayTracing", "EnableNRD", "true")
             end
     end)
 
@@ -367,14 +373,19 @@ local function refreshSettings()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
     setReSTIR()
 
+    if runtime.firstLoad then
+        Utils.DebugMessage('First Load')
+        timeout = settings.refreshTimeout * 2.0
+        runtime.firstLoad = false
+
+        --On the first load do twice to "fix" low performance on start
+        Cron.After(settings.refreshTimeout + 1.0, function()
+            setReSTIR()
+        end)
+    end
+
     if settings.refreshGame then
         timeout = settings.refreshTimeout
-
-        if runtime.firstLoad then
-            --timeout = settings.refreshTimeout * 3.0
-            runtime.firstLoad = false
-        end
-
         GameSettings.RefreshGame(timeout)
     end
 
@@ -382,9 +393,12 @@ local function refreshSettings()
 end
 
 function setRuntime()
+
+    --[[
     GameUI.Listen(function(state)
         GameUI.PrintState(state)
     end)
+    --]]
 
     GameUI.OnLoadingFinish(function(state)
         runtime.inGame = true
@@ -403,6 +417,9 @@ function setRuntime()
     end)
     GameUI.Listen("MenuNav", function(state)
 		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
+            if not GameSettings.HasPathTracing() then
+                NativeSettings.setOption(optionsUI["NRD"], false)
+            end
             saveSettings()
         end
 	end)
