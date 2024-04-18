@@ -33,6 +33,21 @@ local defaults = {
             --ReSTIR
             {
                 index   = "Editor/ReSTIRGI",
+                name    = "MaxHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxReservoirAge",
+                value   = "32"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "TargetHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
                 name    = "SpatialNumDisocclusionBoostSamples",
                 value   = "2"
             },
@@ -93,24 +108,39 @@ local defaults = {
             {
                 index   = "Editor/ReGIR",
                 name    = "BuildCandidatesCount",
-                value   = "4"
+                value   = "8"
             },
             {
                 index   = "Editor/ReGIR",
                 name    = "LightSlotsCount",
-                value   = "96"
+                value   = "128"
             },
             {
                 index   = "Editor/ReGIR",
                 name    = "ShadingCandidatesCount",
-                value   = "4"
+                value   = "6"
             },
 
             --ReSTIR
             {
                 index   = "Editor/ReSTIRGI",
+                name    = "MaxHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxReservoirAge",
+                value   = "24"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "TargetHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
                 name    = "SpatialNumDisocclusionBoostSamples",
-                value   = "1"
+                value   = "2"
             },
             {
                 index   = "Editor/ReSTIRGI",
@@ -183,6 +213,21 @@ local defaults = {
             },
 
             --ReSTIR
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxReservoirAge",
+                value   = "32"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "TargetHistoryLength",
+                value   = "8"
+            },
             {
                 index   = "Editor/ReSTIRGI",
                 name    = "SpatialNumDisocclusionBoostSamples",
@@ -261,6 +306,21 @@ local defaults = {
             --ReSTIR
             {
                 index   = "Editor/ReSTIRGI",
+                name    = "MaxHistoryLength",
+                value   = "10"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxReservoirAge",
+                value   = "20"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "TargetHistoryLength",
+                value   = "8"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
                 name    = "SpatialNumDisocclusionBoostSamples",
                 value   = "32"
             },
@@ -335,6 +395,21 @@ local defaults = {
             },
 
             --ReSTIR
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxHistoryLength",
+                value   = "10"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "MaxReservoirAge",
+                value   = "24"
+            },
+            {
+                index   = "Editor/ReSTIRGI",
+                name    = "TargetHistoryLength",
+                value   = "10"
+            },
             {
                 index   = "Editor/ReSTIRGI",
                 name    = "SpatialNumDisocclusionBoostSamples",
@@ -547,7 +622,7 @@ local defaults = {
             {
                 index   = "Editor/RTXDI",
                 name    = "EnableLocalLightImportanceSampling",
-                value   = "true"
+                value   = "false"
             },
             {
                 index   = "Editor/RTXDI",

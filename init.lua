@@ -12,7 +12,7 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-AdvancedPathTracing = { version = "0.1.0" }
+AdvancedPathTracing = { version = "0.1.1" }
 settings = {}
 local defaults = require("defaults")
 local previous = {}
@@ -73,6 +73,8 @@ local function loadSettings()
         saveSettings()
     end
 
+    --previous = Utils.Clone(settings)
+
     if settings.debug then
         Utils.Dump(settings)
     end
@@ -90,13 +92,15 @@ end
 local function refreshDLSSD()
     local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
-
     Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
 
-    --Takes longer to recover
-    --GameSettings.Set("/graphics/presets", "DLSS_D", false)
-    --GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
-    --pushChanges()
+    if previous["hasDLSSD"] ~= runtime.hasDLSSD then
+        previous["hasDLSSD"] = runtime.hasDLSSD
+        GameSettings.Set("/graphics/presets", "DLSS_D", false)
+        GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
+        pushChanges()
+    end
+
     Cron.After(settings.fastTimeout, function()
         GameSettings.Set("Developer/FeatureToggles", "DLSSD", "true")
         GameSettings.Set("/graphics/presets", "DLSS_D", true)
@@ -163,7 +167,7 @@ local function setReSTIR()
         Utils.DebugMessage("Enabling ReSTIR")
         settings.enableNRDControl = defaults.enableNRDControl
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "true")
-        if settings.enableNRDControl then
+        if settings.enableNRDControl and runtime.hasDLSSD then
             GameSettings.Set("RayTracing", "EnableNRD", "false")
         end
     else
@@ -351,7 +355,7 @@ local function setModMenu()
         defaults.enableNRDControl,
         function(state)
             settings.enableNRDControl = state
-            if not GameSettings.HasPathTracing() then
+            if not (GameSettings.HasPathTracing() and runtime.hasDLSSD) then
                 settings.enableNRDControl = false
             end
 
@@ -399,8 +403,6 @@ local function refreshSettings()
         timeout = settings.refreshTimeout
         GameSettings.RefreshGame(timeout)
     end
-
-    previous = Utils.Clone(settings)
 end
 
 function setRuntime()
@@ -428,8 +430,10 @@ function setRuntime()
     end)
     GameUI.Listen("MenuNav", function(state)
 		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
-            if not GameSettings.HasPathTracing() and NativeSettings then
-                NativeSettings.setOption(optionsUI["NRD"], false)
+            if NativeSettings then
+                if not GameSettings.HasPathTracing() or not runtime.hasDLSSD then
+                    NativeSettings.setOption(optionsUI["NRD"], false)
+                end
             end
             saveSettings()
         end
