@@ -46,7 +46,7 @@ local function saveSettings()
 end
 
 local function loadSettings()
-    settings = Utils.Clone(defaults)
+    defaultSettings = Utils.Clone(defaults)
     Utils.DebugMessage("Loading Settings")
     local file = io.open('settings.json', 'r')
 
@@ -56,20 +56,24 @@ local function loadSettings()
         file:close()
 
         if validJson then
-            for key, _ in pairs(settings) do
-                if savedSettings[key] ~= nil then
-                    settings[key] = savedSettings[key]
-                end
+            settings = Utils.Clone(savedSettings)
+
+            --Validate timings
+            if settings.slowTimeout < settings.fastTimeout then
+                settings.slowTimeout = settings.fastTimeout + 2.0
+            elseif settings.refreshTimeout < settings.fastTimeout then
+                settings.refreshTimeout = settings.fastTimeout * 5.0
             end
         end
 
-        --Validate timings
-        if settings.slowTimeout < settings.fastTimeout then
-            settings.slowTimeout = settings.fastTimeout + 2.0
-        elseif settings.refreshTimeout < settings.fastTimeout then
-            settings.refreshTimeout = settings.fastTimeout * 5.0
+        --New version requires settings reset
+        if defaults.version ~= settings["version"] then
+            Utils.DebugMessage("New Version " .. defaults.version)
+            settings = defaultSettings
+            saveSettings()
         end
     else
+        settings = defaultSettings
         saveSettings()
     end
 

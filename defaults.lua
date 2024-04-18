@@ -1,4 +1,5 @@
 local defaults = {
+    version = '0.1.1',
     debug = false,
 	enableNRDControl = true,
     rayNumber = 2,
