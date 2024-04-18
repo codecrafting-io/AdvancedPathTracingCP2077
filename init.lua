@@ -61,6 +61,7 @@ local function loadSettings()
             end
         end
 
+        --Validate timings
         if settings.slowTimeout < settings.fastTimeout then
             settings.slowTimeout = settings.fastTimeout + 2.0
         elseif settings.refreshTimeout < settings.fastTimeout then
@@ -78,7 +79,9 @@ end
 local function pushChanges()
     Game.GetSettingsSystem():ConfirmChanges()
     Cron.After(0.25, function()
-        NativeSettings.refresh()
+        if NativeSettings then
+            NativeSettings.refresh()
+        end
     end)
 end
 
@@ -86,8 +89,9 @@ local function refreshDLSSD()
     local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
 
+    Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
+
     --Takes longer to recover
-    --Utils.DebugMessage("Re-enabling DLSS Ray Reconstruction - " .. dlssPresetName)
     --GameSettings.Set("/graphics/presets", "DLSS_D", false)
     --GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
     --pushChanges()
@@ -138,13 +142,16 @@ local function setReGIR()
     runtime.reGIRHackApplied = true
     GameSettings.Set("Editor/ReGIR", "UseForDI", "false")
     GameSettings.Set("Editor/ReGIR", "Enable", "false")
-    GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "false")
 
+    --Looks dimmer
+    --GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "false")
     if runtime.enableReGIR then
+
+        --Regir requires to wait a bit before be enabled
         Cron.After(settings.fastTimeout * 1.5, function()
             GameSettings.Set("Editor/ReGIR", "Enable", "true")
             GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
-            GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "true")
+            --GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "true")
         end)
     end
 end
@@ -170,6 +177,7 @@ local function setReSTIR()
     GameSettings.Set("Editor/RTXDI", "BiasCorrectionMode", "0")
     GameSettings.Set("Editor/ReSTIRGI", "BiasCorrectionMode", "0")
 
+    --Update BiasCorrectionMode helps refresing performance
     Cron.After(settings.fastTimeout * 0.5, function()
         setReGIR()
         Cron.After(settings.fastTimeout * 2.0, function()
@@ -193,27 +201,27 @@ end
 local function setPTMode(modeIndex)
     settings.ptModeIndex = modeIndex
 
+    if not NativeSettings then
+        return
+    end
+
     if settings.ptModeIndex == 1 then
         --ReGIR DI/GI
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         settings.enableNRDControl = true
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
-
-        --NativeSettings.setOption(optionsUI["ReGIR"], true)
     elseif settings.ptModeIndex == 2 then
         --ReSTIR DI/GI
         runtime.enableReGIR = false
         runtime.enableReSTIR = true
         settings.enableNRDControl = true
-
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
     else
         --ReSTIR DI
         runtime.enableReGIR = false
         runtime.enableReSTIR = false
         settings.enableNRDControl = false
-
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
     end
 end
@@ -233,6 +241,7 @@ end
 local function setModMenu()
     NativeSettings = GetMod("nativeSettings")
 
+    --Return if NativeSettings not found
     if not NativeSettings then
         return
     end
@@ -417,7 +426,7 @@ function setRuntime()
     end)
     GameUI.Listen("MenuNav", function(state)
 		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
-            if not GameSettings.HasPathTracing() then
+            if not GameSettings.HasPathTracing() and NativeSettings then
                 NativeSettings.setOption(optionsUI["NRD"], false)
             end
             saveSettings()

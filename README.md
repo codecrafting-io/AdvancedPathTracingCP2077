@@ -2,7 +2,7 @@
 
 This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). This mod enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
 
-**NOTE:** This is **Work In Progress** mod, so things may improve in the future.
+**NOTE:** This is a **Work In Progress** mod, so things may improve in the future.
 
 ![Advanced Path Tracing Menu](/menu.png?raw=true)
 
@@ -18,13 +18,13 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - **Balanced**: Improve on Vanilla quality and increase performance by until 1%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
-- Path Tracing Optimizations: Enables small path tracing optimizations internal settings without relevant quality loss
+- Path Tracing Optimizations: Enables small path tracing optimizations without relevant quality loss
 - Control number of rays per pixel and rays per bounce when using **ReSTIR DI** mode
 - Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
 - Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. This is disabled by default
 
-**NOTE:** ReGIR DI/GI mode on Cyberpunk 2077 has activation issues, requiring multiple enable/disable timed cycles, and performance takes up to 30s to stabilize, if not reload the save or restart the game, especially after disabling. Using Auto Refresh Game also may help.
+**NOTE:** ReGIR DI/GI mode on Cyberpunk 2077 has activation issues, requiring multiple enable/disable timed cycles, and performance takes up to 30s to stabilize, if not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting photo mode also may help.
 
 ## Installation
 

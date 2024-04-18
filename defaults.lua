@@ -331,7 +331,7 @@ local defaults = {
             {
                 index   = "Editor/ReGIR",
                 name    = "ShadingCandidatesCount",
-                value   = "24"
+                value   = "32"
             },
 
             --ReSTIR
@@ -437,6 +437,11 @@ local defaults = {
             },
             {
                 index   = "Editor/RTXDI",
+                name    = "EnableApproximateTargetPDF",
+                value   = "false"
+            },
+            {
+                index   = "Editor/RTXDI",
                 name    = "EnableEmissiveProxyLightRejection",
                 value   = "false"
             },
@@ -447,6 +452,11 @@ local defaults = {
             },
             {
                 index   = "Editor/RTXDI",
+                name    = "EnableSeparateDenoising",
+                value   = "true"
+            },
+            {
+                index   = "Editor/RTXDI",
                 name    = "ForcedShadowLightSourceRadius",
                 value   = "0.1"
             },
@@ -454,11 +464,6 @@ local defaults = {
                 index   = "Editor/RTXDI",
                 name    = "MaxHistoryLength",
                 value   = "20"
-            },
-            {
-                index   = "Editor/RTXDI",
-                name    = "EnableApproximateTargetPDF",
-                value   = "false"
             },
             {
                 index   = "Editor/SHARC",
@@ -531,6 +536,11 @@ local defaults = {
             },
             {
                 index   = "Editor/RTXDI",
+                name    = "EnableApproximateTargetPDF",
+                value   = "true"
+            },
+            {
+                index   = "Editor/RTXDI",
                 name    = "EnableEmissiveProxyLightRejection",
                 value   = "true"
             },
@@ -541,6 +551,11 @@ local defaults = {
             },
             {
                 index   = "Editor/RTXDI",
+                name    = "EnableSeparateDenoising",
+                value   = "false"
+            },
+            {
+                index   = "Editor/RTXDI",
                 name    = "ForcedShadowLightSourceRadius",
                 value   = "0.25"
             },
@@ -548,11 +563,6 @@ local defaults = {
                 index   = "Editor/RTXDI",
                 name    = "MaxHistoryLength",
                 value   = "0"
-            },
-            {
-                index   = "Editor/RTXDI",
-                name    = "EnableApproximateTargetPDF",
-                value   = "true"
             },
             {
                 index   = "Editor/SHARC",
