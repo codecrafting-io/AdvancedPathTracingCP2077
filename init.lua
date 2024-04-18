@@ -1,4 +1,6 @@
 --[[
+    Create by codecrafting-io
+
 	AdvancedPathTracing is a small mod for properly setting some advanced path tracing hidden settings
 	Thanks to
 		- Ultra Plus Control
@@ -10,7 +12,7 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-
+AdvancedPathTracing = { version = "0.1.0" }
 settings = {}
 local defaults = require("defaults")
 local previous = {}
