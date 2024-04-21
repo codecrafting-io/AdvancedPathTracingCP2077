@@ -96,7 +96,6 @@ local function refreshDLSSD()
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
 
     Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
-    previous["hasDLSSD"] = runtime.hasDLSSD
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
     Cron.After(settings.fastTimeout, function()
@@ -182,6 +181,7 @@ local function setReSTIR()
         if runtime.hasDLSSD and previous["hasDLSSD"] ~= runtime.hasDLSSD then
             refreshDLSSD()
         end
+        previous["hasDLSSD"] = runtime.hasDLSSD
     end)
 end
 
