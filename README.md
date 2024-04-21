@@ -56,6 +56,7 @@ The mod save your preferences in the `settings.json` file.
 
 ## Credits
 
-- [Ultra Plus Control](https://www.nexusmods.com/cyberpunk2077/mods/10490)
-- [Weathermancer](https://www.nexusmods.com/cyberpunk2077/mods/9805)
-- [betterHeadlights](https://www.nexusmods.com/cyberpunk2077/mods/5013)
+- [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490)
+- [Weathermancer (RMK)](https://www.nexusmods.com/cyberpunk2077/mods/9805)
+- [betterHeadlights (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/5013)
+- [Lua Kit for CET (Pavel Siberx)](https://github.com/psiberx/cp2077-cet-kit)
