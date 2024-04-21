@@ -1,18 +1,18 @@
 --[[
-    Create by codecrafting-io
+    Created by codecrafting-io
 
-	AdvancedPathTracing is a small mod for properly setting some advanced path tracing hidden settings
-	Thanks to
+	AdvancedPathTracing is a small mod for properly setting some advanced path tracing settings
+
+	Credits
 		- Ultra Plus Control
 		- Weathermancer
 		- betterHeadlights
-	for inspiration to create this mod
 
 	Nvidia Docs - https://github.com/NVIDIAGameWorks/RTXDI/blob/main/doc/Integration.md
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-AdvancedPathTracing = { version = "0.1.1" }
+AdvancedPathTracing = { version = "0.1.2" }
 settings = {}
 local defaults = require("defaults")
 local previous = {}
@@ -24,9 +24,9 @@ local NativeSettings = {}
 local optionsUI = {}
 local runtime = {
     firstLoad = true,
+    reGIRApplied = false,
     inGame = false,
     inMainMenu = false,
-    reGIRHackApplied = false,
     nrdTimer = nil,
     particleTimer = nil,
 	enableReGIR = false,
@@ -77,8 +77,6 @@ local function loadSettings()
         saveSettings()
     end
 
-    --previous = Utils.Clone(settings)
-
     if settings.debug then
         Utils.Dump(settings)
     end
@@ -96,19 +94,13 @@ end
 local function refreshDLSSD()
     local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
+
     Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
-
-    if previous["hasDLSSD"] ~= runtime.hasDLSSD then
-        previous["hasDLSSD"] = runtime.hasDLSSD
-        GameSettings.Set("/graphics/presets", "DLSS_D", false)
-        GameSettings.Set("Developer/FeatureToggles", "DLSSD", "false")
-        pushChanges()
-    end
-
+    previous["hasDLSSD"] = runtime.hasDLSSD
+    GameSettings.Set("/graphics/presets", "DLSS_D", false)
+    pushChanges()
     Cron.After(settings.fastTimeout, function()
-        GameSettings.Set("Developer/FeatureToggles", "DLSSD", "true")
         GameSettings.Set("/graphics/presets", "DLSS_D", true)
-        GameSettings.Set("/graphics/presets", "DLSS", dlssPreset)
         pushChanges()
     end)
 end
@@ -140,6 +132,8 @@ end
 
 local function setNRDControl()
     runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
+
+        --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
         if runtime.inGame and runtime.hasDLSSD then
             Utils.DebugMessage("Disabling NRD")
             GameSettings.Set("RayTracing", "EnableNRD", "false")
@@ -149,19 +143,17 @@ end
 
 local function setReGIR()
     Utils.DebugMessage("Disabling ReGIR")
-    runtime.reGIRHackApplied = true
     GameSettings.Set("Editor/ReGIR", "UseForDI", "false")
     GameSettings.Set("Editor/ReGIR", "Enable", "false")
 
-    --Looks dimmer
-    --GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "false")
     if runtime.enableReGIR then
 
         --Regir requires to wait a bit before be enabled
         Cron.After(settings.fastTimeout * 1.5, function()
+            Utils.DebugMessage("Enabling ReGIR")
+            runtime.reGIRApplied = true
             GameSettings.Set("Editor/ReGIR", "Enable", "true")
             GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
-            --GameSettings.Set("Editor/RTXDI", "EnableSeparateDenoising", "true")
         end)
     end
 end
@@ -182,21 +174,14 @@ local function setReSTIR()
         GameSettings.Set("RayTracing", "EnableNRD", "true")
     end
 
-    diBiasMode = GameOptions.Get("Editor/RTXDI", "BiasCorrectionMode")
-    giBiasMode = GameOptions.Get("Editor/ReSTIRGI", "BiasCorrectionMode")
-    GameSettings.Set("Editor/RTXDI", "BiasCorrectionMode", "0")
-    GameSettings.Set("Editor/ReSTIRGI", "BiasCorrectionMode", "0")
-
-    --Update BiasCorrectionMode helps refresing performance
-    Cron.After(settings.fastTimeout * 0.5, function()
+    if not runtime.reGIRApplied then
         setReGIR()
-        Cron.After(settings.fastTimeout * 2.0, function()
-            GameSettings.Set("Editor/RTXDI", "BiasCorrectionMode", diBiasMode)
-            GameSettings.Set("Editor/ReSTIRGI", "BiasCorrectionMode", giBiasMode)
-            if runtime.hasDLSSD then
-                refreshDLSSD()
-            end
-        end)
+    end
+
+    Cron.After(settings.fastTimeout * 2.0, function()
+        if runtime.hasDLSSD and previous["hasDLSSD"] ~= runtime.hasDLSSD then
+            refreshDLSSD()
+        end
     end)
 end
 
@@ -217,6 +202,7 @@ local function setPTMode(modeIndex)
 
     if settings.ptModeIndex == 1 then
         --ReGIR DI/GI
+        previous["hasDLSSD"] = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         settings.enableNRDControl = true
@@ -224,6 +210,7 @@ local function setPTMode(modeIndex)
     elseif settings.ptModeIndex == 2 then
         --ReSTIR DI/GI
         runtime.enableReGIR = false
+        runtime.reGIRApplied = false
         runtime.enableReSTIR = true
         settings.enableNRDControl = true
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
@@ -231,6 +218,7 @@ local function setPTMode(modeIndex)
         --ReSTIR DI
         runtime.enableReGIR = false
         runtime.enableReSTIR = false
+        runtime.reGIRApplied = false
         settings.enableNRDControl = false
         NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
     end
@@ -359,9 +347,6 @@ local function setModMenu()
         defaults.enableNRDControl,
         function(state)
             settings.enableNRDControl = state
-            if not (GameSettings.HasPathTracing() and runtime.hasDLSSD) then
-                settings.enableNRDControl = false
-            end
 
             if not runtime.nrdTimer and settings.enableNRDControl then
                 setNRDControl()
@@ -373,7 +358,6 @@ local function setModMenu()
                 if runtime.nrdTimer then
                     Cron.Pause(runtime.nrdTimer)
                 end
-                GameSettings.Set("RayTracing", "EnableNRD", "true")
             end
     end)
 
@@ -388,80 +372,75 @@ local function setModMenu()
     end)
 end
 
-local function refreshSettings()
+local function refreshSettings(refreshGame)
     runtime.hasDLSSD = GameSettings.HasDLSSD()
-    setReSTIR()
+    NativeSettings.setOption(optionsUI["NRD"], runtime.hasDLSSD)
+    GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
+
+    if previous["hasDLSSD"] ~= runtime.hasDLSSD then
+        runtime.reGIRApplied = false
+    end
 
     if runtime.firstLoad then
         Utils.DebugMessage('First Load')
-        timeout = settings.refreshTimeout * 2.0
         runtime.firstLoad = false
-
-        --On the first load do twice to "fix" low performance on start
-        Cron.After(settings.refreshTimeout + 1.0, function()
-            setReSTIR()
-        end)
     end
 
-    if settings.refreshGame then
-        timeout = settings.refreshTimeout
-        GameSettings.RefreshGame(timeout)
+    if GameSettings.HasPathTracing() then
+        setReSTIR()
+    end
+
+    if refreshGame then
+        GameSettings.RefreshGame(settings.refreshTimeout)
     end
 end
 
 function setRuntime()
-
-    --[[
     GameUI.Listen(function(state)
-        GameUI.PrintState(state)
+        --GameUI.PrintState(state)
     end)
-    --]]
 
-    GameUI.OnLoadingFinish(function(state)
+    GameUI.OnSessionStart(function(state)
         runtime.inGame = true
         runtime.inMainMenu = false
-        refreshSettings()
+        refreshSettings(settings.refreshGame)
     end)
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false
         runtime.inMainMenu = true
-        runtime.reGIRHackApplied = false
+        runtime.reGIRApplied = false
+        previous["hasDLSSD"] = nil
     end)
     GameUI.OnMenuClose(function(state)
         if runtime.inGame then
-            refreshSettings()
-        end
-    end)
-    GameUI.Listen("MenuNav", function(state)
-		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
-            if NativeSettings then
-                if not GameSettings.HasPathTracing() or not runtime.hasDLSSD then
-                    NativeSettings.setOption(optionsUI["NRD"], false)
-                end
-            end
+            refreshSettings(settings.refreshGame)
             saveSettings()
         end
-	end)
+    end)
 
     runtime.inGame = not GameUI.IsDetached()
     runtime.inMainMenu = not runtime.inGame
-    runtime.reGIRHackApplied = false
 end
 
 registerForEvent('onInit', function()
     loadSettings()
-    setRuntime()
     setModMenu()
-    setPTMode(settings.ptModeIndex)
-    setPTQuality(settings.ptQualityIndex)
-    setPTOptimizations(settings.ptOptimizationsIndex)
 
-    if settings.enableNRDControl then
-        setNRDControl()
-    end
+    if NativeSettings then
+        setRuntime()
+        setPTMode(settings.ptModeIndex)
+        setPTQuality(settings.ptQualityIndex)
+        setPTOptimizations(settings.ptOptimizationsIndex)
 
-    if settings.enableDLSSDParticles then
-        setDLSSDParticles()
+        if settings.enableNRDControl then
+            setNRDControl()
+        end
+
+        if settings.enableDLSSDParticles then
+            setDLSSDParticles()
+        end
+    else
+        error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
 end)
 

@@ -1,5 +1,5 @@
 local defaults = {
-    version = '0.1.1',
+    version = '0.1.2',
     debug = false,
 	enableNRDControl = true,
     rayNumber = 2,
@@ -628,7 +628,7 @@ local defaults = {
             {
                 index   = "Editor/RTXDI",
                 name    = "EnableSeparateDenoising",
-                value   = "false"
+                value   = "true"
             },
             {
                 index   = "Editor/RTXDI",

@@ -59,5 +59,3 @@ The mod save your preferences in the `settings.json` file.
 - [Ultra Plus Control](https://www.nexusmods.com/cyberpunk2077/mods/10490)
 - [Weathermancer](https://www.nexusmods.com/cyberpunk2077/mods/9805)
 - [betterHeadlights](https://www.nexusmods.com/cyberpunk2077/mods/5013)
-
-Thanks for inspiration to create this mod
