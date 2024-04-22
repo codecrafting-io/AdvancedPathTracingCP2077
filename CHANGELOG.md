@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2
+
+- Improve ReGIR activation handling
+- Improve first loading
+
 ## v0.1.0
 
 - First Release
