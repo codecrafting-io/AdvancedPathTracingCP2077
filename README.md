@@ -48,10 +48,10 @@ The mod save your preferences in the `settings.json` file.
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
 | refreshTimeout | int | 5.0 | Wether or not to Auto Refresh the Game |
 | enableDLSSDParticles | boolean | true | Wether or not enable DLSS Ray Reconstruction particles |
-| ptModeIndex | int | 1 | Path Tracing mode |
-| ptQualityIndex | int | 3 | Path Tracing mode |
+| ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR GI |
+| ptQualityIndex | int | 3 | Path Tracing mode. Defaults to balanced |
 | ptQualitySettings | table | table[3] | Multiple set of commands to set quality level |
-| ptOptimizationsIndex | int | 2 | Set on 1 disables and 2 enables the PT optimizations |
+| ptOptimizationsIndex | int | 2 | Set to 1 disables and 2 enables the PT optimizations |
 | ptOptimizationsSettings | table | table[2] | Multiple set of commands to set the optimizations |
 
 ## Credits

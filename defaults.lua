@@ -9,7 +9,7 @@ local defaults = {
     refreshGame = false,
     refreshTimeout = 5.0,
     enableDLSSDParticles = true,
-    ptModeIndex = 1,
+    ptModeIndex = 2,
     ptQualityIndex = 3,
     ptQualitySettings = {
         --Vanilla
