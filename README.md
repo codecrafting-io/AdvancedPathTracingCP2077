@@ -13,7 +13,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 - Control Path Tracing with the following modes:
   - **ReGIR DI/GI**: Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR. Often looks and performs better, but can be noisier
-  - **ReSTIR GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
+  - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray. Allows control of rays per pixel and bounces per ray
 - Control Path Tracing internal settings to set the following levels of quality:
   - **Vanilla**: Default game quality
@@ -48,7 +48,7 @@ The mod save your preferences in the `settings.json` file.
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
 | refreshTimeout | int | 5.0 | Wether or not to Auto Refresh the Game |
 | enableDLSSDParticles | boolean | true | Wether or not enable DLSS Ray Reconstruction particles |
-| ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR GI |
+| ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |
 | ptQualityIndex | int | 3 | Path Tracing mode. Defaults to balanced |
 | ptQualitySettings | table | table[3] | Multiple set of commands to set quality level |
 | ptOptimizationsIndex | int | 2 | Set to 1 disables and 2 enables the PT optimizations |

@@ -121,12 +121,11 @@ local function setDLSSDParticles()
                 previous["isRaining"] = isRaining
                 previous["isIndoors"] = isIndoors
 
-                if isIndoors or not isRaining then
-                    Utils.DebugMessage("It's not raining or is indoors. Enabling DLSSD separate particle colour")
+                if isIndoors or isRaining then
+                    Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle colour")
                     GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
-
                 else
-                    Utils.DebugMessage("It's raining and it's outdoors. Disabling DLSSD separate particle colour")
+                    Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle colour")
                     GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
                 end
             end

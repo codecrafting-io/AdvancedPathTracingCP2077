@@ -6,6 +6,7 @@
 - Improved first loading
 - Improved NRD Control handling
 - Changed PT Mode order
+- Fixed DLSSD Particles
 
 ## v0.1.0
 
