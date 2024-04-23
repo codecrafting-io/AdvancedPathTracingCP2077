@@ -12,7 +12,7 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-AdvancedPathTracing = { version = "0.1.2" }
+AdvancedPathTracing = { version = "0.2.0" }
 settings = {}
 local defaults = require("defaults")
 local previous = {}
@@ -95,6 +95,7 @@ local function refreshDLSSD()
     local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
     local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
 
+    previous["dlssPreset"] = dlssPresetName
     Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
@@ -102,6 +103,10 @@ local function refreshDLSSD()
         GameSettings.Set("/graphics/presets", "DLSS_D", true)
         pushChanges()
     end)
+end
+
+local function hasDLSSDChanged()
+    return previous["hasDLSSD"] ~= runtime.hasDLSSD or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
 end
 
 local function setDLSSDParticles()
@@ -160,17 +165,11 @@ end
 local function setReSTIR()
     if runtime.enableReSTIR then
         Utils.DebugMessage("Enabling ReSTIR")
-        settings.enableNRDControl = defaults.enableNRDControl
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "true")
-        if settings.enableNRDControl and runtime.hasDLSSD then
-            GameSettings.Set("RayTracing", "EnableNRD", "false")
-        end
     else
         Utils.DebugMessage("Disabling ReSTIR")
         runtime.enableReGIR = false
-        settings.enableNRDControl = false
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "false")
-        GameSettings.Set("RayTracing", "EnableNRD", "true")
     end
 
     if not runtime.reGIRApplied then
@@ -178,7 +177,7 @@ local function setReSTIR()
     end
 
     Cron.After(settings.fastTimeout * 2.0, function()
-        if runtime.hasDLSSD and previous["hasDLSSD"] ~= runtime.hasDLSSD then
+        if runtime.hasDLSSD and hasDLSSDChanged() then
             refreshDLSSD()
         end
         previous["hasDLSSD"] = runtime.hasDLSSD
@@ -201,26 +200,20 @@ local function setPTMode(modeIndex)
     end
 
     if settings.ptModeIndex == 1 then
-        --ReGIR DI/GI
-        previous["hasDLSSD"] = nil
-        runtime.enableReGIR = true
-        runtime.enableReSTIR = true
-        settings.enableNRDControl = true
-        NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
+        --ReSTIR DI
+        runtime.enableReGIR = false
+        runtime.enableReSTIR = false
+        runtime.reGIRApplied = false
     elseif settings.ptModeIndex == 2 then
         --ReSTIR DI/GI
         runtime.enableReGIR = false
         runtime.reGIRApplied = false
         runtime.enableReSTIR = true
-        settings.enableNRDControl = true
-        NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
     else
-        --ReSTIR DI
-        runtime.enableReGIR = false
-        runtime.enableReSTIR = false
-        runtime.reGIRApplied = false
-        settings.enableNRDControl = false
-        NativeSettings.setOption(optionsUI["NRD"], settings.enableNRDControl)
+        --ReGIR DI/GI
+        previous["hasDLSSD"] = nil
+        runtime.enableReGIR = true
+        runtime.enableReSTIR = true
     end
 end
 
@@ -253,9 +246,9 @@ local function setModMenu()
     }
 
     ptMode = {
-        [1] = "ReGIR DI/GI",
-        [2] = "ReSTIR GI",
-        [3] = "ReSTIR DI"
+        [1] = "ReSTIR DI",
+        [2] = "ReSTIR DI/GI",
+        [3] = "ReGIR DI/GI"
     }
 
     if not NativeSettings.pathExists("/AdvancedPathTracing") then
@@ -267,7 +260,7 @@ local function setModMenu()
     optionsUI["PT_MODE"] = NativeSettings.addSelectorString(
         "/AdvancedPathTracing/path_tracing",
         "Mode",
-        "Changes Path Tracing mode\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.\n\nReSTIR GI - Reservoir SpatioTemporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI is the older PT from update 2.0, only used for DI. Enables control of rays per pixel and bounces per ray",
+        "Changes Path Tracing mode\n\nReSTIR DI is the older PT from update 2.0, only used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir SpatioTemporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
         ptMode,
         settings.ptModeIndex,
         defaults.ptModeIndex,
@@ -289,7 +282,7 @@ local function setModMenu()
     optionsUI["PT_OPTIMIZATION"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
         "Optimizations",
-        "Enables small path tracing optimizations without relevant loss of quality or performance",
+        "Enables small path tracing optimizations without relevant loss of quality. May improve performance",
         settings.ptOptimizationsIndex == 2,
         defaults.ptOptimizationsIndex == 2,
         function(state)
@@ -342,7 +335,7 @@ local function setModMenu()
     optionsUI["NRD"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
         "NRD Disable Helper",
-        "Disables NRD denoisier (RR is used instead) every " .. settings.slowTimeout .. "s to mitigate Ray Reconstruction loss of performance over time",
+        "Disables NRD denoisier every " .. settings.slowTimeout .. "s to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on.",
         settings.enableNRDControl,
         defaults.enableNRDControl,
         function(state)
@@ -374,10 +367,13 @@ end
 
 local function refreshSettings(refreshGame)
     runtime.hasDLSSD = GameSettings.HasDLSSD()
-    NativeSettings.setOption(optionsUI["NRD"], runtime.hasDLSSD)
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
-    if previous["hasDLSSD"] ~= runtime.hasDLSSD then
+    if not runtime.hasDLSSD then
+        NativeSettings.setOption(optionsUI["NRD"], false)
+    end
+
+    if hasDLSSDChanged() then
         runtime.reGIRApplied = false
     end
 
@@ -414,9 +410,13 @@ function setRuntime()
     GameUI.OnMenuClose(function(state)
         if runtime.inGame then
             refreshSettings(settings.refreshGame)
-            saveSettings()
         end
     end)
+    GameUI.Listen("MenuNav", function(state)
+		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
+            saveSettings()
+        end
+	end)
 
     runtime.inGame = not GameUI.IsDetached()
     runtime.inMainMenu = not runtime.inGame

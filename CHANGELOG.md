@@ -1,9 +1,11 @@
 # Changelog
 
-## v0.1.2
+## v0.2.0
 
-- Improve ReGIR activation handling
-- Improve first loading
+- Improved ReGIR activation handling
+- Improved first loading
+- Improved NRD Control handling
+- Changed PT Mode order
 
 ## v0.1.0
 

@@ -1,5 +1,5 @@
 local defaults = {
-    version = '0.1.2',
+    version = '0.2.0',
     debug = false,
 	enableNRDControl = true,
     rayNumber = 2,
@@ -119,7 +119,7 @@ local defaults = {
             {
                 index   = "Editor/ReGIR",
                 name    = "ShadingCandidatesCount",
-                value   = "6"
+                value   = "3"
             },
 
             --ReSTIR
