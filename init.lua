@@ -4,9 +4,10 @@
 	AdvancedPathTracing is a small mod for properly setting some advanced path tracing settings
 
 	Credits
-		- Ultra Plus Control
-		- Weathermancer
-		- betterHeadlights
+    - [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490)
+    - [Weathermancer (RMK)](https://www.nexusmods.com/cyberpunk2077/mods/9805)
+    - [betterHeadlights (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/5013)
+    - [Lua Kit for CET (Pavel Siberx)](https://github.com/psiberx/cp2077-cet-kit)
 
 	Nvidia Docs - https://github.com/NVIDIAGameWorks/RTXDI/blob/main/doc/Integration.md
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
