@@ -2,11 +2,13 @@
 
 ## v0.2.0
 
-- Improved ReGIR activation handling
-- Improved first loading
-- Improved NRD Control handling
 - Changed PT Mode order
 - Fixed DLSSD Particles
+- Improved first loading
+- Improved NRD Control handling
+- Improved ReGIR activation handling
+- Minor internal reeorganization
+- Separate PT Quality settings from user settings
 
 ## v0.1.0
 

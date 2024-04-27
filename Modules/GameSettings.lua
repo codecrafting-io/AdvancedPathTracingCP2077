@@ -11,35 +11,35 @@ function GameSettings.RemoveGameStatus(effect)
     Game.GetStatusEffectSystem():RemoveStatusEffect(GetPlayer():GetEntityID(), effect)
 end
 
-function GameSettings.Get(index, name)
-    if string.find(index, '/') == 1 then
-        return Game.GetSettingsSystem():GetVar(index, name):GetValue()
+function GameSettings.Get(category, name)
+    if string.find(category, '/') == 1 then
+        return Game.GetSettingsSystem():GetVar(category, name):GetValue()
     else
-        return GameOptions.Get(index, name)
+        return GameOptions.Get(category, name)
     end
 end
 
-function GameSettings.GetIndex(index, name)
-    if string.find(index, '/') == 1 then
-        return Game.GetSettingsSystem():GetVar(index, name):GetIndex()
+function GameSettings.GetIndex(category, name)
+    if string.find(category, '/') == 1 then
+        return Game.GetSettingsSystem():GetVar(category, name):GetIndex()
     end
 end
 
-function GameSettings.Set(index, name, value)
-    if string.find(index, '/') == 1 then
+function GameSettings.Set(category, name, value)
+    if string.find(category, '/') == 1 then
         if type(value) == 'number' then
-            Game.GetSettingsSystem():GetVar(index, name):SetIndex(value)
+            Game.GetSettingsSystem():GetVar(category, name):SetIndex(value)
         else
-            Game.GetSettingsSystem():GetVar(index, name):SetValue(value)
+            Game.GetSettingsSystem():GetVar(category, name):SetValue(value)
         end
     else
-        GameOptions.Set(index, name, value)
+        GameOptions.Set(category, name, value)
     end
 end
 
 function GameSettings.SetAll(settings)
     for k, v in next, settings do
-        GameSettings.Set(v.index, v.name, v.value)
+        GameSettings.Set(v.category, v.name, v.value)
     end
 end
 

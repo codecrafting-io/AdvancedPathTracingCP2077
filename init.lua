@@ -14,12 +14,13 @@
 
 AdvancedPathTracing = { version = "0.2.0" }
 settings = {}
-local defaults = require("defaults")
 local previous = {}
-local Cron = require("Cron")
-local GameUI = require("GameUI")
-local GameSettings = require("GameSettings")
-local Utils = require("Utils")
+local defaults = require("defaults")
+local ptQuality = require("ptQuality")
+local Cron = require("Modules/Cron")
+local GameUI = require("Modules/GameUI")
+local GameSettings = require("Modules/GameSettings")
+local Utils = require("Modules/Utils")
 local NativeSettings = {}
 local optionsUI = {}
 local runtime = {
@@ -122,10 +123,10 @@ local function setDLSSDParticles()
                 previous["isIndoors"] = isIndoors
 
                 if isIndoors or isRaining then
-                    Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle colour")
+                    Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle color")
                     GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
                 else
-                    Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle colour")
+                    Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
                     GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
                 end
             end
@@ -219,13 +220,13 @@ end
 local function setPTQuality(qualityIndex)
     settings.ptQualityIndex = qualityIndex
     Utils.DebugMessage("Setting Path Tracing Quality")
-    GameSettings.SetAll(settings.ptQualitySettings[qualityIndex])
+    GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
 
 local function setPTOptimizations(optimizationsIndex)
     settings.ptOptimizationsIndex = optimizationsIndex
     Utils.DebugMessage("Setting Path Tracing Optimizations")
-    GameSettings.SetAll(settings.ptOptimizationsSettings[optimizationsIndex])
+    GameSettings.SetAll(ptQuality.optimizations[optimizationsIndex])
 end
 
 local function setModMenu()
@@ -236,7 +237,7 @@ local function setModMenu()
         return
     end
 
-    ptQuality = {
+    ptQualityNames = {
         [1] = "Vanilla",
         [2] = "Performance",
         [3] = "Balanced",
@@ -259,7 +260,7 @@ local function setModMenu()
     optionsUI["PT_MODE"] = NativeSettings.addSelectorString(
         "/AdvancedPathTracing/path_tracing",
         "Mode",
-        "Changes Path Tracing mode\n\nReSTIR DI is the older PT from update 2.0, only used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir SpatioTemporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
+        "Changes Path Tracing mode\n\nReSTIR DI is the older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
         ptMode,
         settings.ptModeIndex,
         defaults.ptModeIndex,
@@ -271,7 +272,7 @@ local function setModMenu()
         "/AdvancedPathTracing/path_tracing",
         "Quality",
         "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality\n\nPsycho: Flatline your GPU",
-        ptQuality,
+        ptQualityNames,
         settings.ptQualityIndex,
         defaults.ptQualityIndex,
         function(value)
@@ -313,7 +314,7 @@ local function setModMenu()
     optionsUI["DLSSD_PARTICLE"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
         "Ray Reconstruction Particles",
-        "Enables particles to not be separated in Ray Reconstruction, when it's not raining or indoors",
+        "Enables particles to not be separated in Ray Reconstruction, when it's not raining and outdoors",
         settings.enableDLSSDParticles,
         defaults.enableDLSSDParticles,
         function(state)
@@ -334,7 +335,7 @@ local function setModMenu()
     optionsUI["NRD"] = NativeSettings.addSwitch(
         "/AdvancedPathTracing/path_tracing",
         "NRD Disable Helper",
-        "Disables NRD denoisier every " .. settings.slowTimeout .. "s to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on.",
+        "Disables NRD denoisier every " .. settings.slowTimeout .. "s to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
         settings.enableNRDControl,
         defaults.enableNRDControl,
         function(state)
@@ -446,4 +447,3 @@ end)
 registerForEvent('onUpdate', function(delta)
     Cron.Update(delta)
 end)
-
