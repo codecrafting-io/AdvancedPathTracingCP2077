@@ -7,7 +7,7 @@
 - Improved first loading
 - Improved NRD Control handling
 - Improved ReGIR activation handling
-- Minor internal reeorganization
+- Minor internal reorganization
 - Separate PT Quality settings from user settings
 
 ## v0.1.0
