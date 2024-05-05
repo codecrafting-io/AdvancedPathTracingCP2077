@@ -23,6 +23,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - **Psycho**: Flatline your GPU 💀
 - Path Tracing Optimizations: Enables small path tracing optimizations without relevant quality loss
 - Control number of rays per pixel and rays per bounce when using **ReSTIR DI** mode
+- Enable V self reflection.
 - Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
 - Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. This is disabled by default
@@ -47,7 +48,8 @@ The mod save your preferences in the `settings.json` file.
 | slowTimeout | int | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
 | refreshTimeout | int | 5.0 | The Auto Refresh Timeout |
-| enableDLSSDParticles | boolean | true | Wether or not enable DLSS Ray Reconstruction particles |
+| selfReflection | boolean | false | Whether or not to enable V self-reflection. The head won't appear due to game limitation. |
+| enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
 | ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |
 | ptQualityIndex | int | 3 | Path Tracing mode. Defaults to balanced |
 | ptOptimizationsIndex | int | 2 | Set to 1 disables and 2 enables the PT optimizations |

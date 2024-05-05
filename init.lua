@@ -219,15 +219,21 @@ local function setPTMode(modeIndex)
 end
 
 local function setPTQuality(qualityIndex)
-    settings.ptQualityIndex = qualityIndex
     Utils.DebugMessage("Setting Path Tracing Quality")
+    settings.ptQualityIndex = qualityIndex
     GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
 
 local function setPTOptimizations(optimizationsIndex)
-    settings.ptOptimizationsIndex = optimizationsIndex
     Utils.DebugMessage("Setting Path Tracing Optimizations")
+    settings.ptOptimizationsIndex = optimizationsIndex
     GameSettings.SetAll(ptQuality.optimizations[optimizationsIndex])
+end
+
+local function setSelfReflection(selfReflection)
+    Utils.DebugMessage("Setting Self Reflection")
+    settings.selfReflection = not selfReflection
+    GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(settings.selfReflection))
 end
 
 local function setModMenu()
@@ -331,6 +337,16 @@ local function setModMenu()
                 Cron.Pause(runtime.particleTimer)
                 GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
             end
+    end)
+
+    optionsUI["SELF_REFLECTION"] = NativeSettings.addSwitch(
+        "/AdvancedPathTracing/path_tracing",
+        "Self Reflection",
+        "Enables self reflaction of V without showing the head (internal game limitation). Also works with normal Ray Tracing",
+        settings.selfReflection,
+        defaults.selfReflection,
+        function(state)
+            setSelfReflection(state)
     end)
 
     optionsUI["NRD"] = NativeSettings.addSwitch(

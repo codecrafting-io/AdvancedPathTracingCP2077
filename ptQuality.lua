@@ -570,7 +570,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "BoilingFilterStrength",
-                value       = "0.2"
+                value       = "0.25"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -590,12 +590,12 @@ local ptQuality = {
             {
                 category    = "Editor/RTXDI",
                 name        = "BoilingFilterStrength",
-                value       = "0.1"
+                value       = "0.15"
             },
             {
                 category    = "Editor/RTXDI",
                 name        = "EmissiveDistanceThreshold",
-                value       = "0.7"
+                value       = "0.67"
             },
             {
                 category    = "Editor/RTXDI",
@@ -645,7 +645,7 @@ local ptQuality = {
             {
                 category    = "RayTracing",
                 name        = "TransparentReflectionEnvironmentBlendFactor",
-                value       = "0.06"
+                value       = "0.05"
             },
             {
                 category    = "RayTracing/Reflection",
