@@ -32,6 +32,11 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 **NOTE:** This mod is will designed for Path Tracing (PT), not normal Ray Tracing (RT). So quality levels, optimizations are only for PT and won't affect RT.
 
+## Requirements
+
+- [Cyber Engine Tweaks (>= v1.30.1)](https://www.nexusmods.com/cyberpunk2077/mods/107)
+- [Native Settings UI (>= 1.96)](https://www.nexusmods.com/cyberpunk2077/mods/3518)
+
 ## Installation
 
 Just drop the folder in `<path to cyberpunk 2077>\bin\x64\plugins\cyber_engine_tweaks\mods`. Remember to install the requirements.
