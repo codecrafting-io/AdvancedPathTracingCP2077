@@ -1,6 +1,6 @@
-local Utils = require("Utils")
-local GameHUD = require("GameHUD")
-local Cron = require("Cron")
+local Utils = require("Modules/Utils")
+local GameHUD = require("Modules/GameHUD")
+local Cron = require("Modules/Cron")
 local GameSettings = {}
 
 function GameSettings.ApplyGameStatus(effect)

@@ -30,6 +30,8 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 **NOTE:** ReGIR DI/GI mode on Cyberpunk 2077 has activation issues, requiring multiple enable/disable timed cycles, and performance takes up to 30s to stabilize, if not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting photo mode also may help.
 
+**NOTE:** This mod is will designed for Path Tracing (PT), not normal Ray Tracing (RT). So quality levels, optimizations are only for PT and won't affect RT.
+
 ## Installation
 
 Just drop the folder in `<path to cyberpunk 2077>\bin\x64\plugins\cyber_engine_tweaks\mods`. Remember to install the requirements.
@@ -48,11 +50,11 @@ The mod save your preferences in the `settings.json` file.
 | slowTimeout | int | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
 | refreshTimeout | int | 5.0 | The Auto Refresh Timeout |
-| selfReflection | boolean | false | Whether or not to enable V self-reflection. The head won't appear due to game limitation. |
+| selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
 | ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |
 | ptQualityIndex | int | 3 | Path Tracing mode. Defaults to balanced |
-| ptOptimizationsIndex | int | 2 | Set to 1 disables and 2 enables the PT optimizations |
+| ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
 
 ## Credits
 

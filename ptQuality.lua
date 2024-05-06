@@ -457,7 +457,7 @@ local ptQuality = {
     },
     optimizations = {
         --Off
-        [1] = {
+        [false] = {
             {
                 category    = "Editor/Denoising/NRD",
                 name        = "DisocclusionThreshold",
@@ -556,7 +556,7 @@ local ptQuality = {
         },
 
         --On
-        [2] = {
+        [true] = {
             {
                 category    = "Editor/Denoising/NRD",
                 name        = "DisocclusionThreshold",

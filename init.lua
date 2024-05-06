@@ -15,20 +15,20 @@
 
 AdvancedPathTracing = { version = "0.2.0" }
 settings = {}
+Cron = require("Modules/Cron")
+GameUI = require("Modules/GameUI")
+GameSettings = require("Modules/GameSettings")
+
 local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
-local Cron = require("Modules/Cron")
-local GameUI = require("Modules/GameUI")
-local GameSettings = require("Modules/GameSettings")
 local Utils = require("Modules/Utils")
 local NativeSettings = {}
-local optionsUI = {}
+local modOptions = require("modOptions")
 local runtime = {
     firstLoad = true,
     reGIRApplied = false,
     inGame = false,
-    inMainMenu = false,
     nrdTimer = nil,
     particleTimer = nil,
 	enableReGIR = false,
@@ -57,7 +57,12 @@ local function loadSettings()
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
 
-        if validJson then
+        --New version requires settings reset
+        if defaults.version ~= savedSettings["version"] then
+            Utils.DebugMessage("New Version " .. defaults.version)
+            settings = defaultSettings
+            saveSettings()
+        elseif validJson then
             settings = Utils.Clone(savedSettings)
 
             --Validate timings
@@ -66,13 +71,6 @@ local function loadSettings()
             elseif settings.refreshTimeout < settings.fastTimeout then
                 settings.refreshTimeout = settings.fastTimeout * 5.0
             end
-        end
-
-        --New version requires settings reset
-        if defaults.version ~= settings["version"] then
-            Utils.DebugMessage("New Version " .. defaults.version)
-            settings = defaultSettings
-            saveSettings()
         end
     else
         settings = defaultSettings
@@ -111,39 +109,60 @@ local function hasDLSSDChanged()
     return previous["hasDLSSD"] ~= runtime.hasDLSSD or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
 end
 
-local function setDLSSDParticles()
-    -- enable particle PT integration unless player is outdoors AND it's raining
-    runtime.particleTimer = Cron.Every(settings.fastTimeout * 2.0, function()
-        if runtime.inGame then
-            local isRaining = GameSettings.IsRaining()
-            local isIndoors = GameSettings.IsIndoors()
+function setDLSSDParticlesControl(enableDLSSDParticles)
+    if not runtime.particleTimer and enableDLSSDParticles then
+        -- enable particle PT integration unless player is outdoors AND it's raining
+        runtime.particleTimer = Cron.Every(settings.fastTimeout * 2.0, function()
+            if runtime.inGame then
+                local isRaining = GameSettings.IsRaining()
+                local isIndoors = GameSettings.IsIndoors()
 
-            --Change detection
-            if isRaining ~= previous["isRaining"] or isIndoors ~= previous["isIndoors"] then
-                previous["isRaining"] = isRaining
-                previous["isIndoors"] = isIndoors
+                --Change detection
+                if isRaining ~= previous["isRaining"] or isIndoors ~= previous["isIndoors"] then
+                    previous["isRaining"] = isRaining
+                    previous["isIndoors"] = isIndoors
 
-                if isIndoors or isRaining then
-                    Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle color")
-                    GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
-                else
-                    Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
-                    GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
+                    if isIndoors or isRaining then
+                        Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle color")
+                        GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
+                    else
+                        Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
+                        GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
+                    end
                 end
             end
+        end)
+    end
+
+    if enableDLSSDParticles then
+        Cron.Resume(runtime.particleTimer)
+    else
+        if runtime.particleTimer then
+            Cron.Pause(runtime.particleTimer)
         end
-    end)
+        GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
+    end
 end
 
-local function setNRDControl()
-    runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
+function setNRDControl(enableNRDControl)
+    if not runtime.nrdTimer and settings.enableNRDControl then
+        runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
 
-        --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
-        if runtime.inGame and runtime.hasDLSSD then
-            Utils.DebugMessage("Disabling NRD")
-            GameSettings.Set("RayTracing", "EnableNRD", "false")
+            --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
+            if runtime.inGame and runtime.hasDLSSD then
+                Utils.DebugMessage("Disabling NRD")
+                GameSettings.Set("RayTracing", "EnableNRD", "false")
+            end
+        end)
+    end
+
+    if enableNRDControl and runtime.hasDLSSD then
+        Cron.Resume(runtime.nrdTimer)
+    else
+        if runtime.nrdTimer then
+            Cron.Pause(runtime.nrdTimer)
         end
-    end)
+    end
 end
 
 local function setReGIR()
@@ -185,15 +204,17 @@ local function setReSTIR()
     end)
 end
 
-local function setRayNumber(number)
+function setRayNumber(number)
+    Utils.DebugMessage("Setting Ray Number")
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
 end
 
-local function setRayBounce(number)
+function setRayBounce(number)
+    Utils.DebugMessage("Setting Ray Bounce")
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
 
-local function setPTMode(modeIndex)
+function setPTMode(modeIndex)
     settings.ptModeIndex = modeIndex
 
     if not NativeSettings then
@@ -218,25 +239,24 @@ local function setPTMode(modeIndex)
     end
 end
 
-local function setPTQuality(qualityIndex)
+function setPTQuality(qualityIndex)
     Utils.DebugMessage("Setting Path Tracing Quality")
     settings.ptQualityIndex = qualityIndex
     GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
 
-local function setPTOptimizations(optimizationsIndex)
+function setPTOptimizations(optimizations)
     Utils.DebugMessage("Setting Path Tracing Optimizations")
-    settings.ptOptimizationsIndex = optimizationsIndex
-    GameSettings.SetAll(ptQuality.optimizations[optimizationsIndex])
+    settings.ptOptimizations = optimizations
+    GameSettings.SetAll(ptQuality.optimizations[optimizations])
 end
 
-local function setSelfReflection(selfReflection)
+function setSelfReflection(selfReflection)
     Utils.DebugMessage("Setting Self Reflection")
-    settings.selfReflection = not selfReflection
-    GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(settings.selfReflection))
+    GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
 end
 
-local function setModMenu()
+local function setNativeSettings()
     NativeSettings = GetMod("nativeSettings")
 
     --Return if NativeSettings not found
@@ -244,142 +264,48 @@ local function setModMenu()
         return
     end
 
-    ptQualityNames = {
-        [1] = "Vanilla",
-        [2] = "Performance",
-        [3] = "Balanced",
-        [4] = "Quality",
-        [5] = "Psycho"
-    }
-
-    ptMode = {
-        [1] = "ReSTIR DI",
-        [2] = "ReSTIR DI/GI",
-        [3] = "ReGIR DI/GI"
-    }
-
-    if not NativeSettings.pathExists("/AdvancedPathTracing") then
-        NativeSettings.addTab("/AdvancedPathTracing", "Advanced Path Tracing")
-        NativeSettings.addSubcategory("/AdvancedPathTracing/path_tracing", "Path Tracing")
-        NativeSettings.addSubcategory("/AdvancedPathTracing/misc", "Misc")
+    if not NativeSettings.pathExists(modOptions.tabName) then
+        NativeSettings.addTab(modOptions.tabName, modOptions.tabLabel)
+        for _, c in pairs(modOptions.categories) do
+            NativeSettings.addSubcategory(modOptions.tabName .. '/' .. c.name, c.label)
+        end
     end
 
-    optionsUI["PT_MODE"] = NativeSettings.addSelectorString(
-        "/AdvancedPathTracing/path_tracing",
-        "Mode",
-        "Changes Path Tracing mode\n\nReSTIR DI is the older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
-        ptMode,
-        settings.ptModeIndex,
-        defaults.ptModeIndex,
-        function(value)
-            setPTMode(value)
-    end)
-
-    optionsUI["PT_QUALITY"] = NativeSettings.addSelectorString(
-        "/AdvancedPathTracing/path_tracing",
-        "Quality",
-        "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality\n\nPsycho: Flatline your GPU",
-        ptQualityNames,
-        settings.ptQualityIndex,
-        defaults.ptQualityIndex,
-        function(value)
-            setPTQuality(value)
-    end)
-
-    optionsUI["PT_OPTIMIZATION"] = NativeSettings.addSwitch(
-        "/AdvancedPathTracing/path_tracing",
-        "Optimizations",
-        "Enables small path tracing optimizations without relevant loss of quality. May improve performance",
-        settings.ptOptimizationsIndex == 2,
-        defaults.ptOptimizationsIndex == 2,
-        function(state)
-            setPTOptimizations(state and 2 or 1)
-    end)
-
-    optionsUI["RAY_NUMBER"] = NativeSettings.addRangeInt(
-        "/AdvancedPathTracing/path_tracing",
-        "Rays Per Pixel",
-        "Number of rays per pixel. Only works when using ReSTIR DI mode",
-        1, 8, 1,
-        settings.rayNumber,
-        defaults.rayNumber,
-        function(value)
-            setRayNumber(value)
-    end)
-
-    optionsUI["RAY_BOUNCE"] = NativeSettings.addRangeInt(
-        "/AdvancedPathTracing/path_tracing",
-        "Bounces Per Ray",
-        "Number of bounces per ray. Only works when using ReSTIR DI mode",
-        0, 8, 1,
-        settings.rayBounce,
-        defaults.rayBounce,
-        function(value)
-            setRayBounce(value)
-    end)
-
-    optionsUI["DLSSD_PARTICLE"] = NativeSettings.addSwitch(
-        "/AdvancedPathTracing/path_tracing",
-        "Ray Reconstruction Particles",
-        "Enables particles to not be separated in Ray Reconstruction, when it's not raining and outdoors",
-        settings.enableDLSSDParticles,
-        defaults.enableDLSSDParticles,
-        function(state)
-            settings.enableDLSSDParticles = state
-
-            if not runtime.particleTimer and settings.enableDLSSDParticles then
-                setDLSSDParticles()
-            end
-
-            if settings.enableDLSSDParticles then
-                Cron.Resume(runtime.particleTimer)
+    --Only loop with indexed values with ipairs
+    for _, v in ipairs(modOptions.options) do
+        if v.range then
+            if v.range['min'] ~= nil then
+                modOptions.options[v.index] = NativeSettings[v.typeFunction](
+                    v.path,
+                    v.label,
+                    v.description,
+                    v.range.min, v.range.max, v.range.step,
+                    settings[v.value],
+                    defaults[v.value],
+                    v.stateCallback
+                )
             else
-                Cron.Pause(runtime.particleTimer)
-                GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
+                modOptions.options[v.index] = NativeSettings[v.typeFunction](
+                    v.path,
+                    v.label,
+                    v.description,
+                    v.range,
+                    settings[v.value],
+                    defaults[v.value],
+                    v.stateCallback
+                )
             end
-    end)
-
-    optionsUI["SELF_REFLECTION"] = NativeSettings.addSwitch(
-        "/AdvancedPathTracing/path_tracing",
-        "Self Reflection",
-        "Enables self reflaction of V without showing the head (internal game limitation). Also works with normal Ray Tracing",
-        settings.selfReflection,
-        defaults.selfReflection,
-        function(state)
-            setSelfReflection(state)
-    end)
-
-    optionsUI["NRD"] = NativeSettings.addSwitch(
-        "/AdvancedPathTracing/path_tracing",
-        "NRD Disable Helper",
-        "Disables NRD denoisier every " .. settings.slowTimeout .. "s to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
-        settings.enableNRDControl,
-        defaults.enableNRDControl,
-        function(state)
-            settings.enableNRDControl = state
-
-            if not runtime.nrdTimer and settings.enableNRDControl then
-                setNRDControl()
-            end
-
-            if settings.enableNRDControl then
-                Cron.Resume(runtime.nrdTimer)
-            else
-                if runtime.nrdTimer then
-                    Cron.Pause(runtime.nrdTimer)
-                end
-            end
-    end)
-
-    optionsUI["REFRESH_GAME"] = NativeSettings.addSwitch(
-        "/AdvancedPathTracing/misc",
-        "Auto Refresh Game",
-        "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to improve performance",
-        settings.refreshGame,
-        defaults.refreshGame,
-        function(state)
-            settings.refreshGame = state
-    end)
+        else
+            modOptions.options[v.index] = NativeSettings[v.typeFunction](
+                v.path,
+                v.label,
+                v.description,
+                settings[v.value],
+                defaults[v.value],
+                v.stateCallback
+            )
+        end
+    end
 end
 
 local function refreshSettings(refreshGame)
@@ -387,7 +313,7 @@ local function refreshSettings(refreshGame)
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
     if not runtime.hasDLSSD then
-        NativeSettings.setOption(optionsUI["NRD"], false)
+        NativeSettings.setOption(modOptions.options["NRD"], false)
     end
 
     if hasDLSSDChanged() then
@@ -415,12 +341,10 @@ function setRuntime()
 
     GameUI.OnSessionStart(function(state)
         runtime.inGame = true
-        runtime.inMainMenu = false
         refreshSettings(settings.refreshGame)
     end)
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false
-        runtime.inMainMenu = true
         runtime.reGIRApplied = false
         previous["hasDLSSD"] = nil
     end)
@@ -436,26 +360,22 @@ function setRuntime()
 	end)
 
     runtime.inGame = not GameUI.IsDetached()
-    runtime.inMainMenu = not runtime.inGame
 end
 
 registerForEvent('onInit', function()
     loadSettings()
-    setModMenu()
+    setNativeSettings()
 
     if NativeSettings then
-        setRuntime()
         setPTMode(settings.ptModeIndex)
         setPTQuality(settings.ptQualityIndex)
-        setPTOptimizations(settings.ptOptimizationsIndex)
-
-        if settings.enableNRDControl then
-            setNRDControl()
-        end
-
-        if settings.enableDLSSDParticles then
-            setDLSSDParticles()
-        end
+        setPTOptimizations(settings.ptOptimizations)
+        setRayNumber(settings.rayNumber)
+        setRayBounce(settings.rayBounce)
+        setSelfReflection(settings.selfReflection)
+        setDLSSDParticlesControl(settings.enableDLSSDParticles)
+        setNRDControl(settings.enableNRDControl)
+        setRuntime()
     else
         error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end

@@ -12,7 +12,7 @@ local defaults = {
     selfReflection = false,
     ptModeIndex = 2,
     ptQualityIndex = 3,
-    ptOptimizationsIndex = 2
+    ptOptimizations = true
 }
 
 return defaults
