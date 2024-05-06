@@ -51,10 +51,10 @@ The mod save your preferences in the `settings.json` file.
 | enableNRDControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
-| fastTimeout | int | 1.0 | Shortest timeout of a series internal timers |
-| slowTimeout | int | 30.0 | Timeout used in enableNRDControl |
+| fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
+| slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
-| refreshTimeout | int | 5.0 | The Auto Refresh Timeout |
+| refreshTimeout | float | 5.0 | The Auto Refresh Timeout |
 | selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
 | ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |
