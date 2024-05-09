@@ -145,9 +145,8 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
 end
 
 function setNRDControl(enableNRDControl)
-    if not runtime.nrdTimer and settings.enableNRDControl then
+    if not runtime.nrdTimer and enableNRDControl then
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
-
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
             if runtime.inGame and runtime.hasDLSSD then
                 Utils.DebugMessage("Disabling NRD")
@@ -360,6 +359,7 @@ function setRuntime()
 	end)
 
     runtime.inGame = not GameUI.IsDetached()
+    runtime.hasDLSSD = GameSettings.HasDLSSD()
 end
 
 registerForEvent('onInit', function()
@@ -367,6 +367,7 @@ registerForEvent('onInit', function()
     setNativeSettings()
 
     if NativeSettings then
+        setRuntime()
         setPTMode(settings.ptModeIndex)
         setPTQuality(settings.ptQualityIndex)
         setPTOptimizations(settings.ptOptimizations)
@@ -375,7 +376,6 @@ registerForEvent('onInit', function()
         setSelfReflection(settings.selfReflection)
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
-        setRuntime()
     else
         error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
