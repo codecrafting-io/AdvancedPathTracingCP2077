@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+- Fix rayBounce and rayNumber not being set correctly
+- Fix some settings not saving
+
 ## v0.2.0
 
 - Added Self Reflection option
