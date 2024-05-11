@@ -50,7 +50,11 @@ Advanced Path Tracing does not use the same settings and values as ULTRA+ Contro
 
 ## Installation
 
-Just drop the folder in `<path to cyberpunk 2077>\bin\x64\plugins\cyber_engine_tweaks\mods`. Remember to install the requirements.
+Extract the zip and paste the `bin` folder to `<path to cyberpunk 2077>`. Note that the end result should be:
+
+`<path to cyberpunk 2077>\bin\x64\plugins\cyber_engine_tweaks\mods\AdvancedPathTracing`
+
+Remember to install the requirements.
 
 ## Settings
 
