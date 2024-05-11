@@ -76,6 +76,11 @@ local ptQuality = {
             --SHARC
             {
                 category    = "Editor/SHARC",
+                name        = "Enable",
+                value       = "true"
+            },
+            {
+                category    = "Editor/SHARC",
                 name        = "Bounces",
                 value       = "4"
             },
@@ -165,6 +170,11 @@ local ptQuality = {
             },
 
             --SHARC
+            {
+                category    = "Editor/SHARC",
+                name        = "Enable",
+                value       = "true"
+            },
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -258,6 +268,11 @@ local ptQuality = {
             --SHARC
             {
                 category    = "Editor/SHARC",
+                name        = "Enable",
+                value       = "true"
+            },
+            {
+                category    = "Editor/SHARC",
                 name        = "Bounces",
                 value       = "2"
             },
@@ -349,6 +364,11 @@ local ptQuality = {
             --SHARC
             {
                 category    = "Editor/SHARC",
+                name        = "Enable",
+                value       = "false"
+            },
+            {
+                category    = "Editor/SHARC",
                 name        = "Bounces",
                 value       = "4"
             },
@@ -438,6 +458,11 @@ local ptQuality = {
             },
 
             --SHARC
+            {
+                category    = "Editor/SHARC",
+                name        = "Enable",
+                value       = "false"
+            },
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",

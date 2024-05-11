@@ -21,16 +21,21 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - **Balanced**: Improve on Vanilla quality and increase performance by until 1%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
-- Path Tracing Optimizations: Enables small path tracing optimizations without relevant quality loss
+- Path Tracing Optimizations: Enables the following optimizations:
+  - Adds missing PT Reflections through Screen Space Reflections
+  - Reduce noise on some scenarios. Some scenes may appear a little darker
+  - Use PDF (Probability Density Function) for minor performance boost
+  - Minor reflections improvement on transparent surfaces
+  - Minor GI/DI light behavior optimizations
 - Control number of rays per pixel and rays per bounce when using **ReSTIR DI** mode
 - Enable V self reflection.
 - Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
 - Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. This is disabled by default
 
-**NOTE:** ReGIR DI/GI mode on Cyberpunk 2077 has activation issues, requiring multiple enable/disable timed cycles, and performance takes up to 30s to stabilize, if not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting photo mode also may help.
+**NOTE:** ReGIR DI/GI has implementation issues, such as sometimes not activating correctly (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if you do not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
 
-**NOTE:** This mod is will designed for Path Tracing (PT), not normal Ray Tracing (RT). So quality levels, optimizations are only for PT and won't affect RT.
+**NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
 ## Requirements
 
