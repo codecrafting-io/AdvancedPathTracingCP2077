@@ -110,6 +110,7 @@ local function hasDLSSDChanged()
 end
 
 function setDLSSDParticlesControl(enableDLSSDParticles)
+    settings.enableDLSSDParticles = enableDLSSDParticles
     if not runtime.particleTimer and enableDLSSDParticles then
         -- enable particle PT integration unless player is outdoors AND it's raining
         runtime.particleTimer = Cron.Every(settings.fastTimeout * 2.0, function()
@@ -145,6 +146,7 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
 end
 
 function setNRDControl(enableNRDControl)
+    settings.enableNRDControl = enableNRDControl
     if not runtime.nrdTimer and enableNRDControl then
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
@@ -205,11 +207,13 @@ end
 
 function setRayNumber(number)
     Utils.DebugMessage("Setting Ray Number")
+    settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
 end
 
 function setRayBounce(number)
     Utils.DebugMessage("Setting Ray Bounce")
+    settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
 
@@ -252,6 +256,7 @@ end
 
 function setSelfReflection(selfReflection)
     Utils.DebugMessage("Setting Self Reflection")
+    settings.selfReflection = selfReflection
     GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
 end
 

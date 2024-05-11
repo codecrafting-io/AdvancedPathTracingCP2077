@@ -72,12 +72,12 @@ local modOptions = {
             },
             value = "rayNumber",
             stateCallback = function(state)
-                setRayBounce(state)
+                setRayNumber(state)
             end,
             typeFunction = 'addRangeInt'
         },
         {
-            index = 'RAY_NUMBER',
+            index = 'RAY_BOUNCE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Bounces Per Ray',
             description = "Number of bounces per ray. Only works when using ReSTIR DI mode",
