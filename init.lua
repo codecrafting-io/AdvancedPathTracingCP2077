@@ -172,7 +172,7 @@ function setRefreshControl(refreshGame)
     settings.refreshGame = refreshGame
     if settings.refreshInterval > 0 then
         if not runtime.refreshTimer and refreshGame then
-            print(settings.refreshInterval * 60)
+            runtime.refreshGame = true
             runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
                 Utils.DebugMessage("Enabling Refresh Game for the next time")
                 runtime.refreshGame = true
@@ -388,7 +388,7 @@ function setRuntime()
 
     GameUI.OnSessionStart(function(state)
         runtime.inGame = true
-        refreshSettings(settings.refreshGame)
+        refreshSettings(runtime.refreshGame)
     end)
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false

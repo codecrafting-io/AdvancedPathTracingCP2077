@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2
+
+- Added Refresh Game Interval
+- Added detection when the game is in a limited gameplay scene to avoid refreshing
+- Restrict camera movement and combat during refresh time
+
 ## v0.2.1
 
 - Fix rayBounce and rayNumber not being set correctly

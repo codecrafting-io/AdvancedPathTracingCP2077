@@ -7,15 +7,17 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 **NOTE:** This is a **Work In Progress** mod, so things may improve in the future.
 
+**NOTE:** For NVIDIA documentation about Path Tracing terms check [this link](https://github.com/NVIDIAGameWorks/RTXDI/blob/main/doc/Integration.md)
+
 ![Advanced Path Tracing Menu](/menu.png?raw=true)
 
 ## Features
 
-- Control Path Tracing with the following modes:
+- Path Tracing Modes:
   - **ReGIR DI/GI**: Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR. Often looks and performs better, but can be noisier
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray. Allows control of rays per pixel and bounces per ray
-- Control Path Tracing internal settings to set the following levels of quality:
+- Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
   - **Balanced**: Improve on Vanilla quality and increase performance by until 1%
@@ -27,14 +29,15 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
   - Minor GI/DI light behavior optimizations
-- Control number of rays per pixel and rays per bounce when using **ReSTIR DI** mode
-- Enable V self reflection.
-- Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
-- Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
-- Refresh Game: when loading and exiting menus. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. Disabled by default.
+- Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
+- Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
+- Self Reflection: Enable V self reflectio without the head (game limitation😅🤷‍♂️). You may be able to remove this limitation if installing the [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669)
+- DLSS Ray Reconstruction Particles: By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
+- NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD), so when using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
+- Refresh Game: when loading saves and exiting menus. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. Game will skip the refresh if a limited gameplay scene is detected. Disabled by default.
 - Refresh Game Interval: The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 
-**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if you do not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
+**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if not, reload the save or restart the game, especially after disabling it. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
