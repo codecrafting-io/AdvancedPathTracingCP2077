@@ -371,11 +371,13 @@ local function refreshSettings(refreshGame)
         setReSTIR()
     end
 
-    if refreshGame then
+    if refreshGame and GameSettings.CanRefresh() then
         if settings.refreshInterval > 0 then
             runtime.refreshGame = false
         end
         GameSettings.RefreshGame(settings.refreshPauseTimeout)
+    else
+        Utils.DebugMessage("Can't refresh now")
     end
 end
 

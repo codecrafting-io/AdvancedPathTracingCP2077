@@ -1051,6 +1051,16 @@ function GameUI.IsTutorial()
 	return isTutorial
 end
 
+-- Undefined = 0
+-- FullGameplay = 1
+-- StagedGameplay = 2
+-- LimitedGameplay = 3
+-- FPPCinematic = 4
+-- Cinematic = 5
+function GameUI.GetSceneTier()
+	return sceneTier
+end
+
 function GameUI.IsScene()
 	return sceneTier >= 3 and not GameUI.IsMainMenu()
 end

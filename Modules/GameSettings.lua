@@ -1,5 +1,6 @@
 local Utils = require("Modules/Utils")
 local GameHUD = require("Modules/GameHUD")
+local GameUI = require("Modules/GameUI")
 local Cron = require("Modules/Cron")
 local GameSettings = {}
 
@@ -25,13 +26,15 @@ function GameSettings.GetIndex(category, name)
     end
 end
 
+function GameSettings.SetIndex(category, name, index)
+    if string.find(category, '/') == 1 and type(index) == 'number' then
+        Game.GetSettingsSystem():GetVar(category, name):SetIndex(index)
+    end
+end
+
 function GameSettings.Set(category, name, value)
     if string.find(category, '/') == 1 then
-        if type(value) == 'number' then
-            Game.GetSettingsSystem():GetVar(category, name):SetIndex(value)
-        else
-            Game.GetSettingsSystem():GetVar(category, name):SetValue(value)
-        end
+        Game.GetSettingsSystem():GetVar(category, name):SetValue(value)
     else
         GameOptions.Set(category, name, value)
     end
@@ -43,17 +46,40 @@ function GameSettings.SetAll(settings)
     end
 end
 
+function GameSettings.CanTimeSkip()
+    local player = GetPlayer()
+
+    return player and GameTimeUtils.CanPlayerTimeSkip(player)
+end
+
+function GameSettings.CanRefresh()
+    return not GameUI.IsScene() and not Game.GetTimeSystem():IsTimeDilationActive()
+end
+
 function GameSettings.RefreshGame(timeout)
+    local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
+    local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
+
     Utils.DebugMessage("Refreshing the game")
     GameHUD.ShowMessage("REFRESHING")
+
+    --Camera Movement
+    GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', 0)
+    GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', 0)
+
+    --Player Movement
     GameSettings.ApplyGameStatus("GameplayRestriction.NoZooming")
     GameSettings.ApplyGameStatus("GameplayRestriction.NoMovement")
+    GameSettings.ApplyGameStatus("GameplayRestriction.NoCombat")
     GameSettings.SetTimeDilation(0.0)
     Cron.After(timeout, function()
+        GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
+        GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', y)
         GameSettings.RemoveGameStatus("GameplayRestriction.NoZooming")
         GameSettings.RemoveGameStatus("GameplayRestriction.NoMovement")
+        GameSettings.RemoveGameStatus("GameplayRestriction.NoCombat")
         GameSettings.UnsetTimeDilation()
-        GameHUD.ShowMessage("REFRESH Done")
+        GameHUD.ShowMessage("REFRESH DONE")
         Utils.DebugMessage("Refreshing done")
     end)
 end
