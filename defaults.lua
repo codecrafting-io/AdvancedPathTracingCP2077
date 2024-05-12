@@ -1,5 +1,5 @@
-local defaults = {
-    version = '0.2.0',
+return {
+    version = '0.2.2',
     debug = false,
 	enableNRDControl = true,
     rayNumber = 2,
@@ -7,12 +7,11 @@ local defaults = {
 	fastTimeout = 1.0,
     slowTimeout = 30.0,
     refreshGame = false,
-    refreshTimeout = 5.0,
+    refreshInterval = 30.0,
+    refreshPauseTimeout = 5.0,
     enableDLSSDParticles = true,
     selfReflection = false,
     ptModeIndex = 2,
     ptQualityIndex = 3,
     ptOptimizations = true
 }
-
-return defaults

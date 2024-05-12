@@ -31,9 +31,10 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 - Enable V self reflection.
 - Enable DLSS ray reconstruction particles in raytracing. By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - Disable NRD Denoiser helper for Ray Reconstruction. Path Tracing has two main denoisers, RR and NRD, so using RR should disable NRD, but sometimes it enables, this helps to keep NRD disabled over time
-- Auto Refresh game when loading and exiting the menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. This is disabled by default
+- Refresh Game: when loading and exiting menus. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. Disabled by default.
+- Refresh Game Interval: The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 
-**NOTE:** ReGIR DI/GI has implementation issues, such as sometimes not activating correctly (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if you do not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
+**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if you do not reload the save or restart the game, especially after disabling. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
@@ -69,7 +70,8 @@ The mod save your preferences in the `settings.json` file.
 | fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |
-| refreshTimeout | float | 5.0 | The Auto Refresh Timeout |
+| refreshPauseTimeout | float | 5.0 | The Auto Refresh Timeout |
+| refreshInterval | int | 30 | Amount of time in minutes to wait for the next refresh. Zero will refresh every time |
 | selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
 | ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |

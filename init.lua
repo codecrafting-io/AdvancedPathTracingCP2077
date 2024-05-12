@@ -13,7 +13,7 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-AdvancedPathTracing = { version = "0.2.0" }
+AdvancedPathTracing = { version = "0.2.2" }
 settings = {}
 Cron = require("Modules/Cron")
 GameUI = require("Modules/GameUI")
@@ -33,6 +33,8 @@ local runtime = {
     particleTimer = nil,
 	enableReGIR = false,
 	enableReSTIR = true,
+    refreshGame = false,
+    refreshTimer = nil,
     hasDLSSD = false
 }
 
@@ -68,8 +70,8 @@ local function loadSettings()
             --Validate timings
             if settings.slowTimeout < settings.fastTimeout then
                 settings.slowTimeout = settings.fastTimeout + 2.0
-            elseif settings.refreshTimeout < settings.fastTimeout then
-                settings.refreshTimeout = settings.fastTimeout * 5.0
+            elseif settings.refreshPauseTimeout < settings.fastTimeout then
+                settings.refreshPauseTimeout = settings.fastTimeout * 5.0
             end
         end
     else
@@ -92,11 +94,9 @@ local function pushChanges()
 end
 
 local function refreshDLSSD()
-    local dlssPreset = GameSettings.GetIndex("/graphics/presets", "DLSS")
-    local dlssPresetName = GameSettings.Get("/graphics/presets", "DLSS")
-
-    previous["dlssPreset"] = dlssPresetName
-    Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. dlssPresetName)
+    previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
+    previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
+    Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
     Cron.After(settings.fastTimeout, function()
@@ -106,7 +106,9 @@ local function refreshDLSSD()
 end
 
 local function hasDLSSDChanged()
-    return previous["hasDLSSD"] ~= runtime.hasDLSSD or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
+    return previous["hasDLSSD"] ~= runtime.hasDLSSD
+            or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
+            or previous["dlssSharpness"] ~= GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
 end
 
 function setDLSSDParticlesControl(enableDLSSDParticles)
@@ -164,6 +166,41 @@ function setNRDControl(enableNRDControl)
             Cron.Pause(runtime.nrdTimer)
         end
     end
+end
+
+function setRefreshControl(refreshGame)
+    settings.refreshGame = refreshGame
+    if settings.refreshInterval > 0 then
+        if not runtime.refreshTimer and refreshGame then
+            print(settings.refreshInterval * 60)
+            runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
+                Utils.DebugMessage("Enabling Refresh Game for the next time")
+                runtime.refreshGame = true
+            end)
+        end
+
+        if refreshGame then
+            Cron.Resume(runtime.refreshTimer)
+        else
+            if runtime.refreshTimer then
+                Cron.Pause(runtime.refreshTimer)
+            end
+        end
+    else
+        if refreshGame then
+            Utils.DebugMessage("Enabling Refresh Game every time")
+        end
+        runtime.refreshGame = refreshGame
+    end
+end
+
+function setRefreshTime(time)
+    if runtime.refreshTimer then
+        Cron.Pause(runtime.refreshTimer)
+    end
+    runtime.refreshTimer = nil
+    settings.refreshInterval = time
+    setRefreshControl(settings.refreshGame)
 end
 
 local function setReGIR()
@@ -321,6 +358,7 @@ local function refreshSettings(refreshGame)
     end
 
     if hasDLSSDChanged() then
+        Utils.DebugMessage('DLSSD has changed')
         runtime.reGIRApplied = false
     end
 
@@ -334,7 +372,10 @@ local function refreshSettings(refreshGame)
     end
 
     if refreshGame then
-        GameSettings.RefreshGame(settings.refreshTimeout)
+        if settings.refreshInterval > 0 then
+            runtime.refreshGame = false
+        end
+        GameSettings.RefreshGame(settings.refreshPauseTimeout)
     end
 end
 
@@ -354,7 +395,7 @@ function setRuntime()
     end)
     GameUI.OnMenuClose(function(state)
         if runtime.inGame then
-            refreshSettings(settings.refreshGame)
+            refreshSettings(runtime.refreshGame)
         end
     end)
     GameUI.Listen("MenuNav", function(state)
@@ -381,6 +422,7 @@ registerForEvent('onInit', function()
         setSelfReflection(settings.selfReflection)
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
+        setRefreshControl(settings.refreshGame)
     else
         error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end

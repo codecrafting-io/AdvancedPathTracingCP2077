@@ -1,6 +1,6 @@
 
 
-local modOptions = {
+return {
     tabName = '/AdvancedPathTracing',
     tabLabel = 'Advanced Path Tracing',
     categories = {
@@ -18,7 +18,7 @@ local modOptions = {
             index = 'PT_MODE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Mode',
-            description = "Changes Path Tracing mode\n\nReSTIR DI is the older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
+            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
             range = {
                 [1] = "ReSTIR DI",
                 [2] = "ReSTIR DI/GI",
@@ -34,7 +34,7 @@ local modOptions = {
             index = 'PT_QUALITY',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality. Disables SHARC bounce cache.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",
@@ -131,16 +131,30 @@ local modOptions = {
         {
             index = 'REFRESH_GAME',
             path = '/AdvancedPathTracing/misc',
-            label = 'Auto Refresh Game',
-            description = "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to improve performance",
+            label = 'Refresh Game',
+            description = "Enables refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance",
             range = nil,
             value = "refreshGame",
             stateCallback = function(state)
-                settings.refreshGame = state
+                setRefreshControl(state)
             end,
             typeFunction = 'addSwitch'
+        },
+        {
+            index = 'REFRESH_GAME_INTERVAL',
+            path = '/AdvancedPathTracing/misc',
+            label = 'Refresh Game Interval (min)',
+            description = "The amount of time in minutes to wait for the next refresh. Zero will refresh every time",
+            range = {
+                min = 0,
+                max = 60,
+                step = 1
+            },
+            value = "refreshInterval",
+            stateCallback = function(state)
+                setRefreshTime(state)
+            end,
+            typeFunction = 'addRangeInt'
         }
     }
 }
-
-return modOptions

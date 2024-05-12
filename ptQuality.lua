@@ -294,17 +294,17 @@ local ptQuality = {
             {
                 category    = "Editor/ReGIR",
                 name        = "BuildCandidatesCount",
-                value       = "16"
+                value       = "10"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "256"
+                value       = "192"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "ShadingCandidatesCount",
-                value       = "16"
+                value       = "12"
             },
 
             --ReSTIR
@@ -390,17 +390,17 @@ local ptQuality = {
             {
                 category    = "Editor/ReGIR",
                 name        = "BuildCandidatesCount",
-                value       = "32"
+                value       = "12"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "384"
+                value       = "256"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "ShadingCandidatesCount",
-                value       = "32"
+                value       = "24"
             },
 
             --ReSTIR
