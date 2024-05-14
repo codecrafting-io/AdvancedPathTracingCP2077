@@ -20,7 +20,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 - Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
-  - **Balanced**: Improve on Vanilla quality and increase performance by until 1%
+  - **Balanced**: Improve on Vanilla quality and increase performance by up to 1%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
 - Path Tracing Optimizations: Enables the following optimizations:
