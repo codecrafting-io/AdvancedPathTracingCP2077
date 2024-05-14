@@ -31,7 +31,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - Minor GI/DI light behavior optimizations
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
-- Self Reflection: Enable V self reflectio without the head (game limitation😅🤷‍♂️). You may be able to remove this limitation if installing the [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669)
+- Self Reflection: Enable V self reflectio without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - DLSS Ray Reconstruction Particles: By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD), so when using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
 - Refresh Game: when loading saves and exiting menus. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. Game will skip the refresh if a limited gameplay scene is detected. Disabled by default.
@@ -86,4 +86,5 @@ The mod save your preferences in the `settings.json` file.
 - [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490)
 - [Weathermancer (RMK)](https://www.nexusmods.com/cyberpunk2077/mods/9805)
 - [betterHeadlights (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/5013)
+- [JB - TPP MOD WIP third person (Jelle Bakker)](https://www.nexusmods.com/cyberpunk2077/mods/669)
 - [Lua Kit for CET (Pavel Siberx)](https://github.com/psiberx/cp2077-cet-kit)

@@ -35,7 +35,8 @@ local runtime = {
 	enableReSTIR = true,
     refreshGame = false,
     refreshTimer = nil,
-    hasDLSSD = false
+    hasDLSSD = false,
+    --fppHeadAdded = false
 }
 
 local function saveSettings()
@@ -371,13 +372,29 @@ local function refreshSettings(refreshGame)
         setReSTIR()
     end
 
+    --[[
+    --Use AMM or TPP instead, since requires change game assets
+    if not runtime.fppHeadAdded then
+        if settings.selfReflection then
+            runtime.fppHeadAdded = true
+            Cron.After(1.0, function()
+                Utils.DebugMessage("Adding FPP Head")
+                GameSettings.AddFPPHead()
+            end)
+        else
+            Utils.DebugMessage("Removing FPP Head")
+            GameSettings.RemoveFPPHead()
+        end
+    end
+    --]]
+
     if refreshGame and GameSettings.CanRefresh() then
         if settings.refreshInterval > 0 then
             runtime.refreshGame = false
         end
         GameSettings.RefreshGame(settings.refreshPauseTimeout)
     else
-        Utils.DebugMessage("Can't refresh now")
+        Utils.DebugMessage("Refresh disabled or can't refresh now")
     end
 end
 
@@ -393,6 +410,7 @@ function setRuntime()
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false
         runtime.reGIRApplied = false
+        --runtime.fppHeadAdded = false
         previous["hasDLSSD"] = nil
     end)
     GameUI.OnMenuClose(function(state)

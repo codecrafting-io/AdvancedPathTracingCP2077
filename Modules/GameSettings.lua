@@ -56,6 +56,53 @@ function GameSettings.CanRefresh()
     return not GameUI.IsScene() and not Game.GetTimeSystem():IsTimeDilationActive()
 end
 
+local function isFPPMale()
+    local femaleMatch = string.find(tostring(GetPlayer():GetResolvedGenderName()), "Female")
+
+    return not femaleMatch
+end
+
+--Requires AMM and TPP mod
+function GameSettings.RemoveFPPHead()
+    local slot = TweakDBID.new('AttachmentSlots.TppHead')
+
+    --Remove Headgear
+    Game.GetScriptableSystemsContainer():Get(CName.new('TakeOverControlSystem')):EnablePlayerTPPRepresenation(false)
+    Game.GetTransactionSystem():RemoveItemFromSlot(GetPlayer(), slot, true, true, true)
+
+end
+
+local function equipItem(name, slot)
+    local GameItemID = GetSingleton('gameItemID')
+    local itemID = GameItemID:FromTDBID(TweakDBID.new(name))
+    local slot = TweakDBID.new("AttachmentSlots." .. slot)
+
+    if not (Game.GetTransactionSystem():HasItem(GetPlayer(), itemID)) then
+        Game.AddToInventory(name, 1)
+    end
+
+    Game.GetTransactionSystem():AddItemToSlot(GetPlayer(), slot, itemID)
+end
+
+--Requires AMM and TPP mod
+function GameSettings.AddFPPHead()
+    GameSettings.RemoveFPPHead()
+
+    --Add Headgear
+    local tpp = ActivateTPPRepresentationEvent.new()
+    local player = GetPlayer()
+    tpp.playerController = player
+    player:QueueEvent(tpp)
+
+    Cron.After(0.10, function()
+        if isFPPMale() then
+            equipItem("Items.CharacterCustomizationMaHead", "TppHead")
+        else
+            equipItem("Items.CharacterCustomizationWaHead", "TppHead")
+        end
+    end)
+end
+
 function GameSettings.RefreshGame(timeout)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
