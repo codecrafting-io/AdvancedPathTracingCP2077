@@ -6,6 +6,7 @@
 	Credits
     - [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490)
     - [Weathermancer (RMK)](https://www.nexusmods.com/cyberpunk2077/mods/9805)
+    - [JB - TPP MOD WIP third person (Jelle Bakker)](https://www.nexusmods.com/cyberpunk2077/mods/669)
     - [betterHeadlights (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/5013)
     - [Lua Kit for CET (Pavel Siberx)](https://github.com/psiberx/cp2077-cet-kit)
 
