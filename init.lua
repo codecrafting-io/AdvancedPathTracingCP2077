@@ -36,7 +36,7 @@ local runtime = {
     refreshGame = false,
     refreshTimer = nil,
     hasDLSSD = false,
-    --fppHeadAdded = false
+    fppHeadAdded = false
 }
 
 local function saveSettings()
