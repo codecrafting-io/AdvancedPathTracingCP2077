@@ -395,7 +395,9 @@ local function refreshSettings()
             if settings.refreshInterval > 0 then
                 runtime.refreshGame = false
             end
-            GameSettings.RefreshGame(settings.refreshPauseTimeout)
+            Cron.After(0.1, function()
+                GameSettings.RefreshGame(settings.refreshPauseTimeout)
+            end)
         end
     end
 end
@@ -432,6 +434,7 @@ function setRuntime()
 
     runtime.inGame = not GameUI.IsDetached()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
+    runtime.refreshGame = settings.refreshGame
 end
 
 registerForEvent('onInit', function()

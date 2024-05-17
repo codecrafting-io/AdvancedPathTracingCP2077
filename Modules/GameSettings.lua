@@ -3,6 +3,17 @@ local GameHUD = require("Modules/GameHUD")
 local GameUI = require("Modules/GameUI")
 local Cron = require("Modules/Cron")
 local GameSettings = {}
+local gameRestrictions = {
+    "GameplayRestriction.NoCameraControl",
+    "GameplayRestriction.NoMovement",
+    "GameplayRestriction.NoCombat",
+    "GameplayRestriction.NoZooming",
+    "GameplayRestriction.NoScanning",
+    "GameplayRestriction.NoJump",
+    "GameplayRestriction.NoPhone",
+    "GameplayRestriction.NoWorldInteractions",
+    "GameplayRestriction.NoPhotoMode"
+}
 
 function GameSettings.ApplyGameStatus(effect)
     Game.GetStatusEffectSystem():ApplyStatusEffect(GetPlayer():GetEntityID(), effect, GetPlayer():GetRecordID(), GetPlayer():GetEntityID())
@@ -41,7 +52,7 @@ function GameSettings.Set(category, name, value)
 end
 
 function GameSettings.SetAll(settings)
-    for k, v in next, settings do
+    for _, v in next, settings do
         GameSettings.Set(v.category, v.name, v.value)
     end
 end
@@ -114,17 +125,19 @@ function GameSettings.RefreshGame(timeout)
     GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', 0)
     GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', 0)
 
-    --Player Movement
-    GameSettings.ApplyGameStatus("GameplayRestriction.NoZooming")
-    GameSettings.ApplyGameStatus("GameplayRestriction.NoMovement")
-    GameSettings.ApplyGameStatus("GameplayRestriction.NoCombat")
     GameSettings.SetTimeDilation(0.0)
+    for _, v in ipairs(gameRestrictions) do
+        GameSettings.ApplyGameStatus(v)
+    end
+
     Cron.After(timeout, function()
         GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
         GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', y)
-        GameSettings.RemoveGameStatus("GameplayRestriction.NoZooming")
-        GameSettings.RemoveGameStatus("GameplayRestriction.NoMovement")
-        GameSettings.RemoveGameStatus("GameplayRestriction.NoCombat")
+
+        for _, v in ipairs(gameRestrictions) do
+            GameSettings.RemoveGameStatus(v)
+        end
+
         GameSettings.UnsetTimeDilation()
         GameHUD.ShowMessage("REFRESH DONE")
         Utils.DebugMessage("Refreshing done")
