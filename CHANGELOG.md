@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.3
+
+- Improved refresh game logic
+
 ## v0.2.2
 
 - Added Refresh Game Interval

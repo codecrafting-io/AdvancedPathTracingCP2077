@@ -3,7 +3,7 @@
 [![GitHub Release](https://img.shields.io/github/v/tag/codecrafting-io/AdvancedPathTracingCP2077?label=version)](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/releases)
 [![Issues](https://img.shields.io/github/issues/codecrafting-io/AdvancedPathTracingCP2077)](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/issues)
 
-This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). This mod enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
+This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). The mod enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
 
 **NOTE:** This is a **Work In Progress** mod, so things may improve in the future.
 
@@ -14,9 +14,9 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 ## Features
 
 - Path Tracing Modes:
-  - **ReGIR DI/GI**: Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR. Often looks and performs better, but can be noisier
+  - **ReGIR DI/GI**: Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR. Can look and performs better, but is noisier
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
-  - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray. Allows control of rays per pixel and bounces per ray
+  - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray
 - Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
@@ -31,13 +31,13 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - Minor GI/DI light behavior optimizations
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
-- Self Reflection: Enable V self reflectio without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
+- Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - DLSS Ray Reconstruction Particles: By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
-- NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD), so when using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
-- Refresh Game: when loading saves and exiting the main menu. The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. Game will skip the refresh if a limited gameplay scene is detected. Disabled by default.
+- NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD). When using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
+- Refresh Game: The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. The mod will skip the refresh if a limited gameplay scene is detected. Disabled by default.
 - Refresh Game Interval: The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 
-**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if not, reload the save or restart the game, especially after disabling it. Using Auto Refresh Game or entering and exiting Photo Mode may also help.
+**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
@@ -77,8 +77,8 @@ The mod save your preferences in the `settings.json` file.
 | refreshInterval | int | 30 | Amount of time in minutes to wait for the next refresh. Zero will refresh every time |
 | selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
-| ptModeIndex | int | 2 | Path Tracing mode. Defaults to ReSTIR DI/GI |
-| ptQualityIndex | int | 3 | Path Tracing mode. Defaults to balanced |
+| ptModeIndex | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReGIR DI/GI |
+| ptQualityIndex | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Performance |
 | ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
 
 ## Credits
