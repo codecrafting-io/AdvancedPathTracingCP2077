@@ -172,33 +172,30 @@ end
 
 function setRefreshControl(refreshGame)
     settings.refreshGame = refreshGame
+    runtime.refreshGame = refreshGame
     if settings.refreshInterval > 0 then
         if not runtime.refreshTimer and refreshGame then
-            runtime.refreshGame = true
             runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
                 Utils.DebugMessage("Enabling Refresh Game for the next time")
                 runtime.refreshGame = true
             end)
         end
+    elseif refreshGame then
+        Utils.DebugMessage("Enabling Refresh Game every time")
+    end
 
-        if refreshGame then
-            Cron.Resume(runtime.refreshTimer)
-        else
-            if runtime.refreshTimer then
-                Cron.Pause(runtime.refreshTimer)
-            end
-        end
+    if refreshGame then
+        Cron.Resume(runtime.refreshTimer)
     else
-        if refreshGame then
-            Utils.DebugMessage("Enabling Refresh Game every time")
+        if runtime.refreshTimer then
+            Cron.Pause(runtime.refreshTimer)
         end
-        runtime.refreshGame = refreshGame
     end
 end
 
 function setRefreshTime(time)
     if runtime.refreshTimer then
-        Cron.Pause(runtime.refreshTimer)
+        Cron.Halt(runtime.refreshTimer)
     end
     runtime.refreshTimer = nil
     settings.refreshInterval = time
@@ -351,7 +348,7 @@ local function setNativeSettings()
     end
 end
 
-local function refreshSettings(refreshGame)
+local function refreshSettings()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
@@ -389,13 +386,17 @@ local function refreshSettings(refreshGame)
     end
     --]]
 
-    if refreshGame and GameSettings.CanRefresh() then
-        if settings.refreshInterval > 0 then
-            runtime.refreshGame = false
+    if settings.refreshGame then
+        if not runtime.refreshGame then
+            Utils.DebugMessage("Won't Refresh now")
+        elseif not GameSettings.CanRefresh() then
+            Utils.DebugMessage("Can't Refresh now")
+        else
+            if settings.refreshInterval > 0 then
+                runtime.refreshGame = false
+            end
+            GameSettings.RefreshGame(settings.refreshPauseTimeout)
         end
-        GameSettings.RefreshGame(settings.refreshPauseTimeout)
-    else
-        Utils.DebugMessage("Refresh disabled or can't refresh now")
     end
 end
 
@@ -406,17 +407,21 @@ function setRuntime()
 
     GameUI.OnSessionStart(function(state)
         runtime.inGame = true
-        refreshSettings(runtime.refreshGame)
+
+        --Reset Refresh Control
+        setRefreshTime(settings.refreshInterval)
+        refreshSettings()
     end)
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false
         runtime.reGIRApplied = false
+        runtime.refreshGame = settings.refreshGame
         --runtime.fppHeadAdded = false
         previous["hasDLSSD"] = nil
     end)
     GameUI.OnMenuClose(function(state)
         if runtime.inGame then
-            refreshSettings(runtime.refreshGame)
+            refreshSettings()
         end
     end)
     GameUI.Listen("MenuNav", function(state)
@@ -443,7 +448,6 @@ registerForEvent('onInit', function()
         setSelfReflection(settings.selfReflection)
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
-        setRefreshControl(settings.refreshGame)
     else
         error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
