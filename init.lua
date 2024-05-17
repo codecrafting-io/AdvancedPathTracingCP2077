@@ -434,7 +434,6 @@ function setRuntime()
 
     runtime.inGame = not GameUI.IsDetached()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
-    runtime.refreshGame = settings.refreshGame
 end
 
 registerForEvent('onInit', function()
@@ -451,6 +450,7 @@ registerForEvent('onInit', function()
         setSelfReflection(settings.selfReflection)
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
+        setRefreshControl(settings.refreshGame)
     else
         error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
