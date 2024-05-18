@@ -6,14 +6,6 @@ function Utils.DebugMessage(msg)
 	end
 end
 
-function Utils.ApplyGameStatus(effect)
-    Game.GetStatusEffectSystem():ApplyStatusEffect(GetPlayer():GetEntityID(), effect, GetPlayer():GetRecordID(), GetPlayer():GetEntityID())
-end
-
-function Utils.RemoveGameStatus(effect)
-    Game.GetStatusEffectSystem():RemoveStatusEffect(GetPlayer():GetEntityID(), effect)
-end
-
 function Utils.Clone(orig, copies)
     copies = copies or {}
     local orig_type = type(orig)
