@@ -1,6 +1,13 @@
+---@class Debug
 local Debug = {
-    enable = false
+    INFO = 1,
+    DEBUG = 2,
+    WARNING = 3,
+    ERROR = 4,
+    NONE = 5
 }
+
+local logLevel = Debug.NONE
 
 ---Parse userdata data type
 ---@param t userdata|CName|string
@@ -143,19 +150,59 @@ function Debug.Parse(...)
     return output
 end
 
----Log message into mod log file and console
----@param msg string
-function Debug.Log(msg)
-    Debug.Info(msg)
-    spdlog.info(string.format(' [%s] %s', 'INFO', msg))
+---Set log level between INFO, DEBUG, WARNING, ERROR, NONE. Returns itself
+---@param level integer
+---@return Debug
+function Debug.SetLogLevel(level)
+    if type(level) == "number" and level >= 1 and level <= 5 then
+        logLevel = level
+    end
+
+    return Debug
 end
 
----Print any message with info format if debug is enabled
+---Log a message to the file. If logLevel <= INFO also logs to the console
+---@param msg any
+function Debug.Log(msg)
+    spdlog.info(string.format('[%s] %s', 'INFO', msg))
+    if logLevel <= Debug.INFO then
+        print(string.format('[[[ %s ]]]', msg))
+    end
+end
+
+---Log INFO messages
 ---@param msg string
 function Debug.Info(msg)
-	if Debug.enable then
+    if logLevel <= Debug.INFO then
         print(string.format('[[[ %s ]]]', msg))
-	end
+    end
+end
+
+---Log DEBUG messages
+---@param msg string
+function Debug.Debug(msg)
+    if logLevel <= Debug.DEBUG then
+        print(string.format('[[[ %s ]]]', msg))
+        spdlog.info(string.format('[%s] %s', 'DEBUG', msg))
+    end
+end
+
+---Log WARNING messages
+---@param msg string
+function Debug.Warning(msg)
+    if logLevel <= Debug.WARNING then
+        print(string.format('[[[ WARNING: %s ]]]', msg))
+        spdlog.warning(string.format('[%s] %s', 'WARNING', msg))
+    end
+end
+
+---Log ERROR messages
+---@param msg string
+function Debug.Error(msg)
+    if logLevel <= Debug.ERROR then
+        spdlog.error(string.format('[%s] %s', 'ERROR', msg))
+        error(msg)
+    end
 end
 
 ---Parse variables and print them into console

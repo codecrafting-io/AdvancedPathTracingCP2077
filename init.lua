@@ -40,6 +40,7 @@ local runtime = {
     fppHeadAdded = false
 }
 
+---Save mod settings to the file
 local function saveSettings()
     Debug.Info("Saving Settings")
     local validJson, contents = pcall(function() return json.encode(settings) end)
@@ -50,11 +51,12 @@ local function saveSettings()
             file:write(contents)
             file:close()
         else
-            error("Failed to save settings file '" .. settingsFilename .. "'")
+            Debug.Error("Failed to save settings file '" .. settingsFilename .. "'")
         end
     end
 end
 
+---Load mod settings from the file
 local function loadSettings()
     local file = io.open(settingsFilename, 'r')
     defaultSettings = Debug.Clone(defaults)
@@ -64,7 +66,7 @@ local function loadSettings()
         local contents = file:read("*a")
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
-        Debug.enable = savedSettings["debug"]
+        Debug.SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
 
         --New version requires settings reset
         if defaults.version ~= savedSettings["version"] then
@@ -82,17 +84,18 @@ local function loadSettings()
             end
         end
     else
-        Debug.enable = settings["debug"]
+        Debug.SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
         settings = defaultSettings
         saveSettings()
     end
 
     if settings.debug then
-        Debug.Log(string.format('%s v%s Settings', 'Advanced Path Tracing', settings.version))
-        Debug.Log(Debug.Parse(settings))
+        Debug.Debug(string.format('%s Settings', 'Advanced Path Tracing'))
+        Debug.Debug(Debug.Parse(settings))
     end
 end
 
+---Confirm game changes and refresh NativeSettings
 local function pushChanges()
     Game.GetSettingsSystem():ConfirmChanges()
     Cron.After(0.25, function()
@@ -102,6 +105,7 @@ local function pushChanges()
     end)
 end
 
+---Refresh Ray Reconstruction if preset or sharpness was changed
 local function refreshDLSSD()
     previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
     previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
@@ -114,12 +118,16 @@ local function refreshDLSSD()
     end)
 end
 
+---Check for Ray Reconstruction changes in preset or sharpness
+---@return boolean
 local function hasDLSSDChanged()
     return previous["hasDLSSD"] ~= runtime.hasDLSSD
             or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
             or previous["dlssSharpness"] ~= GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
 end
 
+---Set Ray Reconstruction particles control detection
+---@param enableDLSSDParticles boolean
 function setDLSSDParticlesControl(enableDLSSDParticles)
     settings.enableDLSSDParticles = enableDLSSDParticles
     if not runtime.particleTimer and enableDLSSDParticles then
@@ -156,6 +164,8 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
     end
 end
 
+---Set NRD denoiser control (timer only)
+---@param enableNRDControl boolean
 function setNRDControl(enableNRDControl)
     settings.enableNRDControl = enableNRDControl
     if not runtime.nrdTimer and enableNRDControl then
@@ -177,11 +187,14 @@ function setNRDControl(enableNRDControl)
     end
 end
 
+---Set Refresh Game control (timer only)
+---@param refreshGame boolean
 function setRefreshControl(refreshGame)
     settings.refreshGame = refreshGame
     runtime.refreshGame = refreshGame
     if settings.refreshInterval > 0 then
         if not runtime.refreshTimer and refreshGame then
+            --In minutes
             runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
                 Debug.Info("Enabling Refresh Game for the next time")
                 runtime.refreshGame = true
@@ -200,6 +213,8 @@ function setRefreshControl(refreshGame)
     end
 end
 
+---Set a new interval for the Refresh Game control. Will reset current timer
+---@param time number
 function setRefreshTime(time)
     if runtime.refreshTimer then
         Cron.Halt(runtime.refreshTimer)
@@ -209,6 +224,7 @@ function setRefreshTime(time)
     setRefreshControl(settings.refreshGame)
 end
 
+---Set ReGIR PT mode. ReGIR will be enabled after a fast timeout * 1.5
 local function setReGIR()
     Debug.Info("Disabling ReGIR")
     GameSettings.Set("Editor/ReGIR", "UseForDI", "false")
@@ -226,6 +242,7 @@ local function setReGIR()
     end
 end
 
+---Set ReSTIR PT mode. Will trigger ReGIR if enabled, and also refreshes Ray Reconstruction
 local function setReSTIR()
     if runtime.enableReSTIR then
         Debug.Info("Enabling ReSTIR")
@@ -248,18 +265,24 @@ local function setReSTIR()
     end)
 end
 
+---Set the PT Ray Number. Only works in ReSTIR DI mode
+---@param number integer
 function setRayNumber(number)
     Debug.Info("Setting Ray Number")
     settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
 end
 
+---Set the PT Ray Bounce Number. Only works in ReSTIR DI mode
+---@param number integer
 function setRayBounce(number)
     Debug.Info("Setting Ray Bounce")
     settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
 
+---Set PT mode
+---@param modeIndex integer --the index of PT mode
 function setPTMode(modeIndex)
     settings.ptModeIndex = modeIndex
 
@@ -285,24 +308,31 @@ function setPTMode(modeIndex)
     end
 end
 
+---Set PT Quality
+---@param qualityIndex any --the PT quality index
 function setPTQuality(qualityIndex)
     Debug.Info("Setting Path Tracing Quality")
     settings.ptQualityIndex = qualityIndex
     GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
 
+---Set PT optimizations
+---@param optimizations boolean
 function setPTOptimizations(optimizations)
     Debug.Info("Setting Path Tracing Optimizations")
     settings.ptOptimizations = optimizations
     GameSettings.SetAll(ptQuality.optimizations[optimizations])
 end
 
+---Set self reflections to show or not
+---@param selfReflection boolean
 function setSelfReflection(selfReflection)
     Debug.Info("Setting Self Reflection")
     settings.selfReflection = selfReflection
     GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
 end
 
+---Setup Native Settings menu
 local function setNativeSettings()
     NativeSettings = GetMod("nativeSettings")
 
@@ -355,17 +385,13 @@ local function setNativeSettings()
     end
 end
 
-local function refreshSettings()
+---Update Runtime mod state and refresh settings
+local function updateRuntime()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
     if not runtime.hasDLSSD then
         NativeSettings.setOption(modOptions.options["NRD"], false)
-    end
-
-    if hasDLSSDChanged() then
-        Debug.Info('DLSSD has changed')
-        runtime.reGIRApplied = false
     end
 
     if runtime.firstLoad then
@@ -374,41 +400,35 @@ local function refreshSettings()
     end
 
     if GameSettings.HasPathTracing() then
+        if hasDLSSDChanged() then
+            Debug.Info('DLSSD has changed')
+            runtime.reGIRApplied = false
+        end
         setReSTIR()
     end
 
-    --[[
-    --Use AMM or TPP instead, since requires change game assets
-    if not runtime.fppHeadAdded then
-        if settings.selfReflection then
-            runtime.fppHeadAdded = true
-            Cron.After(1.0, function()
-                Debug.Info("Adding FPP Head")
-                GameSettings.AddFPPHead()
-            end)
-        else
-            Debug.Info("Removing FPP Head")
-            GameSettings.RemoveFPPHead()
-        end
-    end
-    --]]
-
     if settings.refreshGame then
         if not runtime.refreshGame then
+            --It could refresh but hasn't passed enough time
             Debug.Info("Won't Refresh now")
         elseif not GameSettings.CanRefresh() then
+            --Should not refresh due to limited gameplay scene
             Debug.Info("Can't Refresh now")
         else
+            --Always refresh
             if settings.refreshInterval > 0 then
                 runtime.refreshGame = false
             end
-            Cron.After(0.1, function()
+
+            --Wait a bit for the first load
+            Cron.After(0.15, function()
                 GameSettings.RefreshGame(settings.refreshPauseTimeout)
             end)
         end
     end
 end
 
+---Set runtime mod state controls and events
 local function setRuntime()
     GameUI.Listen(function(state)
         --GameUI.PrintState(state)
@@ -419,7 +439,7 @@ local function setRuntime()
 
         --Reset Refresh Control
         setRefreshTime(settings.refreshInterval)
-        refreshSettings()
+        updateRuntime()
     end)
     GameUI.OnSessionEnd(function(state)
         runtime.inGame = false
@@ -430,7 +450,7 @@ local function setRuntime()
     end)
     GameUI.OnMenuClose(function(state)
         if runtime.inGame then
-            refreshSettings()
+            updateRuntime()
         end
     end)
     GameUI.Listen("MenuNav", function(state)
@@ -458,8 +478,9 @@ registerForEvent('onInit', function()
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
         setRefreshControl(settings.refreshGame)
+        Debug.Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
     else
-        error('Failed to load Advanced Path Tracing: NativeSettings missing')
+        Debug.Error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
 end)
 
