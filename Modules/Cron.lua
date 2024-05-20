@@ -2,10 +2,12 @@
 Cron.lua
 Timed Tasks Manager
 
+Modded by codecrafting-io
+
 Copyright (c) 2021 psiberx
 ]]
 
-local Cron = { version = '1.0.2' }
+local Cron = { version = '1.0.3' }
 
 local timers = {}
 local counter = 0
@@ -13,7 +15,7 @@ local counter = 0
 ---@param timeout number
 ---@param recurring boolean
 ---@param callback function
----@param args
+---@param args any | "function() end"
 ---@return any
 local function addTimer(timeout, recurring, callback, args)
 	if type(timeout) ~= 'number' then
@@ -79,7 +81,7 @@ end
 
 ---@param timeout number
 ---@param callback function
----@param data
+---@param data any | "function() end"
 ---@return any
 function Cron.After(timeout, callback, data)
 	return addTimer(timeout, false, callback, data)
@@ -87,14 +89,14 @@ end
 
 ---@param timeout number
 ---@param callback function
----@param data
+---@param data any | "function() end"
 ---@return any
 function Cron.Every(timeout, callback, data)
 	return addTimer(timeout, true, callback, data)
 end
 
 ---@param callback function
----@param data
+---@param data any | "function() end"
 ---@return any
 function Cron.NextTick(callback, data)
 	return addTimer(0, false, callback, data)

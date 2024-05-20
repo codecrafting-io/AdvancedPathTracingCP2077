@@ -1,4 +1,4 @@
-local ptQuality = {
+return {
     settings = {
         --Vanilla
         [1] = {
@@ -124,7 +124,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxReservoirAge",
-                value       = "24"
+                value       = "20"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -144,7 +144,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialSamplingRadius",
-                value       = "12.0"
+                value       = "14.0"
             },
 
             --RTXDI
@@ -316,7 +316,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxReservoirAge",
-                value       = "20"
+                value       = "32"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -336,7 +336,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialSamplingRadius",
-                value       = "32.0"
+                value       = "24.0"
             },
 
             --RTXDI
@@ -412,7 +412,7 @@ local ptQuality = {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxReservoirAge",
-                value       = "24"
+                value       = "32"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -680,5 +680,3 @@ local ptQuality = {
         }
     }
 }
-
-return ptQuality

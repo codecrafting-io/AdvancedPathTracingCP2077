@@ -18,7 +18,7 @@ return {
             index = 'PT_MODE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Mode',
-            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR.",
+            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR",
             range = {
                 [1] = "ReSTIR DI",
                 [2] = "ReSTIR DI/GI",
@@ -34,7 +34,7 @@ return {
             index = 'PT_QUALITY',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavy but less noise and higher quality. Disables SHARC bounce cache.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavier but less noise and higher quality. Disables SHARC bounce cache.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",

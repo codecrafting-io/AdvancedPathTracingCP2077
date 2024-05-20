@@ -1,4 +1,5 @@
 /dist
+/.vscode
 settings.json
 *.log
 *.sqlite3

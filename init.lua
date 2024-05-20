@@ -14,12 +14,12 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
-AdvancedPathTracing = { version = "0.2.2" }
 settings = {}
 Cron = require("Modules/Cron")
 GameUI = require("Modules/GameUI")
 GameSettings = require("Modules/GameSettings")
 
+local settingsFilename = "settings.json"
 local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
@@ -45,9 +45,13 @@ local function saveSettings()
     local validJson, contents = pcall(function() return json.encode(settings) end)
 
     if validJson and contents ~= nil then
-        local file = io.open("settings.json", "w+")
-        file:write(contents)
-        file:close()
+        local file = io.open(settingsFilename, "w+")
+        if file ~= nil then
+            file:write(contents)
+            file:close()
+        else
+            error("Failed to save settings file '" .. settingsFilename .. "'")
+        end
     end
 end
 
@@ -402,7 +406,7 @@ local function refreshSettings()
     end
 end
 
-function setRuntime()
+local function setRuntime()
     GameUI.Listen(function(state)
         --GameUI.PrintState(state)
     end)
