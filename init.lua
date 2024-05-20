@@ -23,7 +23,7 @@ local settingsFilename = "settings.json"
 local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
-local Utils = require("Modules/Utils")
+local Debug = require("Modules/Debug")
 local NativeSettings = {}
 local modOptions = require("modOptions")
 local runtime = {
@@ -41,7 +41,7 @@ local runtime = {
 }
 
 local function saveSettings()
-    Utils.DebugMessage("Saving Settings")
+    Debug.Info("Saving Settings")
     local validJson, contents = pcall(function() return json.encode(settings) end)
 
     if validJson and contents ~= nil then
@@ -56,22 +56,23 @@ local function saveSettings()
 end
 
 local function loadSettings()
-    defaultSettings = Utils.Clone(defaults)
-    Utils.DebugMessage("Loading Settings")
-    local file = io.open('settings.json', 'r')
+    local file = io.open(settingsFilename, 'r')
+    defaultSettings = Debug.Clone(defaults)
+    Debug.Log('Loading settings file ' .. settingsFilename)
 
     if file ~= nil then
         local contents = file:read("*a")
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
+        Debug.enable = savedSettings["debug"]
 
         --New version requires settings reset
         if defaults.version ~= savedSettings["version"] then
-            Utils.DebugMessage("New Version " .. defaults.version)
+            Debug.Info("New Version " .. defaults.version)
             settings = defaultSettings
             saveSettings()
         elseif validJson then
-            settings = Utils.Clone(savedSettings)
+            settings = Debug.Clone(savedSettings)
 
             --Validate timings
             if settings.slowTimeout < settings.fastTimeout then
@@ -81,12 +82,14 @@ local function loadSettings()
             end
         end
     else
+        Debug.enable = settings["debug"]
         settings = defaultSettings
         saveSettings()
     end
 
     if settings.debug then
-        Utils.Dump(settings)
+        Debug.Log(string.format('%s v%s Settings', 'Advanced Path Tracing', settings.version))
+        Debug.Log(Debug.Parse(settings))
     end
 end
 
@@ -102,7 +105,7 @@ end
 local function refreshDLSSD()
     previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
     previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
-    Utils.DebugMessage("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
+    Debug.Info("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
     Cron.After(settings.fastTimeout, function()
@@ -132,10 +135,10 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
                     previous["isIndoors"] = isIndoors
 
                     if isIndoors or isRaining then
-                        Utils.DebugMessage("It's raining or is indoors. Enabling DLSSD separate particle color")
+                        Debug.Info("It's raining or is indoors. Enabling DLSSD separate particle color")
                         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
                     else
-                        Utils.DebugMessage("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
+                        Debug.Info("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
                         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
                     end
                 end
@@ -159,7 +162,7 @@ function setNRDControl(enableNRDControl)
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
             if runtime.inGame and runtime.hasDLSSD then
-                Utils.DebugMessage("Disabling NRD")
+                Debug.Info("Disabling NRD")
                 GameSettings.Set("RayTracing", "EnableNRD", "false")
             end
         end)
@@ -180,12 +183,12 @@ function setRefreshControl(refreshGame)
     if settings.refreshInterval > 0 then
         if not runtime.refreshTimer and refreshGame then
             runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
-                Utils.DebugMessage("Enabling Refresh Game for the next time")
+                Debug.Info("Enabling Refresh Game for the next time")
                 runtime.refreshGame = true
             end)
         end
     elseif refreshGame then
-        Utils.DebugMessage("Enabling Refresh Game every time")
+        Debug.Info("Enabling Refresh Game every time")
     end
 
     if refreshGame then
@@ -207,7 +210,7 @@ function setRefreshTime(time)
 end
 
 local function setReGIR()
-    Utils.DebugMessage("Disabling ReGIR")
+    Debug.Info("Disabling ReGIR")
     GameSettings.Set("Editor/ReGIR", "UseForDI", "false")
     GameSettings.Set("Editor/ReGIR", "Enable", "false")
 
@@ -215,7 +218,7 @@ local function setReGIR()
 
         --Regir requires to wait a bit before be enabled
         Cron.After(settings.fastTimeout * 1.5, function()
-            Utils.DebugMessage("Enabling ReGIR")
+            Debug.Info("Enabling ReGIR")
             runtime.reGIRApplied = true
             GameSettings.Set("Editor/ReGIR", "Enable", "true")
             GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
@@ -225,10 +228,10 @@ end
 
 local function setReSTIR()
     if runtime.enableReSTIR then
-        Utils.DebugMessage("Enabling ReSTIR")
+        Debug.Info("Enabling ReSTIR")
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "true")
     else
-        Utils.DebugMessage("Disabling ReSTIR")
+        Debug.Info("Disabling ReSTIR")
         runtime.enableReGIR = false
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "false")
     end
@@ -246,13 +249,13 @@ local function setReSTIR()
 end
 
 function setRayNumber(number)
-    Utils.DebugMessage("Setting Ray Number")
+    Debug.Info("Setting Ray Number")
     settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
 end
 
 function setRayBounce(number)
-    Utils.DebugMessage("Setting Ray Bounce")
+    Debug.Info("Setting Ray Bounce")
     settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
@@ -283,19 +286,19 @@ function setPTMode(modeIndex)
 end
 
 function setPTQuality(qualityIndex)
-    Utils.DebugMessage("Setting Path Tracing Quality")
+    Debug.Info("Setting Path Tracing Quality")
     settings.ptQualityIndex = qualityIndex
     GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
 
 function setPTOptimizations(optimizations)
-    Utils.DebugMessage("Setting Path Tracing Optimizations")
+    Debug.Info("Setting Path Tracing Optimizations")
     settings.ptOptimizations = optimizations
     GameSettings.SetAll(ptQuality.optimizations[optimizations])
 end
 
 function setSelfReflection(selfReflection)
-    Utils.DebugMessage("Setting Self Reflection")
+    Debug.Info("Setting Self Reflection")
     settings.selfReflection = selfReflection
     GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
 end
@@ -361,12 +364,12 @@ local function refreshSettings()
     end
 
     if hasDLSSDChanged() then
-        Utils.DebugMessage('DLSSD has changed')
+        Debug.Info('DLSSD has changed')
         runtime.reGIRApplied = false
     end
 
     if runtime.firstLoad then
-        Utils.DebugMessage('First Load')
+        Debug.Info('First Load')
         runtime.firstLoad = false
     end
 
@@ -380,11 +383,11 @@ local function refreshSettings()
         if settings.selfReflection then
             runtime.fppHeadAdded = true
             Cron.After(1.0, function()
-                Utils.DebugMessage("Adding FPP Head")
+                Debug.Info("Adding FPP Head")
                 GameSettings.AddFPPHead()
             end)
         else
-            Utils.DebugMessage("Removing FPP Head")
+            Debug.Info("Removing FPP Head")
             GameSettings.RemoveFPPHead()
         end
     end
@@ -392,9 +395,9 @@ local function refreshSettings()
 
     if settings.refreshGame then
         if not runtime.refreshGame then
-            Utils.DebugMessage("Won't Refresh now")
+            Debug.Info("Won't Refresh now")
         elseif not GameSettings.CanRefresh() then
-            Utils.DebugMessage("Can't Refresh now")
+            Debug.Info("Can't Refresh now")
         else
             if settings.refreshInterval > 0 then
                 runtime.refreshGame = false

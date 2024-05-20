@@ -1,4 +1,4 @@
-local Utils = require("Modules/Utils")
+local Debug = require("Modules/Debug")
 local GameHUD = require("Modules/GameHUD")
 local GameUI = require("Modules/GameUI")
 local Cron = require("Modules/Cron")
@@ -14,6 +14,8 @@ local gameRestrictions = {
     "GameplayRestriction.NoWorldInteractions",
     "GameplayRestriction.NoPhotoMode"
 }
+
+Debug.enable = settings.debug
 
 function GameSettings.ApplyGameStatus(effect)
     Game.GetStatusEffectSystem():ApplyStatusEffect(GetPlayer():GetEntityID(), effect, GetPlayer():GetRecordID(), GetPlayer():GetEntityID())
@@ -118,7 +120,7 @@ function GameSettings.RefreshGame(timeout)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
 
-    Utils.DebugMessage("Refreshing the game")
+    Debug.Info("Refreshing the game")
     GameHUD.ShowMessage("REFRESHING")
 
     --Camera Movement
@@ -140,7 +142,7 @@ function GameSettings.RefreshGame(timeout)
 
         GameSettings.UnsetTimeDilation()
         GameHUD.ShowMessage("REFRESH DONE")
-        Utils.DebugMessage("Refreshing done")
+        Debug.Info("Refreshing done")
     end)
 end
 
