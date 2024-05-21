@@ -71,7 +71,7 @@ The mod save your preferences in the `settings.json` file.
 | enableNRDControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
-| sharc | boolean | true | Wheter or not to enable NVIDIA's SHARC |
+| sharc | boolean | false | Wheter or not to enable NVIDIA's SHARC |
 | fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |

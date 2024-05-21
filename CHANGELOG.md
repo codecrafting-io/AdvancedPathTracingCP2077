@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.0
+
+- Improved log system
+- Minor code refactor
+- Minor revision for PT Quality settings
+- Separate NVIDIA SHARC from PT quality into its own setting
+
 ## v0.2.3
 
 - Improved refresh game logic

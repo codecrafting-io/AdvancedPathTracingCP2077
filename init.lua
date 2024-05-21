@@ -24,7 +24,7 @@ local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
 local Debug = require("Modules/Debug")
-local NativeSettings = {}
+local NativeSettings = nil
 local modOptions = require("modOptions")
 local runtime = {
     firstLoad = true,
@@ -84,7 +84,7 @@ local function loadSettings()
             end
         end
     else
-        Debug.SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
+        Debug.SetLogLevel(defaultSettings["debug"] and Debug.INFO or Debug.ERROR)
         settings = defaultSettings
         saveSettings()
     end

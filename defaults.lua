@@ -2,7 +2,7 @@ return {
     version = '0.3.0',
     debug = false,
 	enableNRDControl = true,
-    sharc = true,
+    sharc = false,
     rayNumber = 2,
     rayBounce = 2,
 	fastTimeout = 1.0,
