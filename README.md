@@ -29,6 +29,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
   - Minor GI/DI light behavior optimizations
+- NVIDIA SHARC: Enable NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. According to NVIDIA, this is designed to improve signal quality and performance and works in world space. This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. This may result in slight differences in light bounce, shadows and performance may vary. Scales with path tracing quality.
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
 - Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
@@ -37,7 +38,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 - Refresh Game: The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. The mod will skip the refresh if a limited gameplay scene is detected. Disabled by default.
 - Refresh Game Interval: The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 
-**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially at balanced quality or below) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
+**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
@@ -66,10 +67,11 @@ The mod save your preferences in the `settings.json` file.
 
 | name | type | default | description |
 | ---- | ---- | ------- | ----------- |
-| degug | boolean | false | Enables extra messages on the CET console |
+| degug | boolean | false | Enables extra log messages |
 | enableNRDControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
+| sharc | boolean | true | Wheter or not to enable NVIDIA's SHARC |
 | fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
 | refreshGame | int | false | Wheter or not Auto Refresh Game |

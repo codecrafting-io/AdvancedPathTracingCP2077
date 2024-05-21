@@ -34,7 +34,7 @@ return {
             index = 'PT_QUALITY',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavier but less noise and higher quality. Disables SHARC bounce cache.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",
@@ -47,6 +47,18 @@ return {
                 setPTQuality(state)
             end,
             typeFunction = 'addSelectorString'
+        },
+        {
+            index = 'PT_SHARC',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'NVIDIA SHARC',
+            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Enabled is the vanilla mode. Scales with PT Quality. Disables when using ReGIR. Performance and visual quality vary",
+            range = nil,
+            value = "sharc",
+            stateCallback = function(state)
+                setSharc(state)
+            end,
+            typeFunction = 'addSwitch'
         },
         {
             index = 'PT_OPTIMIZATIONS',

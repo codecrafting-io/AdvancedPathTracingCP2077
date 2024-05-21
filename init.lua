@@ -245,10 +245,10 @@ end
 ---Set ReSTIR PT mode. Will trigger ReGIR if enabled, and also refreshes Ray Reconstruction
 local function setReSTIR()
     if runtime.enableReSTIR then
-        Debug.Info("Enabling ReSTIR")
+        Debug.Info("Enabling ReSTIRGI")
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "true")
     else
-        Debug.Info("Disabling ReSTIR")
+        Debug.Info("Disabling ReSTIRGI")
         runtime.enableReGIR = false
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "false")
     end
@@ -281,6 +281,19 @@ function setRayBounce(number)
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
 
+---Set NVIDIA's SHARC
+---@param sharc boolean
+function setSharc(sharc)
+    settings.sharc = sharc
+
+    if not (runtime.reGIRApplied or runtime.enableReGIR) then
+        Debug.Info("Setting SHARC")
+        GameSettings.Set("Editor/SHARC", "Enable", tostring(sharc))
+    else
+        Debug.Info("Skipping SHARC because ReGIR is enabled")
+    end
+end
+
 ---Set PT mode
 ---@param modeIndex integer --the index of PT mode
 function setPTMode(modeIndex)
@@ -292,19 +305,25 @@ function setPTMode(modeIndex)
 
     if settings.ptModeIndex == 1 then
         --ReSTIR DI
+        Debug.Info("Setting Path Tracing Mode: ReSTIR DI")
         runtime.enableReGIR = false
         runtime.enableReSTIR = false
         runtime.reGIRApplied = false
+        GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     elseif settings.ptModeIndex == 2 then
         --ReSTIR DI/GI
+        Debug.Info("Setting Path Tracing Mode: ReSTIR DI/GI")
         runtime.enableReGIR = false
         runtime.reGIRApplied = false
         runtime.enableReSTIR = true
+        GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     else
         --ReGIR DI/GI
+        Debug.Info("Setting Path Tracing Mode: ReGIR DI")
         previous["hasDLSSD"] = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
+        GameSettings.Set("Editor/SHARC", "Enable", "false")
     end
 end
 

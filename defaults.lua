@@ -1,7 +1,8 @@
 return {
-    version = '0.2.4',
+    version = '0.3.0',
     debug = false,
 	enableNRDControl = true,
+    sharc = true,
     rayNumber = 2,
     rayBounce = 2,
 	fastTimeout = 1.0,

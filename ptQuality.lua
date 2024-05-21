@@ -74,11 +74,13 @@ return {
             },
 
             --SHARC
+            --[[
             {
                 category    = "Editor/SHARC",
                 name        = "Enable",
                 value       = "true"
             },
+            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -170,11 +172,13 @@ return {
             },
 
             --SHARC
+            --[[
             {
                 category    = "Editor/SHARC",
                 name        = "Enable",
                 value       = "true"
             },
+            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -183,7 +187,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "7"
+                value       = "30"
             },
             {
                 category    = "Editor/SHARC",
@@ -266,11 +270,13 @@ return {
             },
 
             --SHARC
+            --[[
             {
                 category    = "Editor/SHARC",
                 name        = "Enable",
                 value       = "true"
             },
+            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -279,7 +285,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "7"
+                value       = "30"
             },
             {
                 category    = "Editor/SHARC",
@@ -362,11 +368,13 @@ return {
             },
 
             --SHARC
+            --[[
             {
                 category    = "Editor/SHARC",
                 name        = "Enable",
                 value       = "false"
             },
+            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -375,12 +383,12 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "5"
+                value       = "30"
             },
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "60.0"
+                value       = "45.0"
             }
         },
 
@@ -458,11 +466,13 @@ return {
             },
 
             --SHARC
+            --[[
             {
                 category    = "Editor/SHARC",
                 name        = "Enable",
                 value       = "false"
             },
+            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -471,12 +481,12 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "3"
+                value       = "30"
             },
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "100.0"
+                value       = "60.0"
             }
         }
     },
