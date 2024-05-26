@@ -42,7 +42,7 @@ local runtime = {
 
 ---Save mod settings to the file
 local function saveSettings()
-    Debug.Info("Saving Settings")
+    Debug:Info("Saving Settings")
     local validJson, contents = pcall(function() return json.encode(settings) end)
 
     if validJson and contents ~= nil then
@@ -51,7 +51,7 @@ local function saveSettings()
             file:write(contents)
             file:close()
         else
-            Debug.Error("Failed to save settings file '" .. settingsFilename .. "'")
+            Debug:Error("Failed to save settings file '" .. settingsFilename .. "'")
         end
     end
 end
@@ -59,22 +59,22 @@ end
 ---Load mod settings from the file
 local function loadSettings()
     local file = io.open(settingsFilename, 'r')
-    defaultSettings = Debug.Clone(defaults)
-    Debug.Log('Loading settings file ' .. settingsFilename)
+    defaultSettings = Debug:Clone(defaults)
+    Debug:Log('Loading settings file ' .. settingsFilename)
 
     if file ~= nil then
         local contents = file:read("*a")
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
-        Debug.SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
+        Debug:SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
 
         --New version requires settings reset
         if defaults.version ~= savedSettings["version"] then
-            Debug.Info("New Version " .. defaults.version)
+            Debug:Info("New Version " .. defaults.version)
             settings = defaultSettings
             saveSettings()
         elseif validJson then
-            settings = Debug.Clone(savedSettings)
+            settings = Debug:Clone(savedSettings)
 
             --Validate timings
             if settings.slowTimeout < settings.fastTimeout then
@@ -84,14 +84,14 @@ local function loadSettings()
             end
         end
     else
-        Debug.SetLogLevel(defaultSettings["debug"] and Debug.INFO or Debug.ERROR)
+        Debug:SetLogLevel(defaultSettings["debug"] and Debug.INFO or Debug.ERROR)
         settings = defaultSettings
         saveSettings()
     end
 
     if settings.debug then
-        Debug.Debug(string.format('%s Settings', 'Advanced Path Tracing'))
-        Debug.Debug(Debug.Parse(settings))
+        Debug:Debug(string.format('%s Settings', 'Advanced Path Tracing'))
+        Debug:Debug(Debug:Parse(settings))
     end
 end
 
@@ -109,7 +109,7 @@ end
 local function refreshDLSSD()
     previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
     previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
-    Debug.Info("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
+    Debug:Info("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
     Cron.After(settings.fastTimeout, function()
@@ -143,10 +143,10 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
                     previous["isIndoors"] = isIndoors
 
                     if isIndoors or isRaining then
-                        Debug.Info("It's raining or is indoors. Enabling DLSSD separate particle color")
+                        Debug:Info("It's raining or is indoors. Enabling DLSSD separate particle color")
                         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "true")
                     else
-                        Debug.Info("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
+                        Debug:Info("It's not raining and it's outdoors. Disabling DLSSD separate particle color")
                         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
                     end
                 end
@@ -172,7 +172,7 @@ function setNRDControl(enableNRDControl)
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
             if runtime.inGame and runtime.hasDLSSD then
-                Debug.Info("Disabling NRD")
+                Debug:Info("Disabling NRD")
                 GameSettings.Set("RayTracing", "EnableNRD", "false")
             end
         end)
@@ -196,12 +196,12 @@ function setRefreshControl(refreshGame)
         if not runtime.refreshTimer and refreshGame then
             --In minutes
             runtime.refreshTimer = Cron.Every(settings.refreshInterval * 60, function()
-                Debug.Info("Enabling Refresh Game for the next time")
+                Debug:Info("Enabling Refresh Game for the next time")
                 runtime.refreshGame = true
             end)
         end
     elseif refreshGame then
-        Debug.Info("Enabling Refresh Game every time")
+        Debug:Info("Enabling Refresh Game every time")
     end
 
     if refreshGame then
@@ -226,7 +226,7 @@ end
 
 ---Set ReGIR PT mode. ReGIR will be enabled after a fast timeout * 1.5
 local function setReGIR()
-    Debug.Info("Disabling ReGIR")
+    Debug:Info("Disabling ReGIR")
     GameSettings.Set("Editor/ReGIR", "UseForDI", "false")
     GameSettings.Set("Editor/ReGIR", "Enable", "false")
 
@@ -234,7 +234,7 @@ local function setReGIR()
 
         --Regir requires to wait a bit before be enabled
         Cron.After(settings.fastTimeout * 1.5, function()
-            Debug.Info("Enabling ReGIR")
+            Debug:Info("Enabling ReGIR")
             runtime.reGIRApplied = true
             GameSettings.Set("Editor/ReGIR", "Enable", "true")
             GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
@@ -245,10 +245,10 @@ end
 ---Set ReSTIR PT mode. Will trigger ReGIR if enabled, and also refreshes Ray Reconstruction
 local function setReSTIR()
     if runtime.enableReSTIR then
-        Debug.Info("Enabling ReSTIRGI")
+        Debug:Info("Enabling ReSTIRGI")
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "true")
     else
-        Debug.Info("Disabling ReSTIRGI")
+        Debug:Info("Disabling ReSTIRGI")
         runtime.enableReGIR = false
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "false")
     end
@@ -268,7 +268,7 @@ end
 ---Set the PT Ray Number. Only works in ReSTIR DI mode
 ---@param number integer
 function setRayNumber(number)
-    Debug.Info("Setting Ray Number")
+    Debug:Info("Setting Ray Number")
     settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
 end
@@ -276,7 +276,7 @@ end
 ---Set the PT Ray Bounce Number. Only works in ReSTIR DI mode
 ---@param number integer
 function setRayBounce(number)
-    Debug.Info("Setting Ray Bounce")
+    Debug:Info("Setting Ray Bounce")
     settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
 end
@@ -287,15 +287,15 @@ function setSharc(sharc)
     settings.sharc = sharc
 
     if not (runtime.reGIRApplied or runtime.enableReGIR) then
-        Debug.Info("Setting SHARC")
+        Debug:Info("Setting SHARC")
         GameSettings.Set("Editor/SHARC", "Enable", tostring(sharc))
     else
-        Debug.Info("Skipping SHARC because ReGIR is enabled")
+        Debug:Info("Skipping SHARC because ReGIR is enabled")
     end
 end
 
 ---Set PT mode
----@param modeIndex integer --the index of PT mode
+---@param modeIndex integer the index of PT mode
 function setPTMode(modeIndex)
     settings.ptModeIndex = modeIndex
 
@@ -305,21 +305,21 @@ function setPTMode(modeIndex)
 
     if settings.ptModeIndex == 1 then
         --ReSTIR DI
-        Debug.Info("Setting Path Tracing Mode: ReSTIR DI")
+        Debug:Info("Setting Path Tracing Mode: ReSTIR DI")
         runtime.enableReGIR = false
         runtime.enableReSTIR = false
         runtime.reGIRApplied = false
         GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     elseif settings.ptModeIndex == 2 then
         --ReSTIR DI/GI
-        Debug.Info("Setting Path Tracing Mode: ReSTIR DI/GI")
+        Debug:Info("Setting Path Tracing Mode: ReSTIR DI/GI")
         runtime.enableReGIR = false
         runtime.reGIRApplied = false
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     else
         --ReGIR DI/GI
-        Debug.Info("Setting Path Tracing Mode: ReGIR DI")
+        Debug:Info("Setting Path Tracing Mode: ReGIR DI")
         previous["hasDLSSD"] = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
@@ -328,9 +328,9 @@ function setPTMode(modeIndex)
 end
 
 ---Set PT Quality
----@param qualityIndex any --the PT quality index
+---@param qualityIndex any the PT quality index
 function setPTQuality(qualityIndex)
-    Debug.Info("Setting Path Tracing Quality")
+    Debug:Info("Setting Path Tracing Quality")
     settings.ptQualityIndex = qualityIndex
     GameSettings.SetAll(ptQuality.settings[qualityIndex])
 end
@@ -338,7 +338,7 @@ end
 ---Set PT optimizations
 ---@param optimizations boolean
 function setPTOptimizations(optimizations)
-    Debug.Info("Setting Path Tracing Optimizations")
+    Debug:Info("Setting Path Tracing Optimizations")
     settings.ptOptimizations = optimizations
     GameSettings.SetAll(ptQuality.optimizations[optimizations])
 end
@@ -346,7 +346,7 @@ end
 ---Set self reflections to show or not
 ---@param selfReflection boolean
 function setSelfReflection(selfReflection)
-    Debug.Info("Setting Self Reflection")
+    Debug:Info("Setting Self Reflection")
     settings.selfReflection = selfReflection
     GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
 end
@@ -414,13 +414,13 @@ local function updateRuntime()
     end
 
     if runtime.firstLoad then
-        Debug.Info('First Load')
+        Debug:Info('First Load')
         runtime.firstLoad = false
     end
 
     if GameSettings.HasPathTracing() then
         if hasDLSSDChanged() then
-            Debug.Info('DLSSD has changed')
+            Debug:Info('DLSSD has changed')
             runtime.reGIRApplied = false
         end
         setReSTIR()
@@ -429,10 +429,10 @@ local function updateRuntime()
     if settings.refreshGame then
         if not runtime.refreshGame then
             --It could refresh but hasn't passed enough time
-            Debug.Info("Won't Refresh now")
+            Debug:Info("Won't Refresh now")
         elseif not GameSettings.CanRefresh() then
             --Should not refresh due to limited gameplay scene
-            Debug.Info("Can't Refresh now")
+            Debug:Info("Can't Refresh now")
         else
             --Always refresh
             if settings.refreshInterval > 0 then
@@ -497,9 +497,9 @@ registerForEvent('onInit', function()
         setDLSSDParticlesControl(settings.enableDLSSDParticles)
         setNRDControl(settings.enableNRDControl)
         setRefreshControl(settings.refreshGame)
-        Debug.Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
+        Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
     else
-        Debug.Error('Failed to load Advanced Path Tracing: NativeSettings missing')
+        Debug:Error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
 end)
 

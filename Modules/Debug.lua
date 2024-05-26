@@ -10,7 +10,7 @@ local Debug = {
 local logLevel = Debug.NONE
 
 ---Parse userdata data type
----@param t userdata|CName|string
+---@param t userdata | CName | string
 ---@return any
 local function parseUserData(t)
     local tstr = tostring(t)
@@ -35,13 +35,12 @@ end
 
 ---Parse objects deeply
 ---@param t any --The object
----@param max integer --Max number of objects to parse
----@param depth integer --The depth max to iterate recursively
+---@param max? integer --Max number of objects to parse
+---@param depth? integer --The depth max to iterate recursively
 ---@return string
 local function parseDeep(t, max, depth)
 
     if type(t) ~= 'table' then
-
         if type(t) == 'userdata' then
             t = parseUserData(t)
         end
@@ -105,7 +104,7 @@ end
 ---@param orig any
 ---@param copies any
 ---@return any
-function Debug.Clone(orig, copies)
+function Debug:Clone(orig, copies)
 
     local orig_type = type(orig)
     local copy
@@ -118,9 +117,9 @@ function Debug.Clone(orig, copies)
             copy = {}
             copies[orig] = copy
             for orig_key, orig_value in next, orig, nil do
-                copy[Debug.Clone(orig_key, copies)] = Debug.Clone(orig_value, copies)
+                copy[self:Clone(orig_key, copies)] = self:Clone(orig_value, copies)
             end
-            setmetatable(copy, Debug.Clone(getmetatable(orig), copies))
+            setmetatable(copy, self:Clone(getmetatable(orig), copies))
         end
     else -- number, string, boolean, etc
         copy = orig
@@ -132,7 +131,7 @@ end
 ---Parse variables
 ---@param ... unknown
 ---@return string
-function Debug.Parse(...)
+function Debug:Parse(...)
     local args = {}
     local output = ""
 
@@ -153,35 +152,35 @@ end
 ---Set log level between INFO, DEBUG, WARNING, ERROR, NONE. Returns itself
 ---@param level integer
 ---@return Debug
-function Debug.SetLogLevel(level)
+function Debug:SetLogLevel(level)
     if type(level) == "number" and level >= 1 and level <= 5 then
         logLevel = level
     end
 
-    return Debug
+    return self
 end
 
 ---Log a message to the file. If logLevel <= INFO also logs to the console
 ---@param msg any
-function Debug.Log(msg)
+function Debug:Log(msg)
     spdlog.info(string.format('[%s] %s', 'INFO', msg))
-    if logLevel <= Debug.INFO then
+    if logLevel <= self.INFO then
         print(string.format('[[[ %s ]]]', msg))
     end
 end
 
 ---Log INFO messages
 ---@param msg string
-function Debug.Info(msg)
-    if logLevel <= Debug.INFO then
+function Debug:Info(msg)
+    if logLevel <= self.INFO then
         print(string.format('[[[ %s ]]]', msg))
     end
 end
 
 ---Log DEBUG messages
 ---@param msg string
-function Debug.Debug(msg)
-    if logLevel <= Debug.DEBUG then
+function Debug:Debug(msg)
+    if logLevel <= self.DEBUG then
         print(string.format('[[[ %s ]]]', msg))
         spdlog.info(string.format('[%s] %s', 'DEBUG', msg))
     end
@@ -189,8 +188,8 @@ end
 
 ---Log WARNING messages
 ---@param msg string
-function Debug.Warning(msg)
-    if logLevel <= Debug.WARNING then
+function Debug:Warning(msg)
+    if logLevel <= self.WARNING then
         print(string.format('[[[ WARNING: %s ]]]', msg))
         spdlog.warning(string.format('[%s] %s', 'WARNING', msg))
     end
@@ -198,8 +197,8 @@ end
 
 ---Log ERROR messages
 ---@param msg string
-function Debug.Error(msg)
-    if logLevel <= Debug.ERROR then
+function Debug:Error(msg)
+    if logLevel <= self.ERROR then
         spdlog.error(string.format('[%s] %s', 'ERROR', msg))
         error(msg)
     end
@@ -207,8 +206,8 @@ end
 
 ---Parse variables and print them into console
 ---@param ... unknown
-function Debug.Dump(...)
-    print(Debug.Parse(...))
+function Debug:Dump(...)
+    print(self:Parse(...))
 end
 
 return Debug

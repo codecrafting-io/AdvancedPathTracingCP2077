@@ -15,7 +15,7 @@ local gameRestrictions = {
     "GameplayRestriction.NoPhotoMode"
 }
 
-Debug.SetLogLevel(settings.debug and Debug.INFO or Debug.ERROR)
+Debug:SetLogLevel(settings.debug and Debug.INFO or Debug.ERROR)
 
 ---Apply TweakDB status effect
 ---@param effect string
@@ -44,7 +44,7 @@ end
 ---Get Game settings index value
 ---@param category any
 ---@param name any
----@return string|nil
+---@return string | nil
 function GameSettings.GetIndex(category, name)
     if string.find(category, '/') == 1 then
         return Game.GetSettingsSystem():GetVar(category, name):GetIndex()
@@ -116,7 +116,7 @@ function GameSettings.RemoveFPPHead()
 end
 
 ---Equipe Game item to AttachmentSlots
----@param name CName|string
+---@param name CName | string
 ---@param slot string
 local function equipItem(name, slot)
     local GameItemID = GetSingleton('gameItemID')
@@ -155,7 +155,7 @@ function GameSettings.RefreshGame(timeout)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
 
-    Debug.Info("Refreshing the game")
+    Debug:Info("Refreshing the game")
     GameHUD.ShowMessage("REFRESHING")
 
     --Camera Movement
@@ -177,7 +177,7 @@ function GameSettings.RefreshGame(timeout)
 
         GameSettings.UnsetTimeDilation()
         GameHUD.ShowMessage("REFRESH DONE")
-        Debug.Info("Refreshing done")
+        Debug:Info("Refreshing done")
     end)
 end
 
