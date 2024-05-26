@@ -1,0 +1,30 @@
+#! /bin/bash
+
+cd dist
+
+deployPath='bin/x64/plugins/cyber_engine_tweaks/mods/AdvancedPathTracing'
+deployFile='AdvancedPathTracing.zip'
+removeFiles=(
+    "$deployPath/.git"
+    "$deployPath/.github"
+    "$deployPath/.vscode"
+    "$deployPath/.gitignore"
+    "$deployPath/CHANGELOG.md"
+    "$deployPath/menu.png"
+    "$deployPath/README.md"
+)
+
+echo 'Removing Previous Release'
+rm -f $deployFile
+rm -rf $deployPath
+mkdir -p $deployPath
+
+echo 'Get most recent version'
+cp -r '../.git/' $deployPath
+git -C $deployPath checkout -f main
+
+echo 'Generating deploy file'
+for key in ${removeFiles[@]}; do
+    rm -rf $key
+done
+zip -r $deployFile 'bin'

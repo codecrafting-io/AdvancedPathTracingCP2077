@@ -1,5 +1,7 @@
 /dist
-/.vscode
+/.vscode/*
+!/.vscode/deploy
+!/.vscode/tasks.json
 settings.json
 *.log
 *.sqlite3

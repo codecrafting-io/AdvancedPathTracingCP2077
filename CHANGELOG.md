@@ -6,6 +6,7 @@
 - Minor code refactor
 - Minor revision for PT Quality settings
 - Separate NVIDIA SHARC from PT quality into its own setting
+- Added VSCODE deploy task
 
 ## v0.2.3
 
