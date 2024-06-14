@@ -20,7 +20,11 @@ Debug:SetLogLevel(settings.debug and Debug.INFO or Debug.ERROR)
 ---Apply TweakDB status effect
 ---@param effect string
 function GameSettings.ApplyGameStatus(effect)
-    Game.GetStatusEffectSystem():ApplyStatusEffect(GetPlayer():GetEntityID(), effect, GetPlayer():GetRecordID(), GetPlayer():GetEntityID())
+    local player = GetPlayer()
+    local entityID = player:GetEntityID()
+    local recordID = player:GetRecordID()
+
+    Game.GetStatusEffectSystem():ApplyStatusEffect(entityID, effect, recordID, entityID)
 end
 
 ---Remove TweakDB status effect
