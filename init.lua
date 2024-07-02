@@ -440,7 +440,7 @@ local function updateRuntime()
             end
 
             --Wait a bit for the first load
-            Cron.After(0.15, function()
+            Cron.After(0.25, function()
                 GameSettings.RefreshGame(settings.refreshPauseTimeout)
             end)
         end
@@ -451,29 +451,30 @@ end
 local function setRuntime()
     GameUI.Listen(function(state)
         --GameUI.PrintState(state)
-    end)
 
-    GameUI.OnSessionStart(function(state)
-        runtime.inGame = true
+        --Some events if you clear console can trigger an access memory violation when exiting to MainMenu. Game, CET or GameUI fault?
+        if state.event == 'SessionStart' or state.event == 'FastTravelFinish' then
+            runtime.inGame = true
 
-        --Reset Refresh Control
-        setRefreshTime(settings.refreshInterval)
-        updateRuntime()
-    end)
-    GameUI.OnSessionEnd(function(state)
-        runtime.inGame = false
-        runtime.reGIRApplied = false
-        runtime.refreshGame = settings.refreshGame
-        --runtime.fppHeadAdded = false
-        previous["hasDLSSD"] = nil
+            --Reset Refresh Control
+            setRefreshTime(settings.refreshInterval)
+            updateRuntime()
+        elseif state.event == 'SessionEnd' or state.event == 'FastTravelStart' then
+            runtime.inGame = false
+            runtime.reGIRApplied = false
+            runtime.refreshGame = settings.refreshGame
+            previous["hasDLSSD"] = nil
+            --runtime.fppHeadAdded = false
+        end
     end)
     GameUI.OnMenuClose(function(state)
-        if runtime.inGame then
+        --Avoid update runtime if the player may use fast travel
+        if runtime.inGame and state.lastMenu ~= "FastTravel" then
             updateRuntime()
         end
     end)
-    GameUI.Listen("MenuNav", function(state)
-		if state.lastSubmenu ~= nil and state.lastSubmenu == "Settings" then
+    GameUI.OnMenuNav(function(state)
+		if state.lastSubmenu == "Settings" then
             saveSettings()
         end
 	end)
