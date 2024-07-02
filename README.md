@@ -89,7 +89,7 @@ The mod save your preferences in the `settings.json` file.
 - [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490): The initial game engine settings reference
 - [Freefly (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/9805): TweaksDB status effect reference and time pause
 - [betterHeadlights (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/5013): Additional NativeSettings reference
-- [JB - TPP MOD WIP third person (Jelle Bakker)](https://www.nexusmods.com/cyberpunk2077/mods/669): Additional reference for TweaksDB
+- [JB - TPP MOD WIP third person (Jelle Bakker)](https://www.nexusmods.com/cyberpunk2077/mods/669): Reference for TweaksDB head self reflections (not used)
 - [Lua Kit for CET (Pavel Siberx)](https://github.com/psiberx/cp2077-cet-kit): Cron, GameHUD and GameUI
 - [Native Settings UI (keanuWheeze)](https://www.nexusmods.com/cyberpunk2077/mods/3518): Native Settings UI
 - [Cyber Engine Tweaks (yamashi)](https://www.nexusmods.com/cyberpunk2077/mods/107): Cyber Engine Tweaks
