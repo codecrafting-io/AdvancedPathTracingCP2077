@@ -3,6 +3,7 @@
 ## v0.3.1
 
 - Added support for fast travel to refresh game
+- Improved handling of ReGIR and SHARC settings
 - Minor code revision for pausing in refresh game
 
 ## v0.3.0

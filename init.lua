@@ -286,11 +286,13 @@ end
 function setSharc(sharc)
     settings.sharc = sharc
 
-    if not (runtime.reGIRApplied or runtime.enableReGIR) then
+    if not (sharc and runtime.enableReGIR) then
         Debug:Info("Setting SHARC")
         GameSettings.Set("Editor/SHARC", "Enable", tostring(sharc))
     else
+        settings.sharc = false
         Debug:Info("Skipping SHARC because ReGIR is enabled")
+        NativeSettings.setOption(modOptions.options["PT_SHARC"], false)
     end
 end
 
@@ -324,6 +326,7 @@ function setPTMode(modeIndex)
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
+        NativeSettings.setOption(modOptions.options["PT_SHARC"], false)
     end
 end
 
