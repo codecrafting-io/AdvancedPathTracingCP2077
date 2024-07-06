@@ -68,7 +68,7 @@ The mod save your preferences in the `settings.json` file.
 
 | name | type | default | description |
 | ---- | ---- | ------- | ----------- |
-| degug | boolean | false | Enables extra log messages |
+| debug | boolean | false | Enables extra log messages |
 | enableNRDControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
