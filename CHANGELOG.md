@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.1
+
+- Added support for fast travel to refresh game
+- Minor code revision for pausing in refresh game
+
 ## v0.3.0
 
 - Improved log system
