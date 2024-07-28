@@ -24,7 +24,7 @@ local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
 local Debug = require("Modules/Debug")
-local NativeSettings = nil
+local NativeSettings = {}
 local modOptions = require("modOptions")
 local runtime = {
     firstLoad = true,
@@ -39,6 +39,22 @@ local runtime = {
     hasDLSSD = false,
     fppHeadAdded = false
 }
+
+---Checks if preset has a valid range, except custom
+---@param preset integer
+---@return boolean
+local function isPresetInRange(preset)
+    return preset >= 1 and preset <= 7
+end
+
+---Checks if the provided setting index of the current ptPreset is identical to value, if not set "Custom" profile
+---@param setting string
+---@param value any
+local function checkCustomPreset(setting, value)
+    if isPresetInRange(settings.ptPreset) and ptQuality.preset[settings.ptPreset][setting] ~= value then
+        NativeSettings.setOption(modOptions.options["PT_PRESET"].option, 8)
+    end
+end
 
 ---Save mod settings to the file
 local function saveSettings()
@@ -127,10 +143,10 @@ local function hasDLSSDChanged()
 end
 
 ---Set Ray Reconstruction particles control detection
----@param enableDLSSDParticles boolean
-function setDLSSDParticlesControl(enableDLSSDParticles)
-    settings.enableDLSSDParticles = enableDLSSDParticles
-    if not runtime.particleTimer and enableDLSSDParticles then
+---@param dlssdParticles boolean
+function setDLSSDParticlesControl(dlssdParticles)
+    settings.dlssdParticles = dlssdParticles
+    if not runtime.particleTimer and dlssdParticles then
         -- enable particle PT integration unless player is outdoors AND it's raining
         runtime.particleTimer = Cron.Every(settings.fastTimeout * 2.0, function()
             if runtime.inGame then
@@ -154,7 +170,7 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
         end)
     end
 
-    if enableDLSSDParticles then
+    if dlssdParticles then
         Cron.Resume(runtime.particleTimer)
     else
         if runtime.particleTimer then
@@ -162,6 +178,8 @@ function setDLSSDParticlesControl(enableDLSSDParticles)
         end
         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
     end
+
+    checkCustomPreset('dlssdParticles', dlssdParticles)
 end
 
 ---Set NRD denoiser control (timer only)
@@ -271,6 +289,7 @@ function setRayNumber(number)
     Debug:Info("Setting Ray Number")
     settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
+    checkCustomPreset('rayNumber', number)
 end
 
 ---Set the PT Ray Bounce Number. Only works in ReSTIR DI mode
@@ -279,6 +298,7 @@ function setRayBounce(number)
     Debug:Info("Setting Ray Bounce")
     settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
+    checkCustomPreset('rayBounce', number)
 end
 
 ---Set NVIDIA's SHARC
@@ -292,27 +312,29 @@ function setSharc(sharc)
     else
         settings.sharc = false
         Debug:Info("Skipping SHARC because ReGIR is enabled")
-        NativeSettings.setOption(modOptions.options["PT_SHARC"], false)
+        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, false)
     end
+
+    checkCustomPreset('sharc', sharc)
 end
 
 ---Set PT mode
----@param modeIndex integer the index of PT mode
-function setPTMode(modeIndex)
-    settings.ptModeIndex = modeIndex
+---@param mode integer the index of PT mode
+function setPTMode(mode)
+    settings.ptMode = mode
 
     if not NativeSettings then
         return
     end
 
-    if settings.ptModeIndex == 1 then
+    if settings.ptMode == 1 then
         --ReSTIR DI
         Debug:Info("Setting Path Tracing Mode: ReSTIR DI")
         runtime.enableReGIR = false
         runtime.enableReSTIR = false
         runtime.reGIRApplied = false
         GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
-    elseif settings.ptModeIndex == 2 then
+    elseif settings.ptMode == 2 then
         --ReSTIR DI/GI
         Debug:Info("Setting Path Tracing Mode: ReSTIR DI/GI")
         runtime.enableReGIR = false
@@ -321,29 +343,33 @@ function setPTMode(modeIndex)
         GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     else
         --ReGIR DI/GI
-        Debug:Info("Setting Path Tracing Mode: ReGIR DI")
+        Debug:Info("Setting Path Tracing Mode: ReGIR DI/GI")
         previous["hasDLSSD"] = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
-        NativeSettings.setOption(modOptions.options["PT_SHARC"], false)
+        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, false)
     end
+
+    checkCustomPreset('ptMode', mode)
 end
 
 ---Set PT Quality
----@param qualityIndex any the PT quality index
-function setPTQuality(qualityIndex)
+---@param quality any the PT quality index
+function setPTQuality(quality)
     Debug:Info("Setting Path Tracing Quality")
-    settings.ptQualityIndex = qualityIndex
-    GameSettings.SetAll(ptQuality.settings[qualityIndex])
+    settings.ptQuality = quality
+    GameSettings.SetAll(ptQuality.settings[quality])
+    checkCustomPreset('ptQuality', quality)
 end
 
 ---Set PT optimizations
----@param optimizations boolean
-function setPTOptimizations(optimizations)
+---@param ptOptimizations boolean
+function setPTOptimizations(ptOptimizations)
     Debug:Info("Setting Path Tracing Optimizations")
-    settings.ptOptimizations = optimizations
-    GameSettings.SetAll(ptQuality.optimizations[optimizations])
+    settings.ptOptimizations = ptOptimizations
+    GameSettings.SetAll(ptQuality.optimizations[ptOptimizations])
+    checkCustomPreset('ptOptimizations', ptOptimizations)
 end
 
 ---Set self reflections to show or not
@@ -352,6 +378,36 @@ function setSelfReflection(selfReflection)
     Debug:Info("Setting Self Reflection")
     settings.selfReflection = selfReflection
     GameSettings.Set("RayTracing", "HideFPPAvatar", tostring(not selfReflection))
+    checkCustomPreset('selfReflection', selfReflection)
+end
+
+---Set Path Tracing presetNumber
+---@param preset integer
+function setPTPreset(preset)
+    local ptQualityPreset = ptQuality.preset[preset]
+    settings.ptPreset = preset
+
+    if isPresetInRange(preset) and ptQualityPreset then
+        Debug:Info(string.format('Setting PT Preset "%s"', modOptions.options["PT_PRESET"].settings.range[preset]))
+        NativeSettings.setOption(modOptions.options["PT_MODE"].option, ptQualityPreset.ptMode)
+
+        --Necessary for mod reloading, since NativeSettings does not trigger when the value does not changed
+        setPTMode(ptQualityPreset.ptMode)
+
+        NativeSettings.setOption(modOptions.options["PT_QUALITY"].option, ptQualityPreset.ptQuality)
+        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, ptQualityPreset.sharc)
+        NativeSettings.setOption(modOptions.options["PT_OPTIMIZATIONS"].option, ptQualityPreset.ptOptimizations)
+        NativeSettings.setOption(modOptions.options["RAY_NUMBER"].option, ptQualityPreset.rayNumber)
+        NativeSettings.setOption(modOptions.options["RAY_BOUNCE"].option, ptQualityPreset.rayBounce)
+        NativeSettings.setOption(modOptions.options["DLSSD_PARTICLES"].option, ptQualityPreset.dlssdParticles)
+
+        --Necessary for mod reloading, since NativeSettings does not trigger when the value does not changed
+        setDLSSDParticlesControl(ptQualityPreset.dlssdParticles)
+
+        NativeSettings.setOption(modOptions.options["SELF_REFLECTION"].option, ptQualityPreset.selfReflection)
+    else
+        Debug:Info('Setting PT Preset "Custom"')
+    end
 end
 
 ---Setup Native Settings menu
@@ -370,11 +426,13 @@ local function setNativeSettings()
         end
     end
 
+    local nativeOption = nil
+
     --Only loop with indexed values with ipairs
     for _, v in ipairs(modOptions.options) do
         if v.range then
             if v.range['min'] ~= nil then
-                modOptions.options[v.index] = NativeSettings[v.typeFunction](
+                nativeOption = NativeSettings[v.typeFunction](
                     v.path,
                     v.label,
                     v.description,
@@ -384,7 +442,7 @@ local function setNativeSettings()
                     v.stateCallback
                 )
             else
-                modOptions.options[v.index] = NativeSettings[v.typeFunction](
+                nativeOption = NativeSettings[v.typeFunction](
                     v.path,
                     v.label,
                     v.description,
@@ -395,7 +453,7 @@ local function setNativeSettings()
                 )
             end
         else
-            modOptions.options[v.index] = NativeSettings[v.typeFunction](
+            nativeOption = NativeSettings[v.typeFunction](
                 v.path,
                 v.label,
                 v.description,
@@ -404,6 +462,11 @@ local function setNativeSettings()
                 v.stateCallback
             )
         end
+
+        modOptions.options[v.index] = {
+            settings = v,
+            option = nativeOption
+        }
     end
 end
 
@@ -413,7 +476,7 @@ local function updateRuntime()
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
     if not runtime.hasDLSSD then
-        NativeSettings.setOption(modOptions.options["NRD"], false)
+        NativeSettings.setOption(modOptions.options["NRD"].option, false)
     end
 
     if runtime.firstLoad then
@@ -492,15 +555,21 @@ registerForEvent('onInit', function()
 
     if NativeSettings then
         setRuntime()
-        setPTMode(settings.ptModeIndex)
-        setPTQuality(settings.ptQualityIndex)
-        setPTOptimizations(settings.ptOptimizations)
-        setRayNumber(settings.rayNumber)
-        setRayBounce(settings.rayBounce)
-        setSelfReflection(settings.selfReflection)
-        setDLSSDParticlesControl(settings.enableDLSSDParticles)
-        setNRDControl(settings.enableNRDControl)
-        setRefreshControl(settings.refreshGame)
+        setPTPreset(settings.ptPreset)
+
+        if settings.ptMode == 8 then
+            setPTMode(settings.ptMode)
+            setPTQuality(settings.ptQuality)
+            setSharc(settings.sharc)
+            setPTOptimizations(settings.ptOptimizations)
+            setRayNumber(settings.rayNumber)
+            setRayBounce(settings.rayBounce)
+            setSelfReflection(settings.selfReflection)
+            setDLSSDParticlesControl(settings.dlssdParticles)
+            setNRDControl(settings.enableNRDControl)
+            setRefreshControl(settings.refreshGame)
+        end
+
         Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
     else
         Debug:Error('Failed to load Advanced Path Tracing: NativeSettings missing')

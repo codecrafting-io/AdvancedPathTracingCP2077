@@ -15,6 +15,27 @@ return {
     },
     options = {
         {
+            index = 'PT_PRESET',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'Global Preset',
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium switches to ReSTIR DI/GI with better quality\n\nHigh disables SHARC since it can be noisier sometimes, but it aids with tertiary bounces in dark areas.\n\nUltra changes to ReGIR which can look better, but also noiser (specially with RR), so results vary\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and be more like offline rendering. Results with Ray Reconstruction vary",
+            range = {
+                [1] = "Vanilla",
+                [2] = "Very Low",
+                [3] = "Low",
+                [4] = "Medium",
+                [5] = "High",
+                [6] = "Ultra",
+                [7] = "Psycho",
+                [8] = "Custom"
+            },
+            value = 'ptPreset',
+            stateCallback = function(state)
+                setPTPreset(state)
+            end,
+            typeFunction = 'addSelectorString'
+        },
+        {
             index = 'PT_MODE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Mode',
@@ -24,7 +45,7 @@ return {
                 [2] = "ReSTIR DI/GI",
                 [3] = "ReGIR DI/GI"
             },
-            value = 'ptModeIndex',
+            value = 'ptMode',
             stateCallback = function(state)
                 setPTMode(state)
             end,
@@ -42,7 +63,7 @@ return {
                 [4] = "Quality",
                 [5] = "Psycho"
             },
-            value = "ptQualityIndex",
+            value = "ptQuality",
             stateCallback = function(state)
                 setPTQuality(state)
             end,
@@ -105,12 +126,12 @@ return {
             typeFunction = 'addRangeInt'
         },
         {
-            index = 'DLSSD_PARTICLE',
+            index = 'DLSSD_PARTICLES',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Ray Reconstruction Particles',
             description = "Enables particles to not be separated in Ray Reconstruction, when it's not raining and outdoors",
             range = nil,
-            value = "enableDLSSDParticles",
+            value = "dlssdParticles",
             stateCallback = function(state)
                 setDLSSDParticlesControl(state)
             end,

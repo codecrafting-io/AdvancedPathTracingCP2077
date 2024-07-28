@@ -1,4 +1,83 @@
 return {
+    preset = {
+        --Vanilla
+        [1] = {
+            ptMode              = 2,
+            ptQuality           = 1,
+            sharc               = true,
+            ptOptimizations     = false,
+            rayNumber           = 2,
+            rayBounce           = 2,
+            selfReflection      = false,
+            dlssdParticles      = false
+        },
+        --Very Low
+        [2] = {
+            ptMode              = 1,
+            ptQuality           = 2,
+            sharc               = true,
+            ptOptimizations     = true,
+            rayNumber           = 2,
+            rayBounce           = 1,
+            selfReflection      = false,
+            dlssdParticles      = false
+        },
+        --Low
+        [3] = {
+            ptMode              = 1,
+            ptQuality           = 3,
+            sharc               = true,
+            ptOptimizations     = true,
+            rayNumber           = 2,
+            rayBounce           = 1,
+            selfReflection      = true,
+            dlssdParticles      = true
+        },
+        --Medium
+        [4] = {
+            ptMode              = 2,
+            ptQuality           = 3,
+            sharc               = true,
+            ptOptimizations     = true,
+            rayNumber           = 2,
+            rayBounce           = 2,
+            selfReflection      = true,
+            dlssdParticles      = true
+        },
+        --High
+        [5] = {
+            ptMode              = 2,
+            ptQuality           = 4,
+            sharc               = false,
+            ptOptimizations     = true,
+            rayNumber           = 2,
+            rayBounce           = 2,
+            selfReflection      = true,
+            dlssdParticles      = true
+        },
+        --Ultra
+        [6] = {
+            ptMode              = 3,
+            ptQuality           = 4,
+            sharc               = false,
+            ptOptimizations     = true,
+            rayNumber           = 2,
+            rayBounce           = 2,
+            selfReflection      = true,
+            dlssdParticles      = true
+        },
+        --Psycho
+        [7] = {
+            ptMode              = 1,
+            ptQuality           = 5,
+            sharc               = false,
+            ptOptimizations     = true,
+            rayNumber           = 4,
+            rayBounce           = 6,
+            selfReflection      = true,
+            dlssdParticles      = true
+        }
+    },
     settings = {
         --Vanilla
         [1] = {
