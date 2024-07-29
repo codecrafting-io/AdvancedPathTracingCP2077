@@ -26,6 +26,16 @@ local ptQuality = require("ptQuality")
 local Debug = require("Modules/Debug")
 local NativeSettings = {}
 local modOptions = require("modOptions")
+local PRESET = {
+    VANILLA = 1,
+    VERY_LOW = 2,
+    LOW = 3,
+    MEDIUM = 4,
+    HIGH = 5,
+    ULTRA = 6,
+    PSYCHO = 7,
+    CUSTOM = 8
+}
 local runtime = {
     firstLoad = true,
     reGIRApplied = false,
@@ -44,7 +54,7 @@ local runtime = {
 ---@param preset integer
 ---@return boolean
 local function isPresetInRange(preset)
-    return preset >= 1 and preset <= 7
+    return preset >= PRESET.VANILLA and preset <= PRESET.PSYCHO
 end
 
 ---Checks if the provided setting index of the current ptPreset is identical to value, if not set "Custom" profile
@@ -566,7 +576,7 @@ registerForEvent('onInit', function()
         setRuntime()
         setPTPreset(settings.ptPreset)
 
-        if settings.ptPreset == 8 then
+        if settings.ptPreset == PRESET.CUSTOM then
             setPTMode(settings.ptMode)
             setPTQuality(settings.ptQuality)
             setSharc(settings.sharc)
