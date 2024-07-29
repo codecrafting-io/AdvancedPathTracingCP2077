@@ -255,7 +255,11 @@ local function setReGIR()
             Debug:Info("Enabling ReGIR")
             runtime.reGIRApplied = true
             GameSettings.Set("Editor/ReGIR", "Enable", "true")
-            GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
+
+            --Only for ReGIR DI/GI
+            if settings.ptMode == 4 then
+                GameSettings.Set("Editor/ReGIR", "UseForDI", "true")
+            end
         end)
     end
 end
@@ -342,8 +346,13 @@ function setPTMode(mode)
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", tostring(settings.sharc))
     else
-        --ReGIR DI/GI
-        Debug:Info("Setting Path Tracing Mode: ReGIR DI/GI")
+        --ReGIR
+        if mode == 3 then
+            Debug:Info("Setting Path Tracing Mode: ReSTIR DI + ReGIR GI")
+        else
+            Debug:Info("Setting Path Tracing Mode: ReGIR DI/GI")
+        end
+
         previous["hasDLSSD"] = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true

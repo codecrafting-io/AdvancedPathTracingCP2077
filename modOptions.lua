@@ -18,7 +18,7 @@ return {
             index = 'PT_PRESET',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium switches to ReSTIR DI/GI with better quality\n\nHigh disables SHARC since it can be noisier sometimes, but it aids with tertiary bounces in dark areas.\n\nUltra changes to ReGIR which can look better, but also noiser (specially with RR), so results vary\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and be more like offline rendering. Results with Ray Reconstruction vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium switches to ReSTIR DI/GI with better quality\n\nHigh disables SHARC since it can be noisier sometimes, but it aids with above tertiary bounces in dark areas.\n\nUltra changes to ReGIR which can look better, but also noiser (specially with RR), so results vary\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",
@@ -39,11 +39,12 @@ return {
             index = 'PT_MODE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Mode',
-            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReGIR DI/GI - Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR",
+            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI + ReGIR GI uses Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI\n\n ReGIR DI/GI - Uses ReGIR for both DI and GI",
             range = {
                 [1] = "ReSTIR DI",
                 [2] = "ReSTIR DI/GI",
-                [3] = "ReGIR DI/GI"
+                [3] = "ReSTIR DI + ReGIR GI",
+                [4] = "ReGIR DI/GI"
             },
             value = 'ptMode',
             stateCallback = function(state)

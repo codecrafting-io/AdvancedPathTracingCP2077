@@ -286,7 +286,7 @@ return {
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "128"
+                value       = "256"
             },
             {
                 category    = "Editor/ReGIR",
@@ -335,7 +335,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "NumInitialSamples",
-                value       = "16"
+                value       = "12"
             },
             {
                 category    = "Editor/RTXDI",
@@ -379,17 +379,17 @@ return {
             {
                 category    = "Editor/ReGIR",
                 name        = "BuildCandidatesCount",
-                value       = "10"
+                value       = "8"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "192"
+                value       = "384"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "ShadingCandidatesCount",
-                value       = "12"
+                value       = "10"
             },
 
             --ReSTIR
@@ -433,7 +433,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "NumInitialSamples",
-                value       = "24"
+                value       = "20"
             },
             {
                 category    = "Editor/RTXDI",
@@ -482,7 +482,7 @@ return {
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "256"
+                value       = "512"
             },
             {
                 category    = "Editor/ReGIR",
