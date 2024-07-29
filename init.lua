@@ -566,7 +566,7 @@ registerForEvent('onInit', function()
         setRuntime()
         setPTPreset(settings.ptPreset)
 
-        if settings.ptMode == 8 then
+        if settings.ptPreset == 8 then
             setPTMode(settings.ptMode)
             setPTQuality(settings.ptQuality)
             setSharc(settings.sharc)

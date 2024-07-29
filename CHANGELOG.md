@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.4.0
+
+- Added Global presets from "Very Low" to "Psycho", including full Vanilla mode
+- Added ReSTIR DI + ReGIR GI Path Tracing mode
+- Minor rebalanced on Path Tracing quality settings
+- Fixed SHARC option not loading sometimes
+
 ## v0.3.1
 
 - Added support for fast travel to refresh game

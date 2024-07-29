@@ -4,7 +4,7 @@
 [![Github All Releases](https://img.shields.io/github/downloads/codecrafting-io/AdvancedPathTracingCP2077/total?color=blueviolet)](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/releases)
 [![Issues](https://img.shields.io/github/issues/codecrafting-io/AdvancedPathTracingCP2077)](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/issues)
 
-This repository is for the development of the [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) based mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). The mod enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
+This repository is for the development of the `Advanced Path Tracing` mod for the game [Cyberpunk 2077](https://www.cyberpunk.net/). The mod is based on [Cyber Engine Tweaks](https://wiki.redmodding.org/cyber-engine-tweaks) and enables key advanced controls for Path Tracing, all now available through a native UI thanks to [Native Settings](https://www.nexusmods.com/cyberpunk2077/mods/3518).
 
 **NOTE:** This is a **Work In Progress** mod, so things may improve in the future.
 
@@ -14,8 +14,17 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 
 ## Features
 
+- Global Preset:
+  - **Vanilla**: Is the game's default mode.
+  - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower.
+  - **Low**: Increases very low quality to not be as noisy.
+  - **Medium**: switches to ReSTIR DI/GI with better quality.
+  - **High**: Disables SHARC since it can be noisier sometimes, but it aids with above tertiary bounces in dark areas.
+  - **Ultra**: Changes to ReSTIR DI + ReGIR GI which can look better, but also noiser (specially with RR), so results vary.
+  - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the clanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
-  - **ReGIR DI/GI**: Reservoir-based Grid Importance Sampling, is a world space light sampling on top of ReSTIR. Can look and performs better, but is noisier
+  - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
+  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI can loss specular detail in some surfaces.
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray
 - Path Tracing Quality:
@@ -39,7 +48,7 @@ This repository is for the development of the [Cyber Engine Tweaks](https://wiki
 - Refresh Game: The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. The mod will skip the refresh if a limited gameplay scene is detected. Disabled by default.
 - Refresh Game Interval: The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 
-**NOTE:** ReGIR DI/GI has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
+**NOTE:** ReGIR has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
@@ -80,7 +89,8 @@ The mod save your preferences in the `settings.json` file.
 | refreshInterval | int | 30 | Amount of time in minutes to wait for the next refresh. Zero will refresh every time |
 | selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
-| ptModeIndex | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReGIR DI/GI |
+| ptPreset | int | 4 | Path Tracing global preset. <br> 1 - Vanilla <br> 2 - Very Low <br> 3 - Low <br> 4 - Medium <br> 5 - High <br> 6 - Ultra <br> 7 - Psycho |
+| ptModeIndex | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReSTIR DI + ReGIR GI <br> 4 - ReGIR DI/GI |
 | ptQualityIndex | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
 | ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
 
