@@ -252,6 +252,11 @@ function setRefreshTime(time)
     setRefreshControl(settings.refreshGame)
 end
 
+function setRefreshNow()
+    runtime.refreshGame = true
+    Debug:Info("Will refresh")
+end
+
 ---Set ReGIR PT mode. ReGIR will be enabled after a fast timeout * 1.5
 local function setReGIR()
     Debug:Info("Disabling ReGIR")
@@ -408,21 +413,15 @@ function setPTPreset(preset)
 
     if isPresetInRange(preset) and ptQualityPreset then
         Debug:Info(string.format('Setting PT Preset "%s"', modOptions.options["PT_PRESET"].settings.range[preset]))
+
+        --Settings only change if current value is different from ptQualityPreset value
         NativeSettings.setOption(modOptions.options["PT_MODE"].option, ptQualityPreset.ptMode)
-
-        --Necessary for mod reloading, since NativeSettings does not trigger when the value does not changed
-        setPTMode(ptQualityPreset.ptMode)
-
         NativeSettings.setOption(modOptions.options["PT_QUALITY"].option, ptQualityPreset.ptQuality)
         NativeSettings.setOption(modOptions.options["PT_SHARC"].option, ptQualityPreset.sharc)
         NativeSettings.setOption(modOptions.options["PT_OPTIMIZATIONS"].option, ptQualityPreset.ptOptimizations)
         NativeSettings.setOption(modOptions.options["RAY_NUMBER"].option, ptQualityPreset.rayNumber)
         NativeSettings.setOption(modOptions.options["RAY_BOUNCE"].option, ptQualityPreset.rayBounce)
         NativeSettings.setOption(modOptions.options["DLSSD_PARTICLES"].option, ptQualityPreset.dlssdParticles)
-
-        --Necessary for mod reloading, since NativeSettings does not trigger when the value does not changed
-        setDLSSDParticlesControl(ptQualityPreset.dlssdParticles)
-
         NativeSettings.setOption(modOptions.options["SELF_REFLECTION"].option, ptQualityPreset.selfReflection)
     else
         Debug:Info('Setting PT Preset "Custom"')
@@ -471,6 +470,15 @@ local function setNativeSettings()
                     v.stateCallback
                 )
             end
+        elseif v.typeFunction == 'addButton' then
+            nativeOption = NativeSettings[v.typeFunction](
+                v.path,
+                v.label,
+                v.description,
+                v.buttonText,
+                v.textSize,
+                v.stateCallback
+            )
         else
             nativeOption = NativeSettings[v.typeFunction](
                 v.path,
@@ -511,24 +519,24 @@ local function updateRuntime()
         setReSTIR()
     end
 
-    if settings.refreshGame then
-        if not runtime.refreshGame then
-            --It could refresh but hasn't passed enough time
-            Debug:Info("Won't Refresh now")
-        elseif not GameSettings.CanRefresh() then
-            --Should not refresh due to limited gameplay scene
-            Debug:Info("Can't Refresh now")
-        else
-            --Always refresh
-            if settings.refreshInterval > 0 then
-                runtime.refreshGame = false
-            end
-
+    if runtime.refreshGame then
+        if GameSettings.CanRefresh() then
             --Wait a bit for the first load
             Cron.After(0.25, function()
                 GameSettings.RefreshGame(settings.refreshPauseTimeout)
             end)
+
+            --Always refresh
+            if settings.refreshInterval > 0 then
+                runtime.refreshGame = false
+            end
+        else
+            --Should not refresh due to limited gameplay scene
+            Debug:Info("Can't Refresh now")
         end
+    elseif settings.refreshGame then
+        --It could refresh but hasn't passed enough time
+        Debug:Info("Won't Refresh now")
     end
 end
 
@@ -576,19 +584,17 @@ registerForEvent('onInit', function()
         setRuntime()
         setPTPreset(settings.ptPreset)
 
-        if settings.ptPreset == PRESET.CUSTOM then
-            setPTMode(settings.ptMode)
-            setPTQuality(settings.ptQuality)
-            setSharc(settings.sharc)
-            setPTOptimizations(settings.ptOptimizations)
-            setRayNumber(settings.rayNumber)
-            setRayBounce(settings.rayBounce)
-            setSelfReflection(settings.selfReflection)
-            setDLSSDParticlesControl(settings.dlssdParticles)
-            setNRDControl(settings.enableNRDControl)
-            setRefreshControl(settings.refreshGame)
-        end
-
+        --The setNativeSettings loads the same settings of preset, so values are not loaded yet
+        setPTMode(settings.ptMode)
+        setPTQuality(settings.ptQuality)
+        setSharc(settings.sharc)
+        setPTOptimizations(settings.ptOptimizations)
+        setRayNumber(settings.rayNumber)
+        setRayBounce(settings.rayBounce)
+        setSelfReflection(settings.selfReflection)
+        setDLSSDParticlesControl(settings.dlssdParticles)
+        setNRDControl(settings.enableNRDControl)
+        setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
     else
         Debug:Error('Failed to load Advanced Path Tracing: NativeSettings missing')

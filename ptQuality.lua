@@ -340,7 +340,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "24"
+                value       = "20"
             },
             {
                 category    = "Editor/RTXDI",
@@ -411,7 +411,7 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "32"
+                value       = "24"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -438,7 +438,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "32"
+                value       = "24"
             },
             {
                 category    = "Editor/RTXDI",
@@ -509,12 +509,12 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "64"
+                value       = "32"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "16"
+                value       = "32"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -536,7 +536,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "128"
+                value       = "32"
             },
             {
                 category    = "Editor/RTXDI",
@@ -565,7 +565,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "60.0"
+                value       = "100.0"
             }
         }
     },

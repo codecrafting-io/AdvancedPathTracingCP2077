@@ -165,8 +165,8 @@ return {
         {
             index = 'REFRESH_GAME',
             path = '/AdvancedPathTracing/misc',
-            label = 'Refresh Game',
-            description = "Enables refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance",
+            label = 'Auto Refresh Game',
+            description = "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance",
             range = nil,
             value = "refreshGame",
             stateCallback = function(state)
@@ -189,6 +189,19 @@ return {
                 setRefreshTime(state)
             end,
             typeFunction = 'addRangeInt'
+        },
+        {
+            index = 'REFRESH_GAME_NOW',
+            path = '/AdvancedPathTracing/misc',
+            label = '',
+            description = 'Ignore the interval and refresh the game after exiting the menu',
+            range = nil,
+            buttonText = 'Refresh',
+            textSize = 45,
+            stateCallback = function(state)
+                setRefreshNow()
+            end,
+            typeFunction = 'addButton'
         }
     }
 }

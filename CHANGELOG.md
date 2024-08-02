@@ -3,6 +3,7 @@
 ## v0.4.0
 
 - Added Global presets from "Very Low" to "Psycho", including full Vanilla mode
+- Added refresh button
 - Added ReSTIR DI + ReGIR GI Path Tracing mode
 - Minor rebalanced on Path Tracing quality settings
 - Fixed SHARC option not loading sometimes
