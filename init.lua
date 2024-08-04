@@ -136,11 +136,20 @@ local function refreshDLSSD()
     previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
     previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
     Debug:Info("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
+
+    --Enabling NRD also disables DLSSD
+    GameSettings.Set("RayTracing", "EnableNRD", "true")
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
-    Cron.After(settings.fastTimeout, function()
-        GameSettings.Set("/graphics/presets", "DLSS_D", true)
-        pushChanges()
+    Cron.After(0.02, function()
+        --This should be true, but set it to false also enables DLSSD and reduce noise while refreshing DLSS_D
+        GameSettings.Set("RayTracing", "EnableNRD", "false")
+        Cron.After(settings.fastTimeout, function()
+            --DLSSD is already enabled, but this will update game settings
+            GameSettings.Set("/graphics/presets", "DLSS_D", true)
+            GameSettings.Set("RayTracing", "EnableNRD", "false")
+            pushChanges()
+        end)
     end)
 end
 
