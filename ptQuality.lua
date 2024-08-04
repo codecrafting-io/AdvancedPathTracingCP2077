@@ -220,7 +220,7 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "1"
+                value       = "2"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -318,7 +318,7 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "3"
+                value       = "6"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -345,7 +345,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialSamplingRadius",
-                value       = "48.0"
+                value       = "32.0"
             },
 
             --SHARC
@@ -416,7 +416,7 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "4"
+                value       = "8"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -443,7 +443,7 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialSamplingRadius",
-                value       = "64.0"
+                value       = "48.0"
             },
 
             --SHARC
@@ -467,7 +467,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "45.0"
+                value       = "60.0"
             }
         },
 
@@ -622,6 +622,13 @@ return {
                 name        = "EnableEmissiveProxyLightRejection",
                 value       = "false"
             },
+            --[[
+            {
+                category    = "Editor/RTXDI",
+                name        = "EnableGradients",
+                value       = "false"
+            },
+            --]]
             {
                 category    = "Editor/RTXDI",
                 name        = "EnableLocalLightImportanceSampling",
@@ -721,6 +728,13 @@ return {
                 name        = "EnableEmissiveProxyLightRejection",
                 value       = "true"
             },
+            --[[
+            {
+                category    = "Editor/RTXDI",
+                name        = "EnableGradients",
+                value       = "true"
+            },
+            --]]
             {
                 category    = "Editor/RTXDI",
                 name        = "EnableLocalLightImportanceSampling",
