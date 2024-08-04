@@ -20,7 +20,6 @@ GameUI = require("Modules/GameUI")
 GameSettings = require("Modules/GameSettings")
 
 local settingsFilename = "settings.json"
-local previous = {}
 local defaults = require("defaults")
 local ptQuality = require("ptQuality")
 local Debug = require("Modules/Debug")
@@ -35,6 +34,13 @@ local PRESET = {
     ULTRA = 6,
     PSYCHO = 7,
     CUSTOM = 8
+}
+local previous = {
+    dlssSharpness = nil,
+    dlssPreset = nil,
+    hasDLSSD = nil,
+    isRaining = nil,
+    isIndoors = nil
 }
 local runtime = {
     firstLoad = true,
@@ -133,9 +139,10 @@ end
 
 ---Refresh Ray Reconstruction if preset or sharpness was changed
 local function refreshDLSSD()
-    previous["dlssSharpness"] = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
-    previous["dlssPreset"] = GameSettings.Get("/graphics/presets", "DLSS")
-    Debug:Info("Refreshing DLSS Ray Reconstruction - " .. previous["dlssPreset"])
+    previous.hasDLSSD = runtime.hasDLSSD
+    previous.dlssSharpness = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
+    previous.dlssPreset = GameSettings.Get("/graphics/presets", "DLSS")
+    Debug:Info("Refreshing DLSS Ray Reconstruction - " .. previous.dlssPreset)
 
     --Enabling NRD also disables DLSSD
     GameSettings.Set("RayTracing", "EnableNRD", "true")
@@ -156,9 +163,9 @@ end
 ---Check for Ray Reconstruction changes in preset or sharpness
 ---@return boolean
 local function hasDLSSDChanged()
-    return previous["hasDLSSD"] ~= runtime.hasDLSSD
-            or previous["dlssPreset"] ~= GameSettings.Get("/graphics/presets", "DLSS")
-            or previous["dlssSharpness"] ~= GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
+    return previous.hasDLSSD ~= runtime.hasDLSSD
+            or previous.dlssPreset ~= GameSettings.Get("/graphics/presets", "DLSS")
+            or previous.dlssSharpness ~= GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
 end
 
 ---Set Ray Reconstruction particles control detection
@@ -173,9 +180,9 @@ function setDLSSDParticlesControl(dlssdParticles)
                 local isIndoors = GameSettings.IsIndoors()
 
                 --Change detection
-                if isRaining ~= previous["isRaining"] or isIndoors ~= previous["isIndoors"] then
-                    previous["isRaining"] = isRaining
-                    previous["isIndoors"] = isIndoors
+                if isRaining ~= previous.isRaining or isIndoors ~= previous.isIndoors then
+                    previous.isRaining = isRaining
+                    previous.isIndoors = isIndoors
 
                     if isIndoors or isRaining then
                         Debug:Info("It's raining or is indoors. Enabling DLSSD separate particle color")
@@ -263,7 +270,8 @@ end
 
 function setRefreshNow()
     runtime.refreshGame = true
-    Debug:Info("Will refresh")
+    previous.dlssPreset = nil
+    Debug:Info("Will refresh game and DLSSD")
 end
 
 ---Set ReGIR PT mode. ReGIR will be enabled after a fast timeout * 1.5
@@ -299,16 +307,22 @@ local function setReSTIR()
         GameSettings.Set("Editor/ReSTIRGI", "Enable", "false")
     end
 
+    local dlssdHasChanged = hasDLSSDChanged()
+
+    if dlssdHasChanged then
+        Debug:Info('DLSSD has changed')
+        runtime.reGIRApplied = false
+    end
+
     if not runtime.reGIRApplied then
         setReGIR()
     end
 
-    Cron.After(settings.fastTimeout * 2.0, function()
-        if runtime.hasDLSSD and hasDLSSDChanged() then
+    if runtime.hasDLSSD and dlssdHasChanged then
+        Cron.After(settings.fastTimeout * 2.0, function()
             refreshDLSSD()
-        end
-        previous["hasDLSSD"] = runtime.hasDLSSD
-    end)
+        end)
+    end
 end
 
 ---Set the PT Ray Number. Only works in ReSTIR DI mode
@@ -377,7 +391,7 @@ function setPTMode(mode)
             Debug:Info("Setting Path Tracing Mode: ReGIR DI/GI")
         end
 
-        previous["hasDLSSD"] = nil
+        previous.hasDLSSD = nil
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
@@ -521,10 +535,6 @@ local function updateRuntime()
     end
 
     if GameSettings.HasPathTracing() then
-        if hasDLSSDChanged() then
-            Debug:Info('DLSSD has changed')
-            runtime.reGIRApplied = false
-        end
         setReSTIR()
     end
 
@@ -565,7 +575,7 @@ local function setRuntime()
             runtime.inGame = false
             runtime.reGIRApplied = false
             runtime.refreshGame = settings.refreshGame
-            previous["hasDLSSD"] = nil
+            previous.hasDLSSD = nil
             --runtime.fppHeadAdded = false
         end
     end)

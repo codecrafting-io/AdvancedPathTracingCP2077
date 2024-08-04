@@ -6,6 +6,7 @@
 - Added refresh button
 - Added ReSTIR DI + ReGIR GI Path Tracing mode
 - Minor rebalanced on Path Tracing quality settings
+- Improved DLSSD refresh
 - Fixed SHARC option not loading sometimes
 
 ## v0.3.1
