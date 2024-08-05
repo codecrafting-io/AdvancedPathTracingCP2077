@@ -111,8 +111,10 @@ local function loadSettings()
             --Validate timings
             if settings.slowTimeout < settings.fastTimeout then
                 settings.slowTimeout = settings.fastTimeout + 2.0
-            elseif settings.refreshPauseTimeout < settings.fastTimeout then
-                settings.refreshPauseTimeout = settings.fastTimeout * 5.0
+            end
+
+            if settings.refreshPauseTimeout < settings.fastTimeout then
+                settings.refreshPauseTimeout = settings.fastTimeout + 5.0
             end
         end
     else
@@ -148,7 +150,7 @@ local function refreshDLSSD()
     GameSettings.Set("RayTracing", "EnableNRD", "true")
     GameSettings.Set("/graphics/presets", "DLSS_D", false)
     pushChanges()
-    Cron.After(0.02, function()
+    Cron.After(0.025, function()
         --This should be true, but set it to false also enables DLSSD and reduce noise while refreshing DLSS_D
         GameSettings.Set("RayTracing", "EnableNRD", "false")
         Cron.After(settings.fastTimeout, function()
@@ -197,9 +199,11 @@ function setDLSSDParticlesControl(dlssdParticles)
     end
 
     if dlssdParticles then
+        Debug:Info("Resume Particle Timer")
         Cron.Resume(runtime.particleTimer)
     else
         if runtime.particleTimer then
+            Debug:Info("Pause Particle Timer")
             Cron.Pause(runtime.particleTimer)
         end
         GameSettings.Set("Rendering", "DLSSDSeparateParticleColor", "false")
@@ -211,7 +215,10 @@ end
 ---Set NRD denoiser control (timer only)
 ---@param enableNRDControl boolean
 function setNRDControl(enableNRDControl)
-    settings.enableNRDControl = enableNRDControl
+    --Keep last setting when user disables DLSSD
+    if runtime.hasDLSSD then
+        settings.enableNRDControl = enableNRDControl
+    end
     if not runtime.nrdTimer and enableNRDControl then
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
@@ -223,11 +230,14 @@ function setNRDControl(enableNRDControl)
     end
 
     if enableNRDControl and runtime.hasDLSSD then
+        Debug:Info("Resume NRD Control")
         Cron.Resume(runtime.nrdTimer)
-    else
-        if runtime.nrdTimer then
-            Cron.Pause(runtime.nrdTimer)
-        end
+    elseif runtime.nrdTimer then
+        Debug:Info("Pause NRD Control")
+        Cron.Pause(runtime.nrdTimer)
+
+        --Just for aid user understanding. NativeSettings does not trigger if value stays the same
+        NativeSettings.setOption(modOptions.options["NRD"].option, false)
     end
 end
 
@@ -249,11 +259,11 @@ function setRefreshControl(refreshGame)
     end
 
     if refreshGame then
+        Debug:Info("Resume Refresh Control")
         Cron.Resume(runtime.refreshTimer)
-    else
-        if runtime.refreshTimer then
-            Cron.Pause(runtime.refreshTimer)
-        end
+    elseif runtime.refreshTimer then
+        Debug:Info("Pause Refresh Control")
+        Cron.Pause(runtime.refreshTimer)
     end
 end
 
@@ -281,7 +291,6 @@ local function setReGIR()
     GameSettings.Set("Editor/ReGIR", "Enable", "false")
 
     if runtime.enableReGIR then
-
         --Regir requires to wait a bit before be enabled
         Cron.After(settings.fastTimeout * 1.5, function()
             Debug:Info("Enabling ReGIR")
@@ -522,12 +531,7 @@ end
 
 ---Update Runtime mod state and refresh settings
 local function updateRuntime()
-    runtime.hasDLSSD = GameSettings.HasDLSSD()
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
-
-    if not runtime.hasDLSSD then
-        NativeSettings.setOption(modOptions.options["NRD"].option, false)
-    end
 
     if runtime.firstLoad then
         Debug:Info('First Load')
@@ -587,6 +591,15 @@ local function setRuntime()
     end)
     GameUI.OnMenuNav(function(state)
 		if state.lastSubmenu == "Settings" then
+            runtime.hasDLSSD = GameSettings.HasDLSSD()
+
+            if not runtime.hasDLSSD then
+                --If user disables DLSSD and don't open Mod settings NRD Control has to turn off
+                NativeSettings.setOption(modOptions.options["NRD"].option, false)
+            else
+                NativeSettings.setOption(modOptions.options["NRD"].option, settings.enableNRDControl)
+            end
+
             saveSettings()
         end
 	end)
