@@ -16,12 +16,12 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 
 - Global Preset:
   - **Vanilla**: Is the game's default mode.
-  - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower.
+  - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower
   - **Low**: Increases very low quality to not be as noisy.
-  - **Medium**: switches to ReSTIR DI/GI with better quality.
-  - **High**: Disables SHARC since it can be noisier sometimes, but it aids with above tertiary bounces in dark areas.
-  - **Ultra**: Changes to ReSTIR DI + ReGIR GI which can look better, but also noiser (specially with RR), so results vary.
-  - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the clanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
+  - **Medium**: Switches to ReSTIR DI/GI with better quality.
+  - **High**: Increase quality and disables SHARC since it can be noisier, but it aids with above tertiary bounces in dark areas.
+  - **Ultra**: Changes to ReGIR which can look better, but also noiser (specially with RR), so results vary.
+  - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
   - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI can loss specular detail in some surfaces.
@@ -59,7 +59,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 
 ## Compatibility
 
-This mod is currently not compatible with [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490) due to some overlapping settings and differences in behavior. If you want to use the ULTRA+ fixes and VRAM settings, I suggest you import those settings into an ini file and load them separately from the RT/PT settings.
+This mod is not compatible with [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490) due to some overlapping settings and differences in behavior. If you want to use the ULTRA+ fixes and VRAM settings, I suggest you import those settings into an ini file and load them separately from the RT/PT settings.
 
 Advanced Path Tracing does not use the same settings and values as ULTRA+ Control for RT/PT, but most of the behavior can be replicated. To do this, use the `ptQuality.lua` file to apply the same values in ULTRA+ Control.
 
