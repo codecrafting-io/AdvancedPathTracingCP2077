@@ -24,7 +24,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
-  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI can loss specular detail in some surfaces.
+  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may lose specular detail on some surfaces.
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray
 - Path Tracing Quality:
