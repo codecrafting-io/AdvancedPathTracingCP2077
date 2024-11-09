@@ -14,6 +14,7 @@
     Native Settings Docs - https://github.com/justarandomguyintheinternet/CP77_nativeSettings
 ]]--
 
+--do return end
 settings = {}
 Cron = require("Modules/Cron")
 GameUI = require("Modules/GameUI")
@@ -21,7 +22,7 @@ GameSettings = require("Modules/GameSettings")
 
 local settingsFilename = "settings.json"
 local defaults = require("defaults")
-local ptQuality = require("ptQuality")
+local ptSettings = require("ptSettings")
 local Debug = require("Modules/Debug")
 local NativeSettings = {}
 local modOptions = require("modOptions")
@@ -67,7 +68,7 @@ end
 ---@param setting string
 ---@param value any
 local function checkCustomPreset(setting, value)
-    if isPresetInRange(settings.ptPreset) and ptQuality.preset[settings.ptPreset][setting] ~= value then
+    if isPresetInRange(settings.ptPreset) and ptSettings.preset[settings.ptPreset][setting] ~= value then
         NativeSettings.setOption(modOptions.options["PT_PRESET"].option, 8)
     end
 end
@@ -415,7 +416,7 @@ end
 function setPTQuality(quality)
     Debug:Info("Setting Path Tracing Quality")
     settings.ptQuality = quality
-    GameSettings.SetAll(ptQuality.settings[quality])
+    GameSettings.SetAll(ptSettings.quality[quality])
     checkCustomPreset('ptQuality', quality)
 end
 
@@ -424,7 +425,7 @@ end
 function setPTOptimizations(ptOptimizations)
     Debug:Info("Setting Path Tracing Optimizations")
     settings.ptOptimizations = ptOptimizations
-    GameSettings.SetAll(ptQuality.optimizations[ptOptimizations])
+    GameSettings.SetAll(ptSettings.optimizations[ptOptimizations])
     checkCustomPreset('ptOptimizations', ptOptimizations)
 end
 
@@ -440,7 +441,7 @@ end
 ---Set Path Tracing presetNumber
 ---@param preset integer
 function setPTPreset(preset)
-    local ptQualityPreset = ptQuality.preset[preset]
+    local ptQualityPreset = ptSettings.preset[preset]
     settings.ptPreset = preset
 
     if isPresetInRange(preset) and ptQualityPreset then

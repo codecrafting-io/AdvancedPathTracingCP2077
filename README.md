@@ -61,7 +61,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 
 This mod is not compatible with [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490) due to some overlapping settings and differences in behavior. If you want to use the ULTRA+ fixes and VRAM settings, I suggest you import those settings into an ini file and load them separately from the RT/PT settings.
 
-Advanced Path Tracing does not use the same settings and values as ULTRA+ Control for RT/PT, but most of the behavior can be replicated. To do this, use the `ptQuality.lua` file to apply the same values in ULTRA+ Control.
+Advanced Path Tracing does not use the same settings and values as ULTRA+ Control for RT/PT, but most of the behavior can be replicated. To do this, use the `ptSettings.lua` file to apply the same values in ULTRA+ Control.
 
 ## Installation
 

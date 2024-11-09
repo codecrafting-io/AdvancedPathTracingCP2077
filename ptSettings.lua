@@ -78,7 +78,7 @@ return {
             dlssdParticles      = true
         }
     },
-    settings = {
+    quality = {
         --Vanilla
         [1] = {
             --ReGIR
@@ -765,15 +765,17 @@ return {
                 name        = "EnableImportanceSampling",
                 value       = "false"
             },
+            --[[
             {
                 category    = "RayTracing",
                 name        = "InstanceFlagForceOMM2StateOnLODXAndAbove",
                 value       = "3"
             },
+            --]]
             {
                 category    = "RayTracing",
                 name        = "TransparentReflectionEnvironmentBlendFactor",
-                value       = "0.05"
+                value       = "0.8"
             },
             {
                 category    = "RayTracing/Reflection",
