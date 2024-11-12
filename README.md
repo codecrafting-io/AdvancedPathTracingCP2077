@@ -18,13 +18,13 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Vanilla**: Is the game's default mode.
   - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower
   - **Low**: Increases very low quality to not be as noisy.
-  - **Medium**: Switches to ReSTIR DI/GI with better quality.
-  - **High**: Increase quality and disables SHARC since it can be noisier, but it aids with above tertiary bounces in dark areas.
-  - **Ultra**: Changes to ReGIR which can look better, but also noiser (specially with RR), so results vary.
+  - **Medium**: Medium uses ReSTIR DI/GI, disables SHARC, offering less noise and up to 8% performance over Vanilla.
+  - **High**: High further increase quality.
+  - **Ultra**: Ultra changes to ReSTIR DI + ReGIR GI which can look better but with high cost
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
-  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may lose specular detail on some surfaces.
+  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may loose specular detail on some surfaces.
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray
 - Path Tracing Quality:
@@ -39,7 +39,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
   - Minor GI/DI light behavior optimizations
-- NVIDIA SHARC: Enable NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. According to NVIDIA, this is designed to improve signal quality and performance and works in world space. This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. This may result in slight differences in light bounce, shadows and performance may vary. Scales with path tracing quality.
+- NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5 (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
 - Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).

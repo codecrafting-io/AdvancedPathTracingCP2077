@@ -37,7 +37,7 @@ return {
         [4] = {
             ptMode              = 2,
             ptQuality           = 3,
-            sharc               = true,
+            sharc               = false,
             ptOptimizations     = true,
             rayNumber           = 2,
             rayBounce           = 2,
@@ -106,13 +106,18 @@ return {
             },
             {
                 category    = "Editor/ReSTIRGI",
+                name        = "TargetHistoryLength",
+                value       = "8"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
                 name        = "MaxReservoirAge",
                 value       = "32"
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "TargetHistoryLength",
-                value       = "8"
+                name        = "SpatialSamplingRadius",
+                value       = "32.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -123,11 +128,6 @@ return {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
                 value       = "2"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "SpatialSamplingRadius",
-                value       = "32.0"
             },
 
             --RTXDI
@@ -200,17 +200,22 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxHistoryLength",
-                value       = "8"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "MaxReservoirAge",
-                value       = "20"
+                value       = "0"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "TargetHistoryLength",
-                value       = "8"
+                value       = "0"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "MaxReservoirAge",
+                value       = "16"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "SpatialSamplingRadius",
+                value       = "20.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -221,11 +226,6 @@ return {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
                 value       = "2"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "SpatialSamplingRadius",
-                value       = "14.0"
             },
 
             --RTXDI
@@ -271,7 +271,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "25.0"
+                value       = "35.0"
             }
         },
 
@@ -298,17 +298,22 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxHistoryLength",
-                value       = "8"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "MaxReservoirAge",
-                value       = "32"
+                value       = "6"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "TargetHistoryLength",
-                value       = "8"
+                value       = "6"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "MaxReservoirAge",
+                value       = "24"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "SpatialSamplingRadius",
+                value       = "32.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -319,11 +324,6 @@ return {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
                 value       = "6"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "SpatialSamplingRadius",
-                value       = "24.0"
             },
 
             --RTXDI
@@ -369,7 +369,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "35.0"
+                value       = "40.0"
             }
         },
 
@@ -396,7 +396,12 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxHistoryLength",
-                value       = "10"
+                value       = "6"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "TargetHistoryLength",
+                value       = "6"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -405,8 +410,8 @@ return {
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "TargetHistoryLength",
-                value       = "8"
+                name        = "SpatialSamplingRadius",
+                value       = "32.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -416,12 +421,7 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "8"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "SpatialSamplingRadius",
-                value       = "24.0"
+                value       = "16"
             },
 
             --RTXDI
@@ -494,7 +494,12 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxHistoryLength",
-                value       = "10"
+                value       = "6"
+            },
+            {
+                category    = "Editor/ReSTIRGI",
+                name        = "TargetHistoryLength",
+                value       = "6"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -503,8 +508,8 @@ return {
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "TargetHistoryLength",
-                value       = "10"
+                name        = "SpatialSamplingRadius",
+                value       = "32.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -515,11 +520,6 @@ return {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
                 value       = "32"
-            },
-            {
-                category    = "Editor/ReSTIRGI",
-                name        = "SpatialSamplingRadius",
-                value       = "32.0"
             },
 
             --RTXDI
@@ -584,13 +584,13 @@ return {
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "BoilingFilterStrength",
-                value       = "0.4"
+                name        = "EnableBoilingFilter",
+                value       = "false"
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "EnableBoilingFilter",
-                value       = "false"
+                name        = "BoilingFilterStrength",
+                value       = "0.4"
             },
             {
                 category    = "Editor/ReSTIRGI",
@@ -690,13 +690,13 @@ return {
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "BoilingFilterStrength",
-                value       = "0.25"
+                name        = "EnableBoilingFilter",
+                value       = "true"
             },
             {
                 category    = "Editor/ReSTIRGI",
-                name        = "EnableBoilingFilter",
-                value       = "true"
+                name        = "BoilingFilterStrength",
+                value       = "0.2"
             },
             {
                 category    = "Editor/ReSTIRGI",

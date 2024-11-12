@@ -18,7 +18,7 @@ return {
             index = 'PT_PRESET',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium switches to ReSTIR DI/GI with better quality\n\nHigh increase quality and disables SHARC since it can be noisier, but it aids with above tertiary bounces in dark areas.\n\nUltra changes to ReGIR which can look better, but also noiser (specially with RR), so results vary\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and be more like offline rendering. Results vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, offering less noise and up to 8% performance over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",
@@ -56,7 +56,7 @@ return {
             index = 'PT_QUALITY',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla and increase performance by up to 1%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla loosing up to 2%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",
@@ -74,7 +74,7 @@ return {
             index = 'PT_SHARC',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'NVIDIA SHARC',
-            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Enabled is the vanilla mode. Scales with PT Quality. Disables when using ReGIR. Performance and visual quality vary",
+            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5 (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
             range = nil,
             value = "sharc",
             stateCallback = function(state)
@@ -130,7 +130,7 @@ return {
             index = 'DLSSD_PARTICLES',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Ray Reconstruction Particles',
-            description = "Enables particles to not be separated in Ray Reconstruction, when it's not raining and outdoors",
+            description = "Use Ray Reconstruction on particles, when it's not raining and outdoors",
             range = nil,
             value = "dlssdParticles",
             stateCallback = function(state)

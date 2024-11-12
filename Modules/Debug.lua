@@ -100,6 +100,10 @@ local function parseDeep(t, max, depth)
     return string.format('%s%s}', dumpStr, unIndent)
 end
 
+local function consolePrint(msg)
+    print(string.format(IconGlyphs.Creation .. ' ADVPT [[[ %s ]]]', msg))
+end
+
 ---Clone objects
 ---@param orig any
 ---@param copies any
@@ -165,7 +169,7 @@ end
 function Debug:Log(msg)
     spdlog.info(string.format('[%s] %s', 'INFO', msg))
     if logLevel <= self.INFO then
-        print(string.format('[[[ %s ]]]', msg))
+        consolePrint(msg)
     end
 end
 
@@ -173,7 +177,7 @@ end
 ---@param msg string
 function Debug:Info(msg)
     if logLevel <= self.INFO then
-        print(string.format('[[[ %s ]]]', msg))
+        consolePrint(msg)
     end
 end
 
@@ -181,7 +185,7 @@ end
 ---@param msg string
 function Debug:Debug(msg)
     if logLevel <= self.DEBUG then
-        print(string.format('[[[ %s ]]]', msg))
+        consolePrint(msg)
         spdlog.info(string.format('[%s] %s', 'DEBUG', msg))
     end
 end
