@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0
+
+- Rearranged ptQuality to ptSettings
+- Revised PT Quality settings
+- Updated descriptions
+
 ## v0.4.0
 
 - Added Global presets from "Very Low" to "Psycho", including full Vanilla mode
