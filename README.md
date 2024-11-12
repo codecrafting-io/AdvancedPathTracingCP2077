@@ -90,8 +90,8 @@ The mod save your preferences in the `settings.json` file.
 | selfReflection | boolean | false | Whether or not to enable V's self-reflection. Head won't appear due to game limitation. |
 | enableDLSSDParticles | boolean | true | Whether or not enable DLSS Ray Reconstruction particles |
 | ptPreset | int | 4 | Path Tracing global preset. <br> 1 - Vanilla <br> 2 - Very Low <br> 3 - Low <br> 4 - Medium <br> 5 - High <br> 6 - Ultra <br> 7 - Psycho |
-| ptModeIndex | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReSTIR DI + ReGIR GI <br> 4 - ReGIR DI/GI |
-| ptQualityIndex | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
+| ptMode | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReSTIR DI + ReGIR GI <br> 4 - ReGIR DI/GI |
+| ptQuality | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
 | ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
 
 ## Credits
