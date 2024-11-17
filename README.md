@@ -19,7 +19,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower
   - **Low**: Increases very low quality to not be as noisy.
   - **Medium**: Medium uses ReSTIR DI/GI, disables SHARC, offering less noise and up to 8% performance over Vanilla.
-  - **High**: High further increase quality.
+  - **High**: Further increase quality from Medium.
   - **Ultra**: Ultra changes to ReSTIR DI + ReGIR GI which can look better but with high cost
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
@@ -30,7 +30,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
-  - **Balanced**: Improve on Vanilla quality and increase performance by up to 1%
+  - **Balanced**: Improve on Vanilla loosing up to 2%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
 - Path Tracing Optimizations: Enables the following optimizations:
