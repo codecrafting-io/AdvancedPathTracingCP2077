@@ -777,11 +777,13 @@ return {
                 name        = "TransparentReflectionEnvironmentBlendFactor",
                 value       = "0.8"
             },
+            --[[
             {
                 category    = "RayTracing/Reflection",
                 name        = "EnableHalfResolutionTracing",
                 value       = "0"
             }
+            --]]
         }
     }
 }

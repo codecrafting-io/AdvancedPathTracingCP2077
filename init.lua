@@ -39,6 +39,7 @@ local PRESET = {
 local previous = {
     dlssSharpness = nil,
     dlssPreset = nil,
+    dlssBackend = nil,
     hasDLSSD = nil,
     isRaining = nil,
     isIndoors = nil
@@ -145,6 +146,7 @@ local function refreshDLSSD()
     previous.hasDLSSD = runtime.hasDLSSD
     previous.dlssSharpness = GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
     previous.dlssPreset = GameSettings.Get("/graphics/presets", "DLSS")
+    previous.dlssBackend = GameSettings.Get("/graphics/presets", "DLSS_BackendPreset")
     Debug:Info("Refreshing DLSS Ray Reconstruction - " .. previous.dlssPreset)
 
     --Enabling NRD also disables DLSSD
@@ -169,6 +171,7 @@ local function hasDLSSDChanged()
     return previous.hasDLSSD ~= runtime.hasDLSSD
             or previous.dlssPreset ~= GameSettings.Get("/graphics/presets", "DLSS")
             or previous.dlssSharpness ~= GameSettings.Get("/graphics/presets", "DLSS_NewSharpness")
+            or previous.dlssBackend ~= GameSettings.Get("/graphics/presets", "DLSS_BackendPreset")
 end
 
 ---Set Ray Reconstruction particles control detection
@@ -570,7 +573,7 @@ local function setRuntime()
         --GameUI.PrintState(state)
 
         --Some events if you clear console can trigger an access memory violation when exiting to MainMenu. Game, CET or GameUI fault?
-        if state.event == 'SessionStart' or state.event == 'FastTravelFinish' then
+        if state.event == 'SessionStart' or state.event == 'FastTravelFinish' or state.event == 'PhotoModeOpen' then
             runtime.inGame = true
 
             --Reset Refresh Control
