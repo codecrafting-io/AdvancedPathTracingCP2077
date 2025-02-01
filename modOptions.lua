@@ -18,7 +18,7 @@ return {
             index = 'PT_PRESET',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, offering slightly more stable image and up to 8% performance increase over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, similar quality to Vanilla and up to 8% performance increase over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",

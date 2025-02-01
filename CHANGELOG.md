@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.0
+
+- Improved support for DLSS4
+- Improved support for [LUTSwitcher](https://www.nexusmods.com/cyberpunk2077/mods/16310)
+- Improved Refresh Game
+- Minor revision for quality settings
+- **:fire: EXPERIMENTAL :fire:**: Added support for Photo Mode screenshots
+
 ## v0.5.0
 
 - Rearranged ptQuality to ptSettings

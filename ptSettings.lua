@@ -261,12 +261,12 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
-                value       = "1"
+                value       = "2"
             },
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "30"
+                value       = "10"
             },
             {
                 category    = "Editor/SHARC",
@@ -359,12 +359,12 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
-                value       = "2"
+                value       = "4"
             },
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "30"
+                value       = "10"
             },
             {
                 category    = "Editor/SHARC",
@@ -462,7 +462,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "30"
+                value       = "10"
             },
             {
                 category    = "Editor/SHARC",
@@ -560,7 +560,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "DownscaleFactor",
-                value       = "30"
+                value       = "10"
             },
             {
                 category    = "Editor/SHARC",

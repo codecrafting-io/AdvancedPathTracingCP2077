@@ -364,6 +364,9 @@ end
 function setSharc(sharc)
     settings.sharc = sharc
 
+    --Trigger a DLSS Refresh is better on changing SHARC
+    previous.hasDLSSD = nil
+
     if not (sharc and runtime.enableReGIR) then
         Debug:Info("Setting SHARC")
         GameSettings.Set("Editor/SHARC", "Enable", tostring(sharc))
