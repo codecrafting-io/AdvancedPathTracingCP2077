@@ -18,7 +18,7 @@ return {
             index = 'PT_PRESET',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality that makes some sense to still enable PT, but you can go lower\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, offering less noise and up to 8% performance over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, offering slightly more stable image and up to 8% performance increase over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",
@@ -39,7 +39,7 @@ return {
             index = 'PT_MODE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Mode',
-            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, mainly used for DI. Enables control of rays per pixel and bounces per ray.\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI + ReGIR GI - Uses Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI\n\n ReGIR DI/GI - Uses ReGIR for both DI and GI",
+            description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, used with DI and naive GI. Enables control of rays per pixel and bounces per ray (also for Photo Mode screenshots).\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI + ReGIR GI - Uses Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI\n\n ReGIR DI/GI - Uses ReGIR for both DI and GI",
             range = {
                 [1] = "ReSTIR DI",
                 [2] = "ReSTIR DI/GI",
@@ -74,7 +74,7 @@ return {
             index = 'PT_SHARC',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'NVIDIA SHARC',
-            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5 (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
+            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
             range = nil,
             value = "sharc",
             stateCallback = function(state)
@@ -86,7 +86,7 @@ return {
             index = 'PT_OPTIMIZATIONS',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Optimizations',
-            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nMinor GI/DI light behavior optimizations. May improve performance",
+            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI light behavior optimizations. Increase performance on most scenarios",
             range = nil,
             value = "ptOptimizations",
             stateCallback = function(state)
@@ -98,7 +98,7 @@ return {
             index = 'RAY_NUMBER',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Rays Per Pixel',
-            description = "Number of rays per pixel. Only works when using ReSTIR DI mode",
+            description = "Number of rays per pixel. Only works when using ReSTIR DI mode. Affects Photo Mode screenshots",
             range = {
                 min = 1,
                 max = 8,
@@ -114,7 +114,7 @@ return {
             index = 'RAY_BOUNCE',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Bounces Per Ray',
-            description = "Number of bounces per ray. Only works when using ReSTIR DI mode",
+            description = "Number of bounces per ray. Only works when using ReSTIR DI mode. Affects Photo Mode screenshots",
             range = {
                 min = 0,
                 max = 8,

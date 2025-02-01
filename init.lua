@@ -344,6 +344,8 @@ function setRayNumber(number)
     Debug:Info("Setting Ray Number")
     settings.rayNumber = number
     GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
+    GameSettings.Set("RayTracing/Reference", "RayNumberScreenshot", tostring(number))
+    GameSettings.Set("RayTracing/ReferenceScreenshot", "SampleNumber", tostring(number))
     checkCustomPreset('rayNumber', number)
 end
 
@@ -353,6 +355,7 @@ function setRayBounce(number)
     Debug:Info("Setting Ray Bounce")
     settings.rayBounce = number
     GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
+    GameSettings.Set("RayTracing/Reference", "BounceNumberScreenshot", tostring(number))
     checkCustomPreset('rayBounce', number)
 end
 
@@ -548,10 +551,8 @@ local function updateRuntime()
 
     if runtime.refreshGame then
         if GameSettings.CanRefresh() then
-            --Wait a bit for the first load
-            Cron.After(0.25, function()
-                GameSettings.RefreshGame(settings.refreshPauseTimeout)
-            end)
+            --Apply delay for LUTSwitcher
+            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45)
 
             --Always refresh
             if settings.refreshInterval > 0 then
@@ -573,7 +574,7 @@ local function setRuntime()
         --GameUI.PrintState(state)
 
         --Some events if you clear console can trigger an access memory violation when exiting to MainMenu. Game, CET or GameUI fault?
-        if state.event == 'SessionStart' or state.event == 'FastTravelFinish' or state.event == 'PhotoModeOpen' then
+        if state.event == 'SessionStart' or state.event == 'FastTravelFinish' then
             runtime.inGame = true
 
             --Reset Refresh Control

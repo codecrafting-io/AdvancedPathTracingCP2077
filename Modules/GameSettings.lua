@@ -153,9 +153,10 @@ function GameSettings.AddFPPHead()
     end)
 end
 
----Refresh game by apply multiple restriction effects
+---Refresh game by apply multiple restriction effects. Delay can be applied to time stop
 ---@param timeout number
-function GameSettings.RefreshGame(timeout)
+---@param delay number
+function GameSettings.RefreshGame(timeout, delay)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
 
@@ -165,23 +166,26 @@ function GameSettings.RefreshGame(timeout)
     --Camera Movement
     GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', 0)
     GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', 0)
-    GameSettings.SetTimeDilation(0.0)
 
     for _, v in ipairs(gameRestrictions) do
         GameSettings.ApplyGameStatus(v)
     end
 
-    Cron.After(timeout, function()
-        GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
-        GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', y)
+    Cron.After(delay, function()
+        GameSettings.SetTimeDilation(0.0)
 
-        for _, v in ipairs(gameRestrictions) do
-            GameSettings.RemoveGameStatus(v)
-        end
+        Cron.After(timeout, function()
+            GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
+            GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseY', y)
 
-        GameSettings.UnsetTimeDilation()
-        GameHUD.ShowMessage("REFRESH DONE")
-        Debug:Info("Refreshing done")
+            for _, v in ipairs(gameRestrictions) do
+                GameSettings.RemoveGameStatus(v)
+            end
+
+            GameSettings.UnsetTimeDilation()
+            GameHUD.ShowMessage("REFRESH DONE")
+            Debug:Info("Refreshing done")
+        end)
     end)
 end
 

@@ -16,9 +16,9 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 
 - Global Preset:
   - **Vanilla**: Is the game's default mode.
-  - **Very Low**: Is the lowest quality that makes some sense to still enable PT, but you can go lower
+  - **Very Low**: Is the lowest quality worth enabling PT, but lower is possible.
   - **Low**: Increases very low quality to not be as noisy.
-  - **Medium**: Medium uses ReSTIR DI/GI, disables SHARC, offering less noise and up to 8% performance over Vanilla.
+  - **Medium**: Medium uses ReSTIR DI/GI, disables SHARC, slightly more stable image and up to 8% performance increase over Vanilla.
   - **High**: Further increase quality from Medium.
   - **Ultra**: Ultra changes to ReSTIR DI + ReGIR GI which can look better but with high cost
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
@@ -26,7 +26,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
   - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may loose specular detail on some surfaces.
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
-  - **ReSTIR DI**: This is the older PT from update 2.0, used for DI only. Allows control of rays per pixel and bounces per ray
+  - **ReSTIR DI**: This is the older PT from update 2.0, used with DI and naive GI. Allows control of rays per pixel and bounces per ray (also for Photo Mode screenshots)
 - Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
@@ -39,9 +39,10 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
   - Minor GI/DI light behavior optimizations
-- NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5 (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
-- Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode
-- Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode
+  - Improved RT distance
+- NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
+- Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode. Affects Photo Mode screenshots
+- Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode. Affects Photo Mode screenshots
 - Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - DLSS Ray Reconstruction Particles: By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD). When using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
@@ -51,6 +52,8 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 **NOTE:** ReGIR has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
+
+**NOTE:** Photo Mode screenshots only uses ReSTIR DI mode
 
 ## Requirements
 
