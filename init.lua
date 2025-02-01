@@ -58,7 +58,7 @@ local runtime = {
     fppHeadAdded = false
 }
 local AdvancedPathTracingEvents = {
-    settings = Debug:Clone(defaults),
+    settings = {},
     events = {
         beforeRefresh = {},
         afterRefresh = {}
@@ -662,6 +662,7 @@ registerForEvent('onInit', function()
         setNRDControl(settings.enableNRDControl)
         setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
+        AdvancedPathTracingEvents.settings = Debug:Clone(settings)
     else
         Debug:Error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end

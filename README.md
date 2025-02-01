@@ -111,7 +111,7 @@ AdvancedPathTracing now supports refresh events. The refresh mechanic uses time 
     end)
 ```
 
-You can also check the mod settings through `AdvancedPathTracing.settings`, which returns a table like this:
+You can also check the mod loaded settings through `AdvancedPathTracing.settings`, which returns a table like this:
 
 ```lua
 {
