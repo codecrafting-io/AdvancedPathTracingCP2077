@@ -57,6 +57,32 @@ local runtime = {
     hasDLSSD = false,
     fppHeadAdded = false
 }
+local AdvancedPathTracingEvents = {
+    settings = Debug:Clone(defaults),
+    events = {
+        beforeRefresh = {},
+        afterRefresh = {}
+    }
+}
+local eventHandler = {
+    --Register events
+    __index = function(self, key)
+        return function(callback)
+            if self.events[key] then
+                table.insert(self.events[key], callback)
+            end
+        end
+    end,
+    --Call events
+    __call = function(self, event, ...)
+        if self.events[event] then
+            for _, callback in ipairs(self.events[event]) do
+                callback(...)
+            end
+        end
+    end
+}
+setmetatable(AdvancedPathTracingEvents, eventHandler)
 
 ---Checks if preset has a valid range, except custom
 ---@param preset integer
@@ -555,7 +581,7 @@ local function updateRuntime()
     if runtime.refreshGame then
         if GameSettings.CanRefresh() then
             --Apply delay for LUTSwitcher
-            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45)
+            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45, AdvancedPathTracingEvents)
 
             --Always refresh
             if settings.refreshInterval > 0 then
@@ -644,3 +670,5 @@ end)
 registerForEvent('onUpdate', function(delta)
     Cron.Update(delta)
 end)
+
+return AdvancedPathTracingEvents

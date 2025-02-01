@@ -7,6 +7,7 @@
 - Improved Refresh Game
 - Minor revision for quality settings
 - **:fire: EXPERIMENTAL :fire:**: Added support for Photo Mode screenshots
+- **:fire: NEW :fire:**: Added support for refresh events for other mod developers
 
 ## v0.5.0
 

@@ -97,6 +97,46 @@ The mod save your preferences in the `settings.json` file.
 | ptQuality | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
 | ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
 
+## Events
+
+AdvancedPathTracing now supports refresh events. The refresh mechanic uses time dilation, which can cause minor interference with some mods. Now the mod exposes two events: "afterRefresh" and "beforeRefresh". See below how to use them:
+
+```lua
+    AdvancedPathTracing = GetMod("AdvancedPathTracing")
+    AdvancedPathTracing.beforeRefresh(function()
+        print('Before Refresh')
+    end)
+    AdvancedPathTracing.afterRefresh(function()
+        print('After Refresh')
+    end)
+```
+
+You can also check the mod settings through `AdvancedPathTracing.settings`, which returns a table like this:
+
+```lua
+{
+    version = '0.6.0',
+    debug = false,
+    enableNRDControl = true,
+    fastTimeout = 1.0,
+    slowTimeout = 30.0,
+    refreshGame = false,
+    refreshInterval = 30.0,
+    refreshPauseTimeout = 5.0,
+    ptPreset = 4,
+    ptMode = 2,
+    ptQuality = 3,
+    sharc = true,
+    ptOptimizations = true,
+    rayNumber = 2,
+    rayBounce = 2,
+    selfReflection = true,
+    dlssdParticles = true
+}
+```
+
+Updating the settings will not affect the mod configuration
+
 ## Credits
 
 - [Ultra Plus Control (sammilucia)](https://www.nexusmods.com/cyberpunk2077/mods/10490): The initial game engine settings reference

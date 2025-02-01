@@ -156,10 +156,11 @@ end
 ---Refresh game by apply multiple restriction effects. Delay can be applied to time stop
 ---@param timeout number
 ---@param delay number
-function GameSettings.RefreshGame(timeout, delay)
+function GameSettings.RefreshGame(timeout, delay, events)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
 
+    events('beforeRefresh')
     Debug:Info("Refreshing the game")
     GameHUD.ShowMessage("REFRESHING")
 
@@ -185,6 +186,7 @@ function GameSettings.RefreshGame(timeout, delay)
             GameSettings.UnsetTimeDilation()
             GameHUD.ShowMessage("REFRESH DONE")
             Debug:Info("Refreshing done")
+            events('afterRefresh')
         end)
     end)
 end
