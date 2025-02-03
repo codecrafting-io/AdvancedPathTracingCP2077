@@ -53,7 +53,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 
 **NOTE:** This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
-**NOTE:** Photo Mode screenshots only uses ReSTIR DI mode
+**NOTE:** Photo Mode screenshots switches to ReSTIR DI mode. The *Rays per Pixel* and *Bounces per Ray* numbers will affect the screenshots.
 
 ## Requirements
 

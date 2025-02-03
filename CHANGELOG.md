@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.1
+
+- Fix initial 'refreshing' message not showing most of the times
+
 ## v0.6.0
 
 - Improved support for DLSS4

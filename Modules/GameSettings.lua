@@ -162,7 +162,6 @@ function GameSettings.RefreshGame(timeout, delay, events)
 
     events('beforeRefresh')
     Debug:Info("Refreshing the game")
-    GameHUD.ShowMessage("REFRESHING")
 
     --Camera Movement
     GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', 0)
@@ -173,6 +172,7 @@ function GameSettings.RefreshGame(timeout, delay, events)
     end
 
     Cron.After(delay, function()
+        GameHUD.ShowMessage("REFRESHING")
         GameSettings.SetTimeDilation(0.0)
 
         Cron.After(timeout, function()

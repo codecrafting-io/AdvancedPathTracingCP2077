@@ -6,7 +6,7 @@ return {
     slowTimeout = 30.0,
     refreshGame = false,
     refreshInterval = 30.0,
-    refreshPauseTimeout = 5.0,
+    refreshPauseTimeout = 7.0,
     ptPreset = 4,
     ptMode = 2,
     ptQuality = 3,
