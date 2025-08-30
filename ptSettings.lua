@@ -133,6 +133,11 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
+                name        = "MaxHistoryLength",
+                value       = "20"
+            },
+            {
+                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "2"
             },
@@ -229,6 +234,11 @@ return {
             },
 
             --RTXDI
+            {
+                category    = "Editor/RTXDI",
+                name        = "MaxHistoryLength",
+                value       = "0"
+            },
             {
                 category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
@@ -329,6 +339,11 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
+                name        = "MaxHistoryLength",
+                value       = "0"
+            },
+            {
+                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "2"
             },
@@ -425,6 +440,11 @@ return {
             },
 
             --RTXDI
+            {
+                category    = "Editor/RTXDI",
+                name        = "MaxHistoryLength",
+                value       = "10"
+            },
             {
                 category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
@@ -525,6 +545,11 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
+                name        = "MaxHistoryLength",
+                value       = "10"
+            },
+            {
+                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "1"
             },
@@ -572,6 +597,16 @@ return {
     optimizations = {
         --Off
         [false] = {
+            {
+                category    = "Editor/Denoising/ReLAX/Direct/Common",
+                name        = "ReprojectionTestSkippingWithoutMotion",
+                value       = "false"
+            },
+            {
+                category    = "Editor/Denoising/ReLAX/Indirect/Common",
+                name        = "ReprojectionTestSkippingWithoutMotion",
+                value       = "false"
+            },
             {
                 category    = "Editor/Denoising/NRD",
                 name        = "DisocclusionThreshold",
@@ -645,11 +680,6 @@ return {
                 value       = "0.1"
             },
             {
-                category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "20"
-            },
-            {
                 category    = "Editor/SHARC",
                 name        = "UseRTXDIAtPrimary",
                 value       = "false"
@@ -668,16 +698,33 @@ return {
                 category    = "RayTracing",
                 name        = "TransparentReflectionEnvironmentBlendFactor",
                 value       = "1.0"
+            }
+            --[[
+            {
+                category    = "RayTracing/Diffuse",
+                name        = "EnableHalfResolutionTracing",
+                value       = "1"
             },
             {
                 category    = "RayTracing/Reflection",
                 name        = "EnableHalfResolutionTracing",
                 value       = "1"
             }
+            --]]
         },
 
         --On
         [true] = {
+            {
+                category    = "Editor/Denoising/ReLAX/Direct/Common",
+                name        = "ReprojectionTestSkippingWithoutMotion",
+                value       = "true"
+            },
+            {
+                category    = "Editor/Denoising/ReLAX/Indirect/Common",
+                name        = "ReprojectionTestSkippingWithoutMotion",
+                value       = "true"
+            },
             {
                 category    = "Editor/Denoising/NRD",
                 name        = "DisocclusionThreshold",
@@ -751,11 +798,6 @@ return {
                 value       = "0.25"
             },
             {
-                category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "0"
-            },
-            {
                 category    = "Editor/SHARC",
                 name        = "UseRTXDIAtPrimary",
                 value       = "true"
@@ -778,6 +820,11 @@ return {
                 value       = "0.8"
             },
             --[[
+            {
+                category    = "RayTracing/Diffuse",
+                name        = "EnableHalfResolutionTracing",
+                value       = "0"
+            },
             {
                 category    = "RayTracing/Reflection",
                 name        = "EnableHalfResolutionTracing",
