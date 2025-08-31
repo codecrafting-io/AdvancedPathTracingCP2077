@@ -1,5 +1,5 @@
 return {
-    version = '0.6.0',
+    version = '0.7.0',
     debug = false,
 	enableNRDControl = true,
 	fastTimeout = 1.0,
@@ -11,7 +11,8 @@ return {
     ptMode = 2,
     ptQuality = 3,
     sharc = true,
-    ptOptimizations = true,
+    rtxdiFPSBoost = true,
+    ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,
     selfReflection = true,

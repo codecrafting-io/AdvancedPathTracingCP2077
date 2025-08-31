@@ -74,7 +74,7 @@ return {
             index = 'PT_SHARC',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'NVIDIA SHARC',
-            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
+            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
             range = nil,
             value = "sharc",
             stateCallback = function(state)
@@ -83,14 +83,26 @@ return {
             typeFunction = 'addSwitch'
         },
         {
-            index = 'PT_OPTIMIZATIONS',
+            index = 'RTXDI_FPS_BOOST',
             path = '/AdvancedPathTracing/path_tracing',
-            label = 'Optimizations',
-            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI light behavior optimizations. Increase performance on most scenarios",
+            label = 'RTXDI FPS Boost',
+            description = "Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise",
             range = nil,
-            value = "ptOptimizations",
+            value = "rtxdiFPSBoost",
             stateCallback = function(state)
-                setPTOptimizations(state)
+                setRTXDIFPSBoost(state)
+            end,
+            typeFunction = 'addSwitch'
+        },
+        {
+            index = 'PT_TWEAKS',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'Tweaks',
+            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI behavior optimizations",
+            range = nil,
+            value = "ptTweaks",
+            stateCallback = function(state)
+                setPTTweaks(state)
             end,
             typeFunction = 'addSwitch'
         },

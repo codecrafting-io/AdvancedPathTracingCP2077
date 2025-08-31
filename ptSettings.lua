@@ -5,7 +5,8 @@ return {
             ptMode              = 2,
             ptQuality           = 1,
             sharc               = true,
-            ptOptimizations     = false,
+            rtxdiFPSBoost       = false,
+            ptTweaks            = false,
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = false,
@@ -16,7 +17,8 @@ return {
             ptMode              = 1,
             ptQuality           = 2,
             sharc               = true,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = true,
+            ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 1,
             selfReflection      = false,
@@ -27,7 +29,8 @@ return {
             ptMode              = 1,
             ptQuality           = 3,
             sharc               = true,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = true,
+            ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 1,
             selfReflection      = true,
@@ -38,7 +41,8 @@ return {
             ptMode              = 2,
             ptQuality           = 3,
             sharc               = false,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = true,
+            ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
@@ -49,7 +53,8 @@ return {
             ptMode              = 2,
             ptQuality           = 4,
             sharc               = false,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = false,
+            ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
@@ -60,7 +65,8 @@ return {
             ptMode              = 3,
             ptQuality           = 4,
             sharc               = false,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = false,
+            ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
@@ -71,7 +77,8 @@ return {
             ptMode              = 1,
             ptQuality           = 5,
             sharc               = false,
-            ptOptimizations     = true,
+            rtxdiFPSBoost       = false,
+            ptTweaks            = true,
             rayNumber           = 4,
             rayBounce           = 6,
             selfReflection      = true,
@@ -131,11 +138,6 @@ return {
             },
 
             --RTXDI
-            {
-                category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "20"
-            },
             {
                 category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
@@ -236,11 +238,6 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "0"
-            },
-            {
-                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "2"
             },
@@ -337,11 +334,6 @@ return {
             },
 
             --RTXDI
-            {
-                category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "0"
-            },
             {
                 category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
@@ -442,11 +434,6 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "10"
-            },
-            {
-                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "1"
             },
@@ -545,11 +532,6 @@ return {
             --RTXDI
             {
                 category    = "Editor/RTXDI",
-                name        = "MaxHistoryLength",
-                value       = "10"
-            },
-            {
-                category    = "Editor/RTXDI",
                 name        = "BiasCorrectionMode",
                 value       = "1"
             },
@@ -594,7 +576,7 @@ return {
             }
         }
     },
-    optimizations = {
+    tweaks = {
         --Off
         [false] = {
             {

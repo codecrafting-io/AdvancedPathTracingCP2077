@@ -33,14 +33,15 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Balanced**: Improve on Vanilla loosing up to 2%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
-- Path Tracing Optimizations: Enables the following optimizations:
+- RTXDI FPS Boost: Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise
+- Path Tracing Tweaks: Enables the following optimizations:
   - Adds missing PT Reflections through Screen Space Reflections
   - Reduce noise on some scenarios. Some scenes may appear a little darker
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
-  - Minor GI/DI light behavior optimizations
+  - Minor GI/DI behavior optimizations
   - Improved RT distance
-- NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps with tertiary bounces in dark areas and light bounces during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
+- NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode. Affects Photo Mode screenshots
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode. Affects Photo Mode screenshots
 - Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
@@ -95,7 +96,8 @@ The mod save your preferences in the `settings.json` file.
 | ptPreset | int | 4 | Path Tracing global preset. <br> 1 - Vanilla <br> 2 - Very Low <br> 3 - Low <br> 4 - Medium <br> 5 - High <br> 6 - Ultra <br> 7 - Psycho |
 | ptMode | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReSTIR DI + ReGIR GI <br> 4 - ReGIR DI/GI |
 | ptQuality | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
-| ptOptimizations | boolean | true | Whether or not to enable PT Optimizations |
+| ptTweaks | boolean | true | Whether or not to enable PT Optimizations |
+| rtxdiFPSBoost | boolean | true | Whether or not to enable RTXDI FPS Boost |
 
 ## Events
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.0
+
+- Minor revision to Path Tracing quality settings
+- Renamed PT Optimizations to Tweaks
+- **:fire: EXPERIMENTAL :fire:**: Moved RTXDI Optimization to RTXDI FPS Boost (needs feedback)
+- Keep mod settings updated to events
+
 ## v0.6.1
 
 - Fix initial 'refreshing' message not showing most of the times

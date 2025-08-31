@@ -455,13 +455,28 @@ function setPTQuality(quality)
     checkCustomPreset('ptQuality', quality)
 end
 
+---Set RTXDI FPS boost
+---@param rtxdiFPSBoost boolean
+function setRTXDIFPSBoost(rtxdiFPSBoost)
+    Debug:Info("Setting RTXDI FPS Boost")
+    settings.rtxdiFPSBoost = rtxdiFPSBoost
+
+    if (rtxdiFPSBoost) then
+        GameSettings.Set("Editor/RTXDI", "MaxHistoryLength", "0")
+    else
+        GameSettings.Set("Editor/RTXDI", "MaxHistoryLength", "20")
+    end
+
+    checkCustomPreset('rtxdiFPSBoost', rtxdiFPSBoost)
+end
+
 ---Set PT optimizations
----@param ptOptimizations boolean
-function setPTOptimizations(ptOptimizations)
-    Debug:Info("Setting Path Tracing Optimizations")
-    settings.ptOptimizations = ptOptimizations
-    GameSettings.SetAll(ptSettings.optimizations[ptOptimizations])
-    checkCustomPreset('ptOptimizations', ptOptimizations)
+---@param ptTweaks boolean
+function setPTTweaks(ptTweaks)
+    Debug:Info("Setting Path Tracing Tweaks")
+    settings.ptTweaks = ptTweaks
+    GameSettings.SetAll(ptSettings.tweaks[ptTweaks])
+    checkCustomPreset('ptTweaks', ptTweaks)
 end
 
 ---Set self reflections to show or not
@@ -486,7 +501,8 @@ function setPTPreset(preset)
         NativeSettings.setOption(modOptions.options["PT_MODE"].option, ptQualityPreset.ptMode)
         NativeSettings.setOption(modOptions.options["PT_QUALITY"].option, ptQualityPreset.ptQuality)
         NativeSettings.setOption(modOptions.options["PT_SHARC"].option, ptQualityPreset.sharc)
-        NativeSettings.setOption(modOptions.options["PT_OPTIMIZATIONS"].option, ptQualityPreset.ptOptimizations)
+        NativeSettings.setOption(modOptions.options["RTXDI_FPS_BOOST"].option, ptQualityPreset.rtxdiFPSBoost)
+        NativeSettings.setOption(modOptions.options["PT_TWEAKS"].option, ptQualityPreset.ptTweaks)
         NativeSettings.setOption(modOptions.options["RAY_NUMBER"].option, ptQualityPreset.rayNumber)
         NativeSettings.setOption(modOptions.options["RAY_BOUNCE"].option, ptQualityPreset.rayBounce)
         NativeSettings.setOption(modOptions.options["DLSSD_PARTICLES"].option, ptQualityPreset.dlssdParticles)
@@ -634,6 +650,8 @@ local function setRuntime()
                 NativeSettings.setOption(modOptions.options["NRD"].option, settings.enableNRDControl)
             end
 
+            --Keep event settings updated
+            AdvancedPathTracingEvents.settings = Debug:Clone(settings)
             saveSettings()
         end
 	end)
@@ -654,7 +672,8 @@ registerForEvent('onInit', function()
         setPTMode(settings.ptMode)
         setPTQuality(settings.ptQuality)
         setSharc(settings.sharc)
-        setPTOptimizations(settings.ptOptimizations)
+        setRTXDIFPSBoost(settings.rtxdiFPSBoost)
+        setPTTweaks(settings.ptTweaks)
         setRayNumber(settings.rayNumber)
         setRayBounce(settings.rayBounce)
         setSelfReflection(settings.selfReflection)
