@@ -599,6 +599,7 @@ return {
                 name        = "UseScreenSpaceData",
                 value       = "false"
             },
+            --[[
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "EnableBoilingFilter",
@@ -609,6 +610,7 @@ return {
                 name        = "BoilingFilterStrength",
                 value       = "0.4"
             },
+            --]]
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "EnableFallbackSampling",
@@ -717,6 +719,7 @@ return {
                 name        = "UseScreenSpaceData",
                 value       = "true"
             },
+            --[[ Can cause black noise
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "EnableBoilingFilter",
@@ -727,6 +730,7 @@ return {
                 name        = "BoilingFilterStrength",
                 value       = "0.2"
             },
+            --]]
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "EnableFallbackSampling",
