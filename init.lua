@@ -491,6 +491,15 @@ function setPTTweaks(ptTweaks)
     checkCustomPreset('ptTweaks', ptTweaks)
 end
 
+---Set global light to enabled or disabled
+---@param globalLight boolean
+function setGlobalLight(globalLight)
+    Debug:Info("Setting Global Light")
+    settings.globalLight = globalLight
+    GameSettings.Set("Editor/RTXDI", "EnableGlobalLight", tostring(globalLight))
+    checkCustomPreset('selfReflection', globalLight)
+end
+
 ---Set self reflections to show or not
 ---@param selfReflection boolean
 function setSelfReflection(selfReflection)

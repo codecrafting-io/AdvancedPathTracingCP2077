@@ -5,6 +5,7 @@
 - Minor revision to Path Tracing quality settings
 - Renamed PT Optimizations to Tweaks
 - **:fire: EXPERIMENTAL :fire:**: Moved RTXDI Optimization to Light Frame Accumulation (needs feedback)
+- **:fire: NEW :fire:** Added Enhanced Global Light:
 - Keep mod settings updated to events
 - Migrate/Keep previous valid settings from older versions on upgrading
 

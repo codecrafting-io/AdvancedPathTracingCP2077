@@ -20,7 +20,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Low**: Increases very low quality to not be as noisy.
   - **Medium**: Medium uses ReSTIR DI/GI, disables SHARC, similar quality to Vanilla and up to 8% performance increase over Vanilla.
   - **High**: Further increase quality from Medium.
-  - **Ultra**: Ultra changes to ReSTIR DI + ReGIR GI which can look better but with high cost
+  - **Ultra**: Ultra enables global light and changes to ReSTIR DI + ReGIR GI which can look better but with high cost
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - Path Tracing Modes:
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
@@ -47,6 +47,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode. Affects Photo Mode screenshots
 - Bounces per Ray: Number of and bounces per ray **when using ReSTIR DI** mode. Affects Photo Mode screenshots
+- Global Light: Enables enhanced PT global light for sun/moon, with better radiance. Mostly affects sun light and shadows for foliage animation (wind), but character lighting may look duplicated
 - Self Reflection: Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - DLSS Ray Reconstruction Particles: By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - NRD Disable Helper: Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD). When using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.

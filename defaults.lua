@@ -16,5 +16,6 @@ return {
     rayNumber = 2,
     rayBounce = 2,
     selfReflection = true,
+    globalLight = false,
     dlssdParticles = true
 }

@@ -10,6 +10,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = false,
+            globalLight         = false,
             dlssdParticles      = false
         },
         --Very Low
@@ -22,6 +23,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 1,
             selfReflection      = false,
+            globalLight         = false,
             dlssdParticles      = false
         },
         --Low
@@ -34,6 +36,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 1,
             selfReflection      = true,
+            globalLight         = false,
             dlssdParticles      = true
         },
         --Medium
@@ -46,6 +49,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
+            globalLight         = false,
             dlssdParticles      = true
         },
         --High
@@ -58,6 +62,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
+            globalLight         = false,
             dlssdParticles      = true
         },
         --Ultra
@@ -70,6 +75,7 @@ return {
             rayNumber           = 2,
             rayBounce           = 2,
             selfReflection      = true,
+            globalLight         = true,
             dlssdParticles      = true
         },
         --Psycho
@@ -82,6 +88,7 @@ return {
             rayNumber           = 4,
             rayBounce           = 6,
             selfReflection      = true,
+            globalLight         = true,
             dlssdParticles      = true
         }
     },

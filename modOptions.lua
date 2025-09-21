@@ -18,7 +18,7 @@ return {
             index = 'ptPreset',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, similar quality to Vanilla, but up to 8% performance increase\n\nHigh further increase quality over medium\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, similar quality to Vanilla, but up to 8% performance increase\n\nHigh further increase quality over medium\n\nUltra enables global light and changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",
@@ -68,17 +68,6 @@ return {
             typeFunction = 'addSelectorString',
         },
         {
-            index = 'sharc',
-            path = '/AdvancedPathTracing/path_tracing',
-            label = 'NVIDIA SHARC',
-            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
-            range = nil,
-            stateCallback = function(state)
-                setSharc(state)
-            end,
-            typeFunction = 'addSwitch',
-        },
-        {
             index = 'rtxdiHistory',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Light Frame Accumulation',
@@ -92,17 +81,6 @@ return {
                 setRTXDIHistory(state)
             end,
             typeFunction = 'addSelectorString',
-        },
-        {
-            index = 'ptTweaks',
-            path = '/AdvancedPathTracing/path_tracing',
-            label = 'Tweaks',
-            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI optimizations",
-            range = nil,
-            stateCallback = function(state)
-                setPTTweaks(state)
-            end,
-            typeFunction = 'addSwitch',
         },
         {
             index = 'rayNumber',
@@ -135,6 +113,39 @@ return {
             typeFunction = 'addRangeInt',
         },
         {
+            index = 'sharc',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'NVIDIA SHARC',
+            description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
+            range = nil,
+            stateCallback = function(state)
+                setSharc(state)
+            end,
+            typeFunction = 'addSwitch',
+        },
+        {
+            index = 'ptTweaks',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'Tweaks',
+            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI optimizations",
+            range = nil,
+            stateCallback = function(state)
+                setPTTweaks(state)
+            end,
+            typeFunction = 'addSwitch',
+        },
+        {
+            index = 'globalLight',
+            path = '/AdvancedPathTracing/path_tracing',
+            label = 'Enhanced Global Light',
+            description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nMostly affects sun light and shadows for foliage animation (wind), but character lighting may look duplicated",
+            range = nil,
+            stateCallback = function(state)
+                setGlobalLight(state)
+            end,
+            typeFunction = 'addSwitch',
+        },
+        {
             index = 'dlssdParticles',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Ray Reconstruction Particles',
@@ -158,7 +169,7 @@ return {
         },
         {
             index = 'nrdControl',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/misc',
             label = 'NRD Disable Helper',
             description = "Disables NRD denoisier from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
             range = nil,
