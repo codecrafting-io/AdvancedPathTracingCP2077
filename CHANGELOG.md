@@ -4,7 +4,7 @@
 
 - Minor revision to Path Tracing quality settings
 - Renamed PT Optimizations to Tweaks
-- **:fire: EXPERIMENTAL :fire:**: Moved RTXDI Optimization to RTXDI FPS Boost (needs feedback)
+- **:fire: EXPERIMENTAL :fire:**: Moved RTXDI Optimization to Light Frame Accumulation (needs feedback)
 - Keep mod settings updated to events
 - Migrate/Keep previous valid settings from older versions on upgrading
 

@@ -33,7 +33,10 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Balanced**: Improve on Vanilla loosing up to 3%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
-- RTXDI FPS Boost: Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise
+- Light Frame Accumulation: Defines ReSTIR DI light reservoir frame accumulation:
+  - **Vanilla**: Default game setting
+  - **Disabled**: No accumulation. Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise
+  - **Optimized**: Not as high as vanilla, but more responsive with some accumulation to fix occasional noise flickering
 - Path Tracing Tweaks: Enables the following optimizations:
   - Adds missing PT Reflections through Screen Space Reflections
   - Reduce noise on some scenarios. Some scenes may appear a little darker
@@ -97,7 +100,7 @@ The mod save your preferences in the `settings.json` file.
 | ptMode | int | 2 | Path Tracing mode. <br>1 - ReSTIR DI <br>2 - ReSTIR DI/GI <br> 3 - ReSTIR DI + ReGIR GI <br> 4 - ReGIR DI/GI |
 | ptQuality | int | 3 | Path Tracing quality setting. <br>1 - Vanilla <br>2 - Performance <br>3 - Balanced <br>4 - Quality <br>5 - Psycho |
 | ptTweaks | boolean | true | Whether or not to enable PT Optimizations |
-| rtxdiFPSBoost | boolean | true | Whether or not to enable RTXDI FPS Boost |
+| rtxdiHistory | int | 2 | Defines ReSTIR DI light reservoir frame accumulation |
 
 ## Events
 
@@ -129,7 +132,7 @@ You can also check the mod loaded settings through `AdvancedPathTracing.settings
     ptMode = 2,
     ptQuality = 3,
     sharc = true,
-    rtxdiFPSBoost = false,
+    rtxdiHistory = 2,
     ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,

@@ -79,15 +79,19 @@ return {
             typeFunction = 'addSwitch',
         },
         {
-            index = 'rtxdiFPSBoost',
+            index = 'rtxdiHistory',
             path = '/AdvancedPathTracing/path_tracing',
-            label = 'RTXDI FPS Boost',
-            description = "Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise",
-            range = nil,
+            label = 'Light Frame Accumulation',
+            description = "Defines ReSTIR DI light reservoir frame accumulation\n\nVanilla: Default value\n\nDisabled: No accumulation. Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise\n\nOptimized: Not as high as vanilla, but more responsive with some accumulation to fix occasional noise flickering",
+            range = {
+                [1] = "Vanilla",
+                [2] = "Disabled",
+                [3] = "Optimized"
+            },
             stateCallback = function(state)
-                setRTXDIFPSBoost(state)
+                setRTXDIHistory(state)
             end,
-            typeFunction = 'addSwitch',
+            typeFunction = 'addSelectorString',
         },
         {
             index = 'ptTweaks',

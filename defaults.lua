@@ -11,7 +11,7 @@ return {
     ptMode = 2,
     ptQuality = 3,
     sharc = true,
-    rtxdiFPSBoost = true,
+    rtxdiHistory = 2,
     ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,

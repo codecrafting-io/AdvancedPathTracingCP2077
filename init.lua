@@ -473,19 +473,13 @@ function setPTQuality(quality)
     checkCustomPreset('ptQuality', quality)
 end
 
----Set RTXDI FPS boost
----@param rtxdiFPSBoost boolean
-function setRTXDIFPSBoost(rtxdiFPSBoost)
-    Debug:Info("Setting RTXDI FPS Boost")
-    settings.rtxdiFPSBoost = rtxdiFPSBoost
-
-    if (rtxdiFPSBoost) then
-        GameSettings.Set("Editor/RTXDI", "MaxHistoryLength", "0")
-    else
-        GameSettings.Set("Editor/RTXDI", "MaxHistoryLength", "20")
-    end
-
-    checkCustomPreset('rtxdiFPSBoost', rtxdiFPSBoost)
+---Set Light Frame Accumulation (RTXDI MaxHistoryLength)
+---@param rtxdiHistory boolean
+function setRTXDIHistory(rtxdiHistory)
+    Debug:Info("Setting Light Frame Accumulation")
+    settings.rtxdiHistory = rtxdiHistory
+    GameSettings.Set("Editor/RTXDI", "MaxHistoryLength", ptSettings.rtxdiHistory[rtxdiHistory])
+    checkCustomPreset('rtxdiHistory', rtxdiHistory)
 end
 
 ---Set PT optimizations

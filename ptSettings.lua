@@ -5,7 +5,7 @@ return {
             ptMode              = 2,
             ptQuality           = 1,
             sharc               = true,
-            rtxdiFPSBoost       = false,
+            rtxdiHistory        = 1,
             ptTweaks            = false,
             rayNumber           = 2,
             rayBounce           = 2,
@@ -17,7 +17,7 @@ return {
             ptMode              = 1,
             ptQuality           = 2,
             sharc               = true,
-            rtxdiFPSBoost       = true,
+            rtxdiHistory        = 2,
             ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 1,
@@ -29,7 +29,7 @@ return {
             ptMode              = 1,
             ptQuality           = 3,
             sharc               = true,
-            rtxdiFPSBoost       = true,
+            rtxdiHistory        = 2,
             ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 1,
@@ -41,7 +41,7 @@ return {
             ptMode              = 2,
             ptQuality           = 3,
             sharc               = true,
-            rtxdiFPSBoost       = true,
+            rtxdiHistory        = 2,
             ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
@@ -53,7 +53,7 @@ return {
             ptMode              = 2,
             ptQuality           = 4,
             sharc               = false,
-            rtxdiFPSBoost       = false,
+            rtxdiHistory        = 3,
             ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
@@ -65,7 +65,7 @@ return {
             ptMode              = 3,
             ptQuality           = 4,
             sharc               = false,
-            rtxdiFPSBoost       = false,
+            rtxdiHistory        = 3,
             ptTweaks            = true,
             rayNumber           = 2,
             rayBounce           = 2,
@@ -77,7 +77,7 @@ return {
             ptMode              = 1,
             ptQuality           = 5,
             sharc               = false,
-            rtxdiFPSBoost       = false,
+            rtxdiHistory        = 3,
             ptTweaks            = true,
             rayNumber           = 4,
             rayBounce           = 6,
@@ -85,6 +85,14 @@ return {
             dlssdParticles      = true
         }
     },
+
+    --RTXDI MaxHistoryLength
+    rtxdiHistory = {
+        [1] = "20",
+        [2] = "0",
+        [3] = "10"
+    },
+
     quality = {
         --Vanilla
         [1] = {
