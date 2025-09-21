@@ -96,7 +96,7 @@ end
 ---@param value any
 local function checkCustomPreset(setting, value)
     if isPresetInRange(settings.ptPreset) and ptSettings.preset[settings.ptPreset][setting] ~= value then
-        NativeSettings.setOption(modOptions.options["PT_PRESET"].option, 8)
+        NativeSettings.setOption(modOptions.options["ptPreset"].option, 8)
     end
 end
 
@@ -267,7 +267,7 @@ function setNRDControl(enableNRDControl)
         Cron.Pause(runtime.nrdTimer)
 
         --Just for aid user understanding. NativeSettings does not trigger if value stays the same
-        NativeSettings.setOption(modOptions.options["NRD"].option, false)
+        NativeSettings.setOption(modOptions.options["nrdControl"].option, false)
     end
 end
 
@@ -399,7 +399,7 @@ function setSharc(sharc)
     else
         settings.sharc = false
         Debug:Info("Skipping SHARC because ReGIR is enabled")
-        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, false)
+        NativeSettings.setOption(modOptions.options["sharc"].option, false)
     end
 
     checkCustomPreset('sharc', sharc)
@@ -440,7 +440,7 @@ function setPTMode(mode)
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
-        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, false)
+        NativeSettings.setOption(modOptions.options["sharc"].option, false)
     end
 
     checkCustomPreset('ptMode', mode)
@@ -495,18 +495,13 @@ function setPTPreset(preset)
     settings.ptPreset = preset
 
     if isPresetInRange(preset) and ptQualityPreset then
-        Debug:Info(string.format('Setting PT Preset "%s"', modOptions.options["PT_PRESET"].settings.range[preset]))
+        Debug:Info(string.format('Setting PT Preset "%s"', modOptions.options["ptPreset"].settings.range[preset]))
 
         --Settings only change if current value is different from ptQualityPreset value
-        NativeSettings.setOption(modOptions.options["PT_MODE"].option, ptQualityPreset.ptMode)
-        NativeSettings.setOption(modOptions.options["PT_QUALITY"].option, ptQualityPreset.ptQuality)
-        NativeSettings.setOption(modOptions.options["PT_SHARC"].option, ptQualityPreset.sharc)
-        NativeSettings.setOption(modOptions.options["RTXDI_FPS_BOOST"].option, ptQualityPreset.rtxdiFPSBoost)
-        NativeSettings.setOption(modOptions.options["PT_TWEAKS"].option, ptQualityPreset.ptTweaks)
-        NativeSettings.setOption(modOptions.options["RAY_NUMBER"].option, ptQualityPreset.rayNumber)
-        NativeSettings.setOption(modOptions.options["RAY_BOUNCE"].option, ptQualityPreset.rayBounce)
-        NativeSettings.setOption(modOptions.options["DLSSD_PARTICLES"].option, ptQualityPreset.dlssdParticles)
-        NativeSettings.setOption(modOptions.options["SELF_REFLECTION"].option, ptQualityPreset.selfReflection)
+        for index, value in pairs(ptQualityPreset) do
+            --print(string.format('[[[ Index/Value: %s/%s ]]]', index, value))
+            NativeSettings.setOption(modOptions.options[index].option, value)
+        end
     else
         Debug:Info('Setting PT Preset "Custom"')
     end
@@ -539,8 +534,8 @@ local function setNativeSettings()
                     v.label,
                     v.description,
                     v.range.min, v.range.max, v.range.step,
-                    settings[v.value],
-                    defaults[v.value],
+                    settings[v.index],
+                    defaults[v.index],
                     v.stateCallback
                 )
             else
@@ -549,8 +544,8 @@ local function setNativeSettings()
                     v.label,
                     v.description,
                     v.range,
-                    settings[v.value],
-                    defaults[v.value],
+                    settings[v.index],
+                    defaults[v.index],
                     v.stateCallback
                 )
             end
@@ -568,8 +563,8 @@ local function setNativeSettings()
                 v.path,
                 v.label,
                 v.description,
-                settings[v.value],
-                defaults[v.value],
+                settings[v.index],
+                defaults[v.index],
                 v.stateCallback
             )
         end
@@ -645,9 +640,9 @@ local function setRuntime()
 
             if not runtime.hasDLSSD then
                 --If user disables DLSSD and don't open Mod settings NRD Control has to turn off
-                NativeSettings.setOption(modOptions.options["NRD"].option, false)
+                NativeSettings.setOption(modOptions.options["nrdControl"].option, false)
             else
-                NativeSettings.setOption(modOptions.options["NRD"].option, settings.enableNRDControl)
+                NativeSettings.setOption(modOptions.options["nrdControl"].option, settings.enableNRDControl)
             end
 
             --Keep event settings updated
@@ -666,18 +661,14 @@ registerForEvent('onInit', function()
 
     if NativeSettings then
         setRuntime()
-        setPTPreset(settings.ptPreset)
 
-        --The setNativeSettings loads the same settings of preset, so values are not loaded yet
-        setPTMode(settings.ptMode)
-        setPTQuality(settings.ptQuality)
-        setSharc(settings.sharc)
-        setRTXDIFPSBoost(settings.rtxdiFPSBoost)
-        setPTTweaks(settings.ptTweaks)
-        setRayNumber(settings.rayNumber)
-        setRayBounce(settings.rayBounce)
-        setSelfReflection(settings.selfReflection)
-        setDLSSDParticlesControl(settings.dlssdParticles)
+        --The setNativeSettings only loads native settings to the preset settings, but does set engine values
+        --Use index 1 just for reference
+        for index, _ in pairs(ptSettings.preset[1]) do
+            --print(string.format('[[[ Index/Value: %s/%s ]]]', index, settings[index]))
+            modOptions.options[index].settings.stateCallback(settings[index])
+        end
+
         setNRDControl(settings.enableNRDControl)
         setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))

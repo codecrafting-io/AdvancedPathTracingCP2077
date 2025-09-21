@@ -1,7 +1,7 @@
 return {
     version = '0.7.0',
     debug = false,
-	enableNRDControl = true,
+	nrdControl = true,
 	fastTimeout = 1.0,
     slowTimeout = 30.0,
     refreshGame = false,
