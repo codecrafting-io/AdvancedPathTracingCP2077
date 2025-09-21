@@ -93,7 +93,7 @@ return {
             index = 'ptTweaks',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Tweaks',
-            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI behavior optimizations",
+            description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI optimizations",
             range = nil,
             stateCallback = function(state)
                 setPTTweaks(state)

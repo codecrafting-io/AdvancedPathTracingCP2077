@@ -30,7 +30,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - Path Tracing Quality:
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
-  - **Balanced**: Improve on Vanilla loosing up to 2%
+  - **Balanced**: Improve on Vanilla loosing up to 3%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
 - RTXDI FPS Boost: Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise
@@ -39,7 +39,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - Reduce noise on some scenarios. Some scenes may appear a little darker
   - Use PDF (Probability Density Function) for minor performance boost
   - Minor reflections improvement on transparent surfaces
-  - Minor GI/DI behavior optimizations
+  - Minor GI/DI optimizations
   - Improved RT distance
 - NVIDIA SHARC: Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
 - Rays per Pixel: Number of and rays per pixel **when using ReSTIR DI** mode. Affects Photo Mode screenshots
@@ -82,7 +82,7 @@ The mod save your preferences in the `settings.json` file.
 | name | type | default | description |
 | ---- | ---- | ------- | ----------- |
 | debug | boolean | false | Enables extra log messages |
-| enableNRDControl | boolean | true | Controls NRD denoiser disable helper state |
+| nrdControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
 | sharc | boolean | false | Wheter or not to enable NVIDIA's SHARC |
@@ -117,9 +117,9 @@ You can also check the mod loaded settings through `AdvancedPathTracing.settings
 
 ```lua
 {
-    version = '0.6.0',
+    version = '0.7.0',
     debug = false,
-    enableNRDControl = true,
+    nrdControl = true,
     fastTimeout = 1.0,
     slowTimeout = 30.0,
     refreshGame = false,
@@ -129,7 +129,8 @@ You can also check the mod loaded settings through `AdvancedPathTracing.settings
     ptMode = 2,
     ptQuality = 3,
     sharc = true,
-    ptOptimizations = true,
+    rtxdiFPSBoost = false,
+    ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,
     selfReflection = true,

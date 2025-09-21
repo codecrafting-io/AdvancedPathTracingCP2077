@@ -6,6 +6,7 @@
 - Renamed PT Optimizations to Tweaks
 - **:fire: EXPERIMENTAL :fire:**: Moved RTXDI Optimization to RTXDI FPS Boost (needs feedback)
 - Keep mod settings updated to events
+- Migrate/Keep previous valid settings from older versions on upgrading
 
 ## v0.6.1
 

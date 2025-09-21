@@ -119,7 +119,7 @@ end
 ---Load mod settings from the file
 local function loadSettings()
     local file = io.open(settingsFilename, 'r')
-    defaultSettings = Debug:Clone(defaults)
+    local shouldSave = false
     Debug:Log('Loading settings file ' .. settingsFilename)
 
     if file ~= nil then
@@ -127,14 +127,25 @@ local function loadSettings()
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
         Debug:SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
+        settings = Debug:Clone(defaults)
 
-        --New version requires settings reset
-        if defaults.version ~= savedSettings["version"] then
-            Debug:Info("New Version " .. defaults.version)
-            settings = defaultSettings
-            saveSettings()
-        elseif validJson then
-            settings = Debug:Clone(savedSettings)
+        if validJson then
+
+            --Only load valid saved settings
+            for index, value in pairs(defaults) do
+                if savedSettings[index] ~= nil and type(value) == type(savedSettings[index]) then
+                    settings[index] = savedSettings[index]
+                else
+                    Debug:Debug(string.format("Saved setting '%s' not found. Should save again", index))
+                    shouldSave = true
+                end
+            end
+
+            if defaults.version ~= settings.version then
+                settings.version = defaults.version
+                Debug:Info(string.format("New version '%s' installed!", defaults.version))
+                shouldSave = true
+            end
 
             --Validate timings
             if settings.slowTimeout < settings.fastTimeout then
@@ -144,10 +155,17 @@ local function loadSettings()
             if settings.refreshPauseTimeout < settings.fastTimeout then
                 settings.refreshPauseTimeout = settings.fastTimeout + 5.0
             end
+        else
+            Debug:Error('Invalid settings file')
+            shouldSave = true
         end
     else
-        Debug:SetLogLevel(defaultSettings["debug"] and Debug.INFO or Debug.ERROR)
-        settings = defaultSettings
+        Debug:SetLogLevel(defaults["debug"] and Debug.INFO or Debug.ERROR)
+        settings = Debug:Clone(defaults)
+        shouldSave = true
+    end
+
+    if shouldSave then
         saveSettings()
     end
 
@@ -243,13 +261,13 @@ function setDLSSDParticlesControl(dlssdParticles)
 end
 
 ---Set NRD denoiser control (timer only)
----@param enableNRDControl boolean
-function setNRDControl(enableNRDControl)
+---@param nrdControl boolean
+function setNRDControl(nrdControl)
     --Keep last setting when user disables DLSSD
     if runtime.hasDLSSD then
-        settings.enableNRDControl = enableNRDControl
+        settings.nrdControl = nrdControl
     end
-    if not runtime.nrdTimer and enableNRDControl then
+    if not runtime.nrdTimer and nrdControl then
         runtime.nrdTimer = Cron.Every(settings.slowTimeout, function()
             --hasDLSSD should not be necessary but sometimes the timer dosen't stop at the right time and executes one more time
             if runtime.inGame and runtime.hasDLSSD then
@@ -259,7 +277,7 @@ function setNRDControl(enableNRDControl)
         end)
     end
 
-    if enableNRDControl and runtime.hasDLSSD then
+    if nrdControl and runtime.hasDLSSD then
         Debug:Info("Resume NRD Control")
         Cron.Resume(runtime.nrdTimer)
     elseif runtime.nrdTimer then
@@ -642,7 +660,7 @@ local function setRuntime()
                 --If user disables DLSSD and don't open Mod settings NRD Control has to turn off
                 NativeSettings.setOption(modOptions.options["nrdControl"].option, false)
             else
-                NativeSettings.setOption(modOptions.options["nrdControl"].option, settings.enableNRDControl)
+                NativeSettings.setOption(modOptions.options["nrdControl"].option, settings.nrdControl)
             end
 
             --Keep event settings updated
@@ -669,7 +687,7 @@ registerForEvent('onInit', function()
             modOptions.options[index].settings.stateCallback(settings[index])
         end
 
-        setNRDControl(settings.enableNRDControl)
+        setNRDControl(settings.nrdControl)
         setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
         AdvancedPathTracingEvents.settings = Debug:Clone(settings)
