@@ -18,7 +18,7 @@ return {
             index = 'PT_PRESET',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Global Preset',
-            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, disables SHARC, similar quality to Vanilla and up to 8% performance increase over Vanilla\n\nHigh further increase quality\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
+            description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, similar quality to Vanilla, but up to 8% performance increase\n\nHigh further increase quality over medium\n\nUltra changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
                 [1] = "Vanilla",
                 [2] = "Very Low",
@@ -56,7 +56,7 @@ return {
             index = 'PT_QUALITY',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla loosing up to 2%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla loosing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",

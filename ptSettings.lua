@@ -40,7 +40,7 @@ return {
         [4] = {
             ptMode              = 2,
             ptQuality           = 3,
-            sharc               = false,
+            sharc               = true,
             rtxdiFPSBoost       = true,
             ptTweaks            = true,
             rayNumber           = 2,
@@ -293,7 +293,7 @@ return {
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "256"
+                value       = "192"
             },
             {
                 category    = "Editor/ReGIR",
@@ -342,12 +342,12 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "NumInitialSamples",
-                value       = "12"
+                value       = "10"
             },
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "20"
+                value       = "16"
             },
             {
                 category    = "Editor/RTXDI",
