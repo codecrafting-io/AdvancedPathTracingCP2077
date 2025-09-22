@@ -54,7 +54,7 @@ return {
             index = 'ptQuality',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improve on Vanilla loosing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improves over Vanilla by loosing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",
@@ -138,7 +138,7 @@ return {
             index = 'globalLight',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Enhanced Global Light',
-            description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nMostly affects sun light and shadows for foliage animation (wind), but character lighting may look duplicated",
+            description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nMostly affects sun light and shadows for foliage animation (wind), but shadows may look duplicated",
             range = nil,
             stateCallback = function(state)
                 setGlobalLight(state)
