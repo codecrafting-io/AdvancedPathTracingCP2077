@@ -143,7 +143,7 @@ local function loadSettings()
 
             if defaults.version ~= settings.version then
                 settings.version = defaults.version
-                Debug:Info(string.format("New version '%s' installed!", defaults.version))
+                Debug:Log(string.format("New version '%s' installed!", defaults.version))
                 shouldSave = true
             end
 
@@ -497,7 +497,7 @@ function setGlobalLight(globalLight)
     Debug:Info("Setting Global Light")
     settings.globalLight = globalLight
     GameSettings.Set("Editor/RTXDI", "EnableGlobalLight", tostring(globalLight))
-    checkCustomPreset('selfReflection', globalLight)
+    checkCustomPreset('globalLight', globalLight)
 end
 
 ---Set self reflections to show or not
@@ -599,6 +599,7 @@ end
 
 ---Update Runtime mod state and refresh settings
 local function updateRuntime()
+    runtime.hasDLSSD = GameSettings.HasDLSSD()
     GameSettings.Set("RayTracing", "EnableNRD", tostring(not runtime.hasDLSSD))
 
     if runtime.firstLoad then
