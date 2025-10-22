@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.1
+
+- Fixed Global Preset selection [#11](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/issues/11)
+- Improved mod compatibility when you disable Path Tracing and enter the benchmark
+
 ## v0.7.0
 
 - Minor revision to Path Tracing quality settings
