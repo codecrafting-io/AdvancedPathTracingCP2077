@@ -138,7 +138,7 @@ return {
             index = 'globalLight',
             path = '/AdvancedPathTracing/path_tracing',
             label = 'Enhanced Global Light',
-            description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nIt mostly affects the sunlight and shadows for the foliage animation (wind). However, the shadows may appear duplicated.",
+            description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nIt mostly affects the sunlight and shadows for the foliage animation (wind). However, the shadows may appear duplicated/misaligned.",
             range = nil,
             stateCallback = function(state)
                 setGlobalLight(state)

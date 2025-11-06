@@ -1,5 +1,5 @@
 return {
-    version = '0.7.1',
+    version = '0.8.0',
     debug = false,
 	nrdControl = true,
 	fastTimeout = 1.0,

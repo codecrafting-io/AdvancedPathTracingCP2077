@@ -697,6 +697,16 @@ return {
                 category    = "RayTracing",
                 name        = "TransparentReflectionEnvironmentBlendFactor",
                 value       = "1.0"
+            },
+            {
+                category    = "RayTracing/Collector",
+                name        = "VisibilityFrustumOffset",
+                value       = "200"
+            },
+            {
+                category    = "RayTracing/Collector",
+                name        = "VisibilityCullingRadius",
+                value       = "1000"
             }
             --[[
             {
@@ -820,6 +830,16 @@ return {
                 name        = "TransparentReflectionEnvironmentBlendFactor",
                 value       = "0.8"
             },
+            {
+                category    = "RayTracing/Collector",
+                name        = "VisibilityCullingRadius",
+                value       = "2200"
+            },
+            {
+                category    = "RayTracing/Collector",
+                name        = "VisibilityFrustumOffset",
+                value       = "300"
+            }
             --[[
             {
                 category    = "RayTracing/Diffuse",
