@@ -96,7 +96,7 @@ end
 ---Check if can refresh game now. Mode won't refresh in a limited gameplay scene or if still refresing
 ---@return boolean
 function GameSettings.CanRefresh()
-    return not GameUI.IsScene() and not Game.GetTimeSystem():IsTimeDilationActive()
+    return not (GameUI.IsScene() or GameUI.IsBraindance() or Game.GetTimeSystem():IsTimeDilationActive())
 end
 
 ---Check if current Game character is male
@@ -157,6 +157,11 @@ end
 function GameSettings.RefreshGame(timeout, delay, events)
     local x = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseX')
     local y = GameSettings.Get('/controls/fppcameramouse', 'FPP_MouseY')
+    local currentStreamingBudget = GameSettings.Get('World', 'StreamingTeleportMagSq')
+
+    if tonumber(currentStreamingBudget) >= 2147483647 then
+        currentStreamingBudget = '4096'
+    end
 
     events('beforeRefresh')
     Debug:Info("Refreshing the game")
@@ -172,6 +177,7 @@ function GameSettings.RefreshGame(timeout, delay, events)
     Cron.After(delay, function()
         GameHUD.ShowMessage("REFRESHING")
         GameSettings.SetTimeDilation(0.0)
+        GameSettings.Set('World', 'StreamingTeleportMagSq', '2147483647')
 
         Cron.After(timeout, function()
             GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
@@ -181,6 +187,7 @@ function GameSettings.RefreshGame(timeout, delay, events)
                 GameSettings.RemoveGameStatus(v)
             end
 
+            GameSettings.Set('World', 'StreamingTeleportMagSq', currentStreamingBudget)
             GameSettings.UnsetTimeDilation()
             GameHUD.ShowMessage("REFRESH DONE")
             Debug:Info("Refreshing done")

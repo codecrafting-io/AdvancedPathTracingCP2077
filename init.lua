@@ -236,6 +236,8 @@ function setRefreshControl(refreshGame)
     elseif runtime.refreshTimer then
         Debug:Info("Pause Refresh Control")
         Cron.Pause(runtime.refreshTimer)
+    else
+        Debug:Info("Refresh Control is disabled")
     end
 end
 
@@ -247,7 +249,6 @@ function setRefreshTime(time)
     end
     runtime.refreshTimer = nil
     settings.refreshInterval = time
-    setRefreshControl(settings.refreshGame)
 end
 
 function setRefreshNow()
@@ -503,6 +504,7 @@ local function setRuntime()
 
             --Reset Refresh Control
             setRefreshTime(settings.refreshInterval)
+            setRefreshControl(settings.refreshGame)
             updateRuntime()
         elseif state.event == 'SessionEnd' or state.event == 'FastTravelStart' then
             runtime.inGame = false
@@ -529,6 +531,12 @@ local function setRuntime()
                 ModOptions.setOption('nrdControl', settings.nrdControl)
             end
 
+            --Only update refreshTime on menu close
+            if settings.refreshGame and not runtime.refreshTimer then
+                Debug:Info(string.format('Refresh time updated to %ss', settings.refreshInterval))
+                setRefreshControl(settings.refreshGame)
+            end
+
             --Keep event settings updated
             _Mod.settings = Debug:Clone(settings)
             ModSettings.saveSettings(settings, settingsFilename)
@@ -546,7 +554,7 @@ registerForEvent('onInit', function()
         setRuntime()
         applyPTPreset(ptSettings.preset[1])
         setNRDControl(settings.nrdControl)
-        setRefreshControl(settings.refreshGame)
+        --setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', _Mod.name, settings.version))
         _Mod.settings = Debug:Clone(settings)
     else
