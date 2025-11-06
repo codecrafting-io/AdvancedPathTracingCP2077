@@ -33,7 +33,6 @@ local defaults = require('defaults')
 local ptSettings = require('ptSettings')
 local Debug = require('Modules/Debug')
 local ModSettings = require('Modules/ModSettings')
-local NativeSettings = {}
 local ModOptions = require('modOptions')
 local PRESET = {
     VANILLA = 1,
@@ -98,7 +97,7 @@ end
 ---@param value any
 local function checkCustomPreset(setting, value)
     if isPresetInRange(settings.ptPreset) and ptSettings.preset[settings.ptPreset][setting] ~= value then
-        NativeSettings.setOption(ModOptions.options["ptPreset"].option, 8)
+        ModOptions.setOption('ptPreset', 8)
     end
 end
 
@@ -106,9 +105,7 @@ end
 local function pushChanges()
     Game.GetSettingsSystem():ConfirmChanges()
     Cron.After(0.25, function()
-        if NativeSettings then
-            NativeSettings.refresh()
-        end
+        ModOptions.refresh()
     end)
 end
 
@@ -212,7 +209,7 @@ function setNRDControl(nrdControl)
         Cron.Pause(runtime.nrdTimer)
 
         --Just for aid user understanding. NativeSettings does not trigger if value stays the same
-        NativeSettings.setOption(ModOptions.options["nrdControl"].option, false)
+        ModOptions.setOption('nrdControl', false)
     end
 end
 
@@ -341,23 +338,18 @@ function setSharc(sharc)
     if not (sharc and runtime.enableReGIR) then
         Debug:Info("Setting SHARC")
         GameSettings.Set("Editor/SHARC", "Enable", tostring(sharc))
+        checkCustomPreset('sharc', sharc)
     else
         settings.sharc = false
         Debug:Info("Skipping SHARC because ReGIR is enabled")
-        NativeSettings.setOption(ModOptions.options["sharc"].option, false)
+        ModOptions.setOption('sharc', false)
     end
-
-    checkCustomPreset('sharc', sharc)
 end
 
 ---Set PT mode
 ---@param mode integer the index of PT mode
 function setPTMode(mode)
     settings.ptMode = mode
-
-    if not NativeSettings then
-        return
-    end
 
     if settings.ptMode == 1 then
         --ReSTIR DI
@@ -385,7 +377,7 @@ function setPTMode(mode)
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
-        NativeSettings.setOption(ModOptions.options["sharc"].option, false)
+        ModOptions.setOption('sharc', false)
     end
 
     checkCustomPreset('ptMode', mode)
@@ -443,12 +435,13 @@ function setPTPreset(preset)
     settings.ptPreset = preset
 
     if isPresetInRange(preset) and ptQualityPreset then
-        Debug:Info(string.format('Setting PT Preset "%s"', ModOptions.options["ptPreset"].settings.range[preset]))
+        local presetOption = ModOptions.getNativeSettings('ptPreset')
+        Debug:Info(string.format('Setting PT Preset "%s"', presetOption.range[preset]))
 
         --Settings only change if current value is different from ptQualityPreset value
         for index, value in pairs(ptQualityPreset) do
             --print(string.format('[[[ Index/Value: %s/%s ]]]', index, value))
-            NativeSettings.setOption(ModOptions.options[index].option, value)
+            ModOptions.setOption(index, value)
         end
     else
         Debug:Info('Setting PT Preset "Custom"')
@@ -462,7 +455,7 @@ function applyPTPreset(preset)
     --Use index 1 just for reference
     for index, _ in pairs(preset) do
         --print(string.format('[[[ Index/Value: %s/%s ]]]', index, settings[index]))
-        ModOptions.options[index].settings.stateCallback(settings[index])
+        ModOptions.callAction(index, settings[index])
     end
 end
 
@@ -531,9 +524,9 @@ local function setRuntime()
 
             if not runtime.hasDLSSD then
                 --If user disables DLSSD and don't open Mod settings NRD Control has to turn off
-                NativeSettings.setOption(ModOptions.options["nrdControl"].option, false)
+                ModOptions.setOption('nrdControl', false)
             else
-                NativeSettings.setOption(ModOptions.options["nrdControl"].option, settings.nrdControl)
+                ModOptions.setOption('nrdControl', settings.nrdControl)
             end
 
             --Keep event settings updated
@@ -548,9 +541,8 @@ end
 
 registerForEvent('onInit', function()
     settings = ModSettings.loadSettings(defaults, settingsFilename)
-    NativeSettings = ModOptions.setNativeSettings(settings, defaults)
 
-    if NativeSettings then
+    if ModOptions.loadNativeSettings(settings, defaults) then
         setRuntime()
         applyPTPreset(ptSettings.preset[1])
         setNRDControl(settings.nrdControl)

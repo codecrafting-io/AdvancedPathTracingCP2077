@@ -1,6 +1,4 @@
-
-
-local ModOptions = {
+local nativeSettingsConfig = {
     tabName = '/AdvancedPathTracing',
     tabLabel = 'Advanced Path Tracing',
     categories = {
@@ -220,33 +218,81 @@ local ModOptions = {
     }
 }
 
----Set NativeSettings menus
+local ModOptionsShared = {}
+local ModOptions = {
+    loaded = false,
+    nativeSettings = nil,
+    nativeOptions = {}
+}
+
+--[[
+ModOptions.__index = ModOptions
+
+function ModOptions.new()
+    local self = setmetatable({}, ModOptions)
+
+    self.loaded = false
+    self.options = {}
+
+    return self
+end
+--]]
+
+function ModOptionsShared.isLoaded()
+    return ModOptions.loaded
+end
+
+function ModOptionsShared.refresh()
+    if ModOptions.loaded then
+        ModOptions.nativeSettings.refresh()
+    end
+end
+
+function ModOptionsShared.getNativeSettings(index)
+    if ModOptions.loaded and ModOptions.nativeOptions[index] then
+        return ModOptions.nativeOptions[index].settings
+    end
+end
+
+function ModOptionsShared.callAction(index, value)
+    if ModOptions.loaded and ModOptions.nativeOptions[index] then
+        ModOptions.nativeOptions[index].settings.stateCallback(value)
+    end
+end
+
+function ModOptionsShared.setOption(index, value)
+    if ModOptions.loaded and ModOptions.nativeOptions[index] then
+        ModOptions.nativeSettings.setOption(ModOptions.nativeOptions[index].option, value)
+    end
+end
+
+---Loads NativeSettings menus
 ---@param settings table --The settings values
 ---@param defaults table --The default settings values
----@return table --The NativeSettings options
-function ModOptions.setNativeSettings(settings, defaults)
-    NativeSettings = GetMod("nativeSettings")
+---@return boolean -- Wheter or not NativeSettings were load
+function ModOptionsShared.loadNativeSettings(settings, defaults)
+    local nativeSettings = GetMod("nativeSettings")
 
     --Return if NativeSettings not found
-    if not NativeSettings then
-        ---@diagnostic disable-next-line: missing-return-value
-        return
+    if not nativeSettings then
+        ModOptions.loaded = false
+        return false
     end
 
-    if not NativeSettings.pathExists(ModOptions.tabName) then
-        NativeSettings.addTab(ModOptions.tabName, ModOptions.tabLabel)
-        for _, c in pairs(ModOptions.categories) do
-            NativeSettings.addSubcategory(ModOptions.tabName .. '/' .. c.name, c.label)
+    if not nativeSettings.pathExists(nativeSettingsConfig.tabName) then
+        nativeSettings.addTab(nativeSettingsConfig.tabName, nativeSettingsConfig.tabLabel)
+        for _, c in pairs(nativeSettingsConfig.categories) do
+            nativeSettings.addSubcategory(nativeSettingsConfig.tabName .. '/' .. c.name, c.label)
         end
     end
 
     local nativeOption = nil
 
     --Only loop with indexed values with ipairs
-    for _, v in ipairs(ModOptions.options) do
+    for _, v in ipairs(nativeSettingsConfig.options) do
         if v.range then
             if v.range['min'] ~= nil then
-                nativeOption = NativeSettings[v.typeFunction](
+                nativeOption = nativeSettings[v.typeFunction](
                     v.path,
                     v.label,
                     v.description,
@@ -256,7 +302,7 @@ function ModOptions.setNativeSettings(settings, defaults)
                     v.stateCallback
                 )
             else
-                nativeOption = NativeSettings[v.typeFunction](
+                nativeOption = nativeSettings[v.typeFunction](
                     v.path,
                     v.label,
                     v.description,
@@ -267,7 +313,7 @@ function ModOptions.setNativeSettings(settings, defaults)
                 )
             end
         elseif v.typeFunction == 'addButton' then
-            nativeOption = NativeSettings[v.typeFunction](
+            nativeOption = nativeSettings[v.typeFunction](
                 v.path,
                 v.label,
                 v.description,
@@ -276,7 +322,7 @@ function ModOptions.setNativeSettings(settings, defaults)
                 v.stateCallback
             )
         else
-            nativeOption = NativeSettings[v.typeFunction](
+            nativeOption = nativeSettings[v.typeFunction](
                 v.path,
                 v.label,
                 v.description,
@@ -286,13 +332,16 @@ function ModOptions.setNativeSettings(settings, defaults)
             )
         end
 
-        ModOptions.options[v.index] = {
+        ModOptions.nativeOptions[v.index] = {
             settings = v,
             option = nativeOption
         }
     end
 
-    return NativeSettings
+    ModOptions.nativeSettings = nativeSettings
+    ModOptions.loaded = true
+
+    return true
 end
 
-return ModOptions
+return ModOptionsShared
