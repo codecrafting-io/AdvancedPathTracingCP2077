@@ -57,7 +57,9 @@ local runtime = {
     hasDLSSD = false,
     fppHeadAdded = false
 }
-local AdvancedPathTracingEvents = {
+
+_Mod = {
+    name = 'Advanced Path Tracing',
     settings = {},
     events = {
         beforeRefresh = {},
@@ -82,7 +84,7 @@ local eventHandler = {
         end
     end
 }
-setmetatable(AdvancedPathTracingEvents, eventHandler)
+setmetatable(_Mod, eventHandler)
 
 ---Checks if preset has a valid range, except custom
 ---@param preset integer
@@ -126,7 +128,7 @@ local function loadSettings()
         local contents = file:read("*a")
         local validJson, savedSettings = pcall(function() return json.decode(contents) end)
         file:close()
-        Debug:SetLogLevel(savedSettings["debug"] and Debug.INFO or Debug.ERROR)
+        Debug:SetLogLevel(savedSettings["debug"] and Debug.DEBUG or Debug.ERROR)
         settings = Debug:Clone(defaults)
 
         if validJson then
@@ -170,7 +172,7 @@ local function loadSettings()
     end
 
     if settings.debug then
-        Debug:Debug(string.format('%s Settings', 'Advanced Path Tracing'))
+        Debug:Debug(string.format('%s Settings', _Mod.name))
         Debug:Debug(Debug:Parse(settings))
     end
 end
@@ -614,7 +616,7 @@ local function updateRuntime()
     if runtime.refreshGame then
         if GameSettings.CanRefresh() then
             --Apply delay for LUTSwitcher
-            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45, AdvancedPathTracingEvents)
+            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45, _Mod)
 
             --Always refresh
             if settings.refreshInterval > 0 then
@@ -668,7 +670,7 @@ local function setRuntime()
             end
 
             --Keep event settings updated
-            AdvancedPathTracingEvents.settings = Debug:Clone(settings)
+            _Mod.settings = Debug:Clone(settings)
             saveSettings()
         end
 	end)
@@ -693,8 +695,8 @@ registerForEvent('onInit', function()
 
         setNRDControl(settings.nrdControl)
         setRefreshControl(settings.refreshGame)
-        Debug:Log(string.format('%s v%s loaded', 'AdvancedPathTracing', settings.version))
-        AdvancedPathTracingEvents.settings = Debug:Clone(settings)
+        Debug:Log(string.format('%s v%s loaded', _Mod.name, settings.version))
+        _Mod.settings = Debug:Clone(settings)
     else
         Debug:Error('Failed to load Advanced Path Tracing: NativeSettings missing')
     end
@@ -704,4 +706,4 @@ registerForEvent('onUpdate', function(delta)
     Cron.Update(delta)
 end)
 
-return AdvancedPathTracingEvents
+return _Mod
