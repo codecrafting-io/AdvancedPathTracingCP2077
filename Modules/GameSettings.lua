@@ -15,8 +15,6 @@ local gameRestrictions = {
     "GameplayRestriction.NoPhotoMode"
 }
 
-Debug:SetLogLevel(settings.debug and Debug.DEBUG or Debug.ERROR)
-
 ---Apply TweakDB status effect
 ---@param effect string
 function GameSettings.ApplyGameStatus(effect)

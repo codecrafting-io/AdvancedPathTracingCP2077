@@ -16,16 +16,25 @@
 
 --do return end
 settings = {}
-Cron = require("Modules/Cron")
-GameUI = require("Modules/GameUI")
-GameSettings = require("Modules/GameSettings")
+Cron = require('Modules/Cron')
+GameUI = require('Modules/GameUI')
+GameSettings = require('Modules/GameSettings')
+_Mod = {
+    name = 'Advanced Path Tracing',
+    settings = {},
+    events = {
+        beforeRefresh = {},
+        afterRefresh = {}
+    }
+}
 
 local settingsFilename = "settings.json"
-local defaults = require("defaults")
-local ptSettings = require("ptSettings")
-local Debug = require("Modules/Debug")
+local defaults = require('defaults')
+local ptSettings = require('ptSettings')
+local Debug = require('Modules/Debug')
+local ModSettings = require('Modules/ModSettings')
 local NativeSettings = {}
-local modOptions = require("modOptions")
+local modOptions = require('modOptions')
 local PRESET = {
     VANILLA = 1,
     VERY_LOW = 2,
@@ -56,15 +65,6 @@ local runtime = {
     refreshTimer = nil,
     hasDLSSD = false,
     fppHeadAdded = false
-}
-
-_Mod = {
-    name = 'Advanced Path Tracing',
-    settings = {},
-    events = {
-        beforeRefresh = {},
-        afterRefresh = {}
-    }
 }
 local eventHandler = {
     --Register events
@@ -99,81 +99,6 @@ end
 local function checkCustomPreset(setting, value)
     if isPresetInRange(settings.ptPreset) and ptSettings.preset[settings.ptPreset][setting] ~= value then
         NativeSettings.setOption(modOptions.options["ptPreset"].option, 8)
-    end
-end
-
----Save mod settings to the file
-local function saveSettings()
-    Debug:Info("Saving Settings")
-    local validJson, contents = pcall(function() return json.encode(settings) end)
-
-    if validJson and contents ~= nil then
-        local file = io.open(settingsFilename, "w+")
-        if file ~= nil then
-            file:write(contents)
-            file:close()
-        else
-            Debug:Error("Failed to save settings file '" .. settingsFilename .. "'")
-        end
-    end
-end
-
----Load mod settings from the file
-local function loadSettings()
-    local file = io.open(settingsFilename, 'r')
-    local shouldSave = false
-    Debug:Log('Loading settings file ' .. settingsFilename)
-
-    if file ~= nil then
-        local contents = file:read("*a")
-        local validJson, savedSettings = pcall(function() return json.decode(contents) end)
-        file:close()
-        Debug:SetLogLevel(savedSettings["debug"] and Debug.DEBUG or Debug.ERROR)
-        settings = Debug:Clone(defaults)
-
-        if validJson then
-
-            --Only load valid saved settings
-            for index, value in pairs(defaults) do
-                if savedSettings[index] ~= nil and type(value) == type(savedSettings[index]) then
-                    settings[index] = savedSettings[index]
-                else
-                    Debug:Debug(string.format("Saved setting '%s' not found. Should save again", index))
-                    shouldSave = true
-                end
-            end
-
-            if defaults.version ~= settings.version then
-                settings.version = defaults.version
-                Debug:Log(string.format("New version '%s' installed!", defaults.version))
-                shouldSave = true
-            end
-
-            --Validate timings
-            if settings.slowTimeout < settings.fastTimeout then
-                settings.slowTimeout = settings.fastTimeout + 2.0
-            end
-
-            if settings.refreshPauseTimeout < settings.fastTimeout then
-                settings.refreshPauseTimeout = settings.fastTimeout + 5.0
-            end
-        else
-            Debug:Error('Invalid settings file')
-            shouldSave = true
-        end
-    else
-        Debug:SetLogLevel(defaults["debug"] and Debug.INFO or Debug.ERROR)
-        settings = Debug:Clone(defaults)
-        shouldSave = true
-    end
-
-    if shouldSave then
-        saveSettings()
-    end
-
-    if settings.debug then
-        Debug:Debug(string.format('%s Settings', _Mod.name))
-        Debug:Debug(Debug:Parse(settings))
     end
 end
 
@@ -671,7 +596,7 @@ local function setRuntime()
 
             --Keep event settings updated
             _Mod.settings = Debug:Clone(settings)
-            saveSettings()
+            ModSettings.saveSettings(settings, settingsFilename)
         end
 	end)
 
@@ -680,7 +605,7 @@ local function setRuntime()
 end
 
 registerForEvent('onInit', function()
-    loadSettings()
+    settings = ModSettings.loadSettings(defaults, settingsFilename)
     setNativeSettings()
 
     if NativeSettings then
