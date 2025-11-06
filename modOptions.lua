@@ -1,6 +1,6 @@
 
 
-return {
+local ModOptions = {
     tabName = '/AdvancedPathTracing',
     tabLabel = 'Advanced Path Tracing',
     categories = {
@@ -219,3 +219,80 @@ return {
         }
     }
 }
+
+---Set NativeSettings menus
+---@param settings table --The settings values
+---@param defaults table --The default settings values
+---@return table --The NativeSettings options
+function ModOptions.setNativeSettings(settings, defaults)
+    NativeSettings = GetMod("nativeSettings")
+
+    --Return if NativeSettings not found
+    if not NativeSettings then
+        ---@diagnostic disable-next-line: missing-return-value
+        return
+    end
+
+    if not NativeSettings.pathExists(ModOptions.tabName) then
+        NativeSettings.addTab(ModOptions.tabName, ModOptions.tabLabel)
+        for _, c in pairs(ModOptions.categories) do
+            NativeSettings.addSubcategory(ModOptions.tabName .. '/' .. c.name, c.label)
+        end
+    end
+
+    local nativeOption = nil
+
+    --Only loop with indexed values with ipairs
+    for _, v in ipairs(ModOptions.options) do
+        if v.range then
+            if v.range['min'] ~= nil then
+                nativeOption = NativeSettings[v.typeFunction](
+                    v.path,
+                    v.label,
+                    v.description,
+                    v.range.min, v.range.max, v.range.step,
+                    settings[v.index],
+                    defaults[v.index],
+                    v.stateCallback
+                )
+            else
+                nativeOption = NativeSettings[v.typeFunction](
+                    v.path,
+                    v.label,
+                    v.description,
+                    v.range,
+                    settings[v.index],
+                    defaults[v.index],
+                    v.stateCallback
+                )
+            end
+        elseif v.typeFunction == 'addButton' then
+            nativeOption = NativeSettings[v.typeFunction](
+                v.path,
+                v.label,
+                v.description,
+                v.buttonText,
+                v.textSize,
+                v.stateCallback
+            )
+        else
+            nativeOption = NativeSettings[v.typeFunction](
+                v.path,
+                v.label,
+                v.description,
+                settings[v.index],
+                defaults[v.index],
+                v.stateCallback
+            )
+        end
+
+        ModOptions.options[v.index] = {
+            settings = v,
+            option = nativeOption
+        }
+    end
+
+    return NativeSettings
+end
+
+return ModOptions

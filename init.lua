@@ -34,7 +34,7 @@ local ptSettings = require('ptSettings')
 local Debug = require('Modules/Debug')
 local ModSettings = require('Modules/ModSettings')
 local NativeSettings = {}
-local modOptions = require('modOptions')
+local ModOptions = require('modOptions')
 local PRESET = {
     VANILLA = 1,
     VERY_LOW = 2,
@@ -98,7 +98,7 @@ end
 ---@param value any
 local function checkCustomPreset(setting, value)
     if isPresetInRange(settings.ptPreset) and ptSettings.preset[settings.ptPreset][setting] ~= value then
-        NativeSettings.setOption(modOptions.options["ptPreset"].option, 8)
+        NativeSettings.setOption(ModOptions.options["ptPreset"].option, 8)
     end
 end
 
@@ -212,7 +212,7 @@ function setNRDControl(nrdControl)
         Cron.Pause(runtime.nrdTimer)
 
         --Just for aid user understanding. NativeSettings does not trigger if value stays the same
-        NativeSettings.setOption(modOptions.options["nrdControl"].option, false)
+        NativeSettings.setOption(ModOptions.options["nrdControl"].option, false)
     end
 end
 
@@ -344,7 +344,7 @@ function setSharc(sharc)
     else
         settings.sharc = false
         Debug:Info("Skipping SHARC because ReGIR is enabled")
-        NativeSettings.setOption(modOptions.options["sharc"].option, false)
+        NativeSettings.setOption(ModOptions.options["sharc"].option, false)
     end
 
     checkCustomPreset('sharc', sharc)
@@ -385,7 +385,7 @@ function setPTMode(mode)
         runtime.enableReGIR = true
         runtime.enableReSTIR = true
         GameSettings.Set("Editor/SHARC", "Enable", "false")
-        NativeSettings.setOption(modOptions.options["sharc"].option, false)
+        NativeSettings.setOption(ModOptions.options["sharc"].option, false)
     end
 
     checkCustomPreset('ptMode', mode)
@@ -443,84 +443,26 @@ function setPTPreset(preset)
     settings.ptPreset = preset
 
     if isPresetInRange(preset) and ptQualityPreset then
-        Debug:Info(string.format('Setting PT Preset "%s"', modOptions.options["ptPreset"].settings.range[preset]))
+        Debug:Info(string.format('Setting PT Preset "%s"', ModOptions.options["ptPreset"].settings.range[preset]))
 
         --Settings only change if current value is different from ptQualityPreset value
         for index, value in pairs(ptQualityPreset) do
             --print(string.format('[[[ Index/Value: %s/%s ]]]', index, value))
-            NativeSettings.setOption(modOptions.options[index].option, value)
+            NativeSettings.setOption(ModOptions.options[index].option, value)
         end
     else
         Debug:Info('Setting PT Preset "Custom"')
     end
 end
 
----Setup Native Settings menu
-local function setNativeSettings()
-    NativeSettings = GetMod("nativeSettings")
-
-    --Return if NativeSettings not found
-    if not NativeSettings then
-        return
-    end
-
-    if not NativeSettings.pathExists(modOptions.tabName) then
-        NativeSettings.addTab(modOptions.tabName, modOptions.tabLabel)
-        for _, c in pairs(modOptions.categories) do
-            NativeSettings.addSubcategory(modOptions.tabName .. '/' .. c.name, c.label)
-        end
-    end
-
-    local nativeOption = nil
-
-    --Only loop with indexed values with ipairs
-    for _, v in ipairs(modOptions.options) do
-        if v.range then
-            if v.range['min'] ~= nil then
-                nativeOption = NativeSettings[v.typeFunction](
-                    v.path,
-                    v.label,
-                    v.description,
-                    v.range.min, v.range.max, v.range.step,
-                    settings[v.index],
-                    defaults[v.index],
-                    v.stateCallback
-                )
-            else
-                nativeOption = NativeSettings[v.typeFunction](
-                    v.path,
-                    v.label,
-                    v.description,
-                    v.range,
-                    settings[v.index],
-                    defaults[v.index],
-                    v.stateCallback
-                )
-            end
-        elseif v.typeFunction == 'addButton' then
-            nativeOption = NativeSettings[v.typeFunction](
-                v.path,
-                v.label,
-                v.description,
-                v.buttonText,
-                v.textSize,
-                v.stateCallback
-            )
-        else
-            nativeOption = NativeSettings[v.typeFunction](
-                v.path,
-                v.label,
-                v.description,
-                settings[v.index],
-                defaults[v.index],
-                v.stateCallback
-            )
-        end
-
-        modOptions.options[v.index] = {
-            settings = v,
-            option = nativeOption
-        }
+---Apply the PT preset settings
+---@param preset any
+function applyPTPreset(preset)
+    --The setNativeSettings only loads native settings to the preset settings, but does set engine values
+    --Use index 1 just for reference
+    for index, _ in pairs(preset) do
+        --print(string.format('[[[ Index/Value: %s/%s ]]]', index, settings[index]))
+        ModOptions.options[index].settings.stateCallback(settings[index])
     end
 end
 
@@ -589,9 +531,9 @@ local function setRuntime()
 
             if not runtime.hasDLSSD then
                 --If user disables DLSSD and don't open Mod settings NRD Control has to turn off
-                NativeSettings.setOption(modOptions.options["nrdControl"].option, false)
+                NativeSettings.setOption(ModOptions.options["nrdControl"].option, false)
             else
-                NativeSettings.setOption(modOptions.options["nrdControl"].option, settings.nrdControl)
+                NativeSettings.setOption(ModOptions.options["nrdControl"].option, settings.nrdControl)
             end
 
             --Keep event settings updated
@@ -606,18 +548,11 @@ end
 
 registerForEvent('onInit', function()
     settings = ModSettings.loadSettings(defaults, settingsFilename)
-    setNativeSettings()
+    NativeSettings = ModOptions.setNativeSettings(settings, defaults)
 
     if NativeSettings then
         setRuntime()
-
-        --The setNativeSettings only loads native settings to the preset settings, but does set engine values
-        --Use index 1 just for reference
-        for index, _ in pairs(ptSettings.preset[1]) do
-            --print(string.format('[[[ Index/Value: %s/%s ]]]', index, settings[index]))
-            modOptions.options[index].settings.stateCallback(settings[index])
-        end
-
+        applyPTPreset(ptSettings.preset[1])
         setNRDControl(settings.nrdControl)
         setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', _Mod.name, settings.version))
