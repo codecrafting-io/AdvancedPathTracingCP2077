@@ -180,7 +180,7 @@ local nativeSettingsConfig = {
             index = 'refreshGame',
             path = '/AdvancedPathTracing/misc',
             label = 'Auto Refresh Game',
-            description = "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance",
+            description = "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance. Refresh only happens after exiting menus, loading saves or teleports",
             range = nil,
             stateCallback = function(state)
                 setRefreshControl(state)

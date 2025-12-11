@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.0
+
+- Improved BVH distance, affects reflection on buildings and some long distance shadows, for better support for Global Light
+- Improved game refresh logic
+- Minor Internal code refactor
+
 ## v0.7.1
 
 - Fixed Global Preset selection [#11](https://github.com/codecrafting-io/AdvancedPathTracingCP2077/issues/11)
