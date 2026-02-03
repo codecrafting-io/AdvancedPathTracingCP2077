@@ -53,6 +53,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - **NRD Disable Helper:** Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD). When using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
 - **Refresh Game:** The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. The mod will skip the refresh if a limited gameplay scene is detected. Disabled by default.
 - **Refresh Game Interval:** The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
+- **Refresh Binding:** Configure a CET binding for refresh feature. It won't refresh if a limited gameplay scene is detected
 
 ## Requirements
 
@@ -75,7 +76,7 @@ Remember to install the requirements.
 
 ## Known Issues
 
-- ReGIR has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
+- ReGIR has implementation issues, such as flickering light bounces, not activating correctly sometimes (mostly "fixed" now), noise breakup when using ray reconstruction (especially when using SHARC) in some scenarios. Also, performance can take up to 30s to stabilize, if not, you can use the "Refresh Game" or entering and exiting Photo Mode. Reload the save or restart the game may also fix this.
 
 - This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 

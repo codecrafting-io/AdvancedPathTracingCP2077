@@ -2,8 +2,9 @@
 
 ## v0.8.0
 
-- Improved BVH distance, affects reflection on buildings and some long distance shadows, for better support for Global Light
+- Improved BVH distance (Tweaks setting), affects reflection on buildings and some long distance shadows, for better support for Global Light
 - Improved game refresh logic
+- Added support for binding key for refresh feature
 - Minor Internal code refactor
 
 ## v0.7.1

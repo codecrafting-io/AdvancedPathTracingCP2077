@@ -5,14 +5,18 @@ local Cron = require("Modules/Cron")
 local GameSettings = {}
 local gameRestrictions = {
     "GameplayRestriction.NoCameraControl",
-    "GameplayRestriction.NoMovement",
     "GameplayRestriction.NoCombat",
-    "GameplayRestriction.NoZooming",
-    "GameplayRestriction.NoScanning",
+    "GameplayRestriction.NoHacking",
     "GameplayRestriction.NoJump",
+    "GameplayRestriction.NoMovement",
     "GameplayRestriction.NoPhone",
+    "GameplayRestriction.NoPhoneCall",
+    "GameplayRestriction.NoPhotoMode",
+    "GameplayRestriction.NoScanning",
+    "GameplayRestriction.NoVehicleActions",
     "GameplayRestriction.NoWorldInteractions",
-    "GameplayRestriction.NoPhotoMode"
+    "GameplayRestriction.NoZoom",
+    "GameplayRestriction.NoZooming"
 }
 
 ---Apply TweakDB status effect
@@ -176,8 +180,11 @@ function GameSettings.RefreshGame(timeout, delay, events)
 
     Cron.After(delay, function()
         GameHUD.ShowMessage("REFRESHING")
-        GameSettings.SetTimeDilation(0.0)
+        GameSettings.PauseTime()
         GameSettings.Set('World', 'StreamingTeleportMagSq', '2147483647')
+        GameSettings.Set('Crowd', 'EnablePedestrians', 'false')
+        GameSettings.Set('Crowd', 'EnableVehicles', 'false')
+        GameSettings.Set('Crowd', 'Enabled', 'false')
 
         Cron.After(timeout, function()
             GameSettings.Set('/controls/fppcameramouse', 'FPP_MouseX', x)
@@ -187,8 +194,11 @@ function GameSettings.RefreshGame(timeout, delay, events)
                 GameSettings.RemoveGameStatus(v)
             end
 
+            GameSettings.Set('Crowd', 'EnablePedestrians', 'true')
+            GameSettings.Set('Crowd', 'EnableVehicles', 'true')
+            GameSettings.Set('Crowd', 'Enabled', 'true')
             GameSettings.Set('World', 'StreamingTeleportMagSq', currentStreamingBudget)
-            GameSettings.UnsetTimeDilation()
+            GameSettings.UnpauseTime()
             GameHUD.ShowMessage("REFRESH DONE")
             Debug:Info("Refreshing done")
             events('afterRefresh')
@@ -196,15 +206,17 @@ function GameSettings.RefreshGame(timeout, delay, events)
     end)
 end
 
----Set Game time dilation in seconds
----@param time number
-function GameSettings.SetTimeDilation(time)
-    Game.GetTimeSystem():SetTimeDilation("RefreshPause", time)
+---Pauses game day clock and time
+----@param time number
+function GameSettings.PauseTime()
+    Game.GetTimeSystem():SetTimeDilation("RefreshPause", 0.0)
+    Game.GetTimeSystem():SetPausedState(true, "RefreshPause")
 end
 
----Unset Game time dilation
-function GameSettings.UnsetTimeDilation()
+---Unpause game day clock and time
+function GameSettings.UnpauseTime()
     Game.GetTimeSystem():UnsetTimeDilation("RefreshPause")
+    Game.GetTimeSystem():SetPausedState(false, "RefreshPause")
 end
 
 ---Check if is currently raining in the game

@@ -63,7 +63,6 @@ local runtime = {
     refreshGame = false,
     refreshTimer = nil,
     hasDLSSD = false,
-    fppHeadAdded = false
 }
 local eventHandler = {
     --Register events
@@ -460,6 +459,27 @@ function applyPTPreset(preset)
     end
 end
 
+---Check for refresh game
+local function checkRefreshGame()
+    if runtime.refreshGame then
+        if GameSettings.CanRefresh() then
+            --Apply delay for LUTSwitcher
+            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45, _Mod)
+
+            --Times 0 always will refresh the game, so never false
+            if settings.refreshInterval > 0 then
+                runtime.refreshGame = false
+            end
+        else
+            --Should not refresh due to limited gameplay scene
+            Debug:Info("Can't Refresh now")
+        end
+    elseif settings.refreshGame then
+        --It could refresh but hasn't passed enough time or refresh is disabled
+        Debug:Info("Won't Refresh now")
+    end
+end
+
 ---Update Runtime mod state and refresh settings
 local function updateRuntime()
     runtime.hasDLSSD = GameSettings.HasDLSSD()
@@ -474,23 +494,7 @@ local function updateRuntime()
         setReSTIR()
     end
 
-    if runtime.refreshGame then
-        if GameSettings.CanRefresh() then
-            --Apply delay for LUTSwitcher
-            GameSettings.RefreshGame(settings.refreshPauseTimeout, 0.45, _Mod)
-
-            --Always refresh
-            if settings.refreshInterval > 0 then
-                runtime.refreshGame = false
-            end
-        else
-            --Should not refresh due to limited gameplay scene
-            Debug:Info("Can't Refresh now")
-        end
-    elseif settings.refreshGame then
-        --It could refresh but hasn't passed enough time
-        Debug:Info("Won't Refresh now")
-    end
+    checkRefreshGame()
 end
 
 ---Set runtime mod state controls and events
@@ -501,17 +505,12 @@ local function setRuntime()
         --Some events if you clear console can trigger an access memory violation when exiting to MainMenu. Game, CET or GameUI fault?
         if state.event == 'SessionStart' or state.event == 'FastTravelFinish' then
             runtime.inGame = true
-
-            --Reset Refresh Control
-            setRefreshTime(settings.refreshInterval)
-            setRefreshControl(settings.refreshGame)
+            runtime.refreshGame = settings.refreshGame
             updateRuntime()
         elseif state.event == 'SessionEnd' or state.event == 'FastTravelStart' then
             runtime.inGame = false
             runtime.reGIRApplied = false
-            runtime.refreshGame = settings.refreshGame
             previous.hasDLSSD = nil
-            --runtime.fppHeadAdded = false
         end
     end)
     GameUI.OnMenuClose(function(state)
@@ -531,7 +530,7 @@ local function setRuntime()
                 ModOptions.setOption('nrdControl', settings.nrdControl)
             end
 
-            --Only update refreshTime on menu close
+            --Only update refreshTime on menu close. Condition is only for the messaging
             if settings.refreshGame and not runtime.refreshTimer then
                 Debug:Info(string.format('Refresh time updated to %ss', settings.refreshInterval))
                 setRefreshControl(settings.refreshGame)
@@ -554,7 +553,7 @@ registerForEvent('onInit', function()
         setRuntime()
         applyPTPreset(ptSettings.preset[1])
         setNRDControl(settings.nrdControl)
-        --setRefreshControl(settings.refreshGame)
+        setRefreshControl(settings.refreshGame)
         Debug:Log(string.format('%s v%s loaded', _Mod.name, settings.version))
         _Mod.settings = Debug:Clone(settings)
     else
@@ -564,6 +563,13 @@ end)
 
 registerForEvent('onUpdate', function(delta)
     Cron.Update(delta)
+end)
+
+registerHotkey("refresh_game", "Refresh Game", function()
+    if runtime.inGame then
+        runtime.refreshGame = true
+        checkRefreshGame()
+    end
 end)
 
 return _Mod
