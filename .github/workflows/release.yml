@@ -1,0 +1,53 @@
+name: Publish Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      MOD_PATH: bin/x64/plugins/cyber_engine_tweaks/mods/AdvancedPathTracing
+      VERSION: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Release Notes
+        id: notes
+        run: |
+          awk "/^## ${VERSION}\$/{flag=1; next} /^## /{flag=0} flag" CHANGELOG.md > NOTES.md
+
+      - name: Create ZIP archive
+        run: |
+          mkdir -p "$MOD_PATH"
+          rsync -ahv . "$MOD_PATH" \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".vscode" \
+            --exclude ".gitignore" \
+            --exclude "CHANGELOG.md" \
+            --exclude "menu.png" \
+            --exclude "README.md" \
+            --exclude "README.md" \
+            --exclude "NOTES.md"
+          zip -r "${{ github.event.repository.name }}.zip" bin
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: Advanced Path Tracing ${{ env.VERSION }}
+          files: |
+            ${{ github.event.repository.name }}.zip
+          body_path: NOTES.md
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
