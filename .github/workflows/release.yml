@@ -41,8 +41,8 @@ jobs:
             --exclude "CHANGELOG.md" \
             --exclude "menu.png" \
             --exclude "README.md" \
-            --exclude "README.md" \
-            --exclude "NOTES.md"
+            --exclude "NOTES.md" \
+            --exclude "bin/"
           zip -r "${{ github.event.repository.name }}.zip" bin
 
       - name: Create GitHub Release
