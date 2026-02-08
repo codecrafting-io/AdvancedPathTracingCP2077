@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag/version to release (e.g. v1.2.3)"
+        required: true
 
 permissions:
   contents: write
@@ -14,7 +19,7 @@ jobs:
 
     env:
       MOD_PATH: bin/x64/plugins/cyber_engine_tweaks/mods/AdvancedPathTracing
-      VERSION: ${{ github.ref_name }}
+      VERSION: ${{ github.ref_name || inputs.version }}
 
     steps:
       - name: Checkout repository
