@@ -45,8 +45,8 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - Minor GI/DI optimizations
   - Improved RT distance
 - **NVIDIA SHARC:** Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). This is the vanilla mode, but **won't be enabled with ReGIR** because it can cause noise problems. Performance and image quality will vary
-- **Rays per Pixel:** Number of and rays per pixel **when using ReSTIR DI** mode. Affects Photo Mode screenshots
-- **Bounces per Ray:** Number of and bounces per ray **when using ReSTIR DI** mode. Affects Photo Mode screenshots
+- **Rays per Pixel:** Number of and rays per pixel **when using ReSTIR DI** mode. Use the Screenshot override section to change this settings only for PhotoMode screenshots
+- **Bounces per Ray:** Number of and bounces per ray **when using ReSTIR DI** mode. Use the Screenshot override section to change this settings only for PhotoMode screenshots
 - **Enhanced Global Light:** Enables enhanced PT global light for sun/moon, with better radiance. It mostly affects the sunlight and shadows for the foliage animation (wind). However, shadows may appear duplicated/misaligned.
 - **Self Reflection:** Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - **DLSS Ray Reconstruction Particles:** By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
@@ -96,7 +96,7 @@ Remember to install the requirements.
 
 - This mod is designed for Path Tracing (PT), not normal Ray Tracing (RT), so quality levels, optimizations are mostly for PT not RT.
 
-- Photo Mode screenshots switches to ReSTIR DI mode. The *Rays per Pixel* and *Bounces per Ray* numbers will affect the screenshots.
+- Photo Mode screenshots switches to ReSTIR DI mode. Use the Screenshot Override section to change sample values.
 
 - Change DLSS preset may crash the game
 
@@ -110,6 +110,8 @@ The mod save your preferences in the `settings.json` file.
 | nrdControl | boolean | true | Controls NRD denoiser disable helper state |
 | rayNumber | int | 2 | Number of rays per pixel when using ReSTIR DI mode |
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
+| rayNumberPm | int | 2 | Number of rays per pixel for Photo Mode screenshots |
+| rayBouncePm | int | 2 | Number of bounces per ray for Photo Mode screenshots |
 | sharc | boolean | false | Wheter or not to enable NVIDIA's SHARC |
 | fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
@@ -159,6 +161,8 @@ You can also check the mod loaded settings through `AdvancedPathTracing.settings
     ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,
+    rayNumberPm = 2,
+    rayBouncePm = 2,
     selfReflection = true,
     globalLight = false,
     dlssdParticles = true

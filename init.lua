@@ -308,22 +308,37 @@ end
 
 ---Set the PT Ray Number. Only works in ReSTIR DI mode
 ---@param number integer
-function setRayNumber(number)
-    Debug:Info("Setting Ray Number")
-    settings.rayNumber = number
-    GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
-    GameSettings.Set("RayTracing/Reference", "RayNumberScreenshot", tostring(number))
-    GameSettings.Set("RayTracing/ReferenceScreenshot", "SampleNumber", tostring(number))
+---@param photomode boolean
+function setRayNumber(number, photomode)
+    if photomode then
+        Debug:Info("Setting Ray Number for Photo Mode")
+        settings.rayNumberPm = number
+        GameSettings.Set("RayTracing/Reference", "RayNumberScreenshot", tostring(number))
+        GameSettings.Set("RayTracing/ReferenceScreenshot", "SampleNumber", tostring(number))
+    else
+        Debug:Info("Setting Ray Number")
+        settings.rayNumber = number
+        GameSettings.Set("RayTracing/Reference", "RayNumber", tostring(number))
+    end
+
     checkCustomPreset('rayNumber', number)
 end
 
 ---Set the PT Ray Bounce Number. Only works in ReSTIR DI mode
 ---@param number integer
-function setRayBounce(number)
-    Debug:Info("Setting Ray Bounce")
-    settings.rayBounce = number
-    GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
-    GameSettings.Set("RayTracing/Reference", "BounceNumberScreenshot", tostring(number))
+---@param photomode boolean
+function setRayBounce(number, photomode)
+
+    if photomode then
+        Debug:Info("Setting Ray Bounce for Photo Mode")
+        settings.rayBouncePm = number
+        GameSettings.Set("RayTracing/Reference", "BounceNumberScreenshot", tostring(number))
+    else
+        Debug:Info("Setting Ray Bounce")
+        settings.rayBounce = number
+        GameSettings.Set("RayTracing/Reference", "BounceNumber", tostring(number))
+    end
+
     checkCustomPreset('rayBounce', number)
 end
 

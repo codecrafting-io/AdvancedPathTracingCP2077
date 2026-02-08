@@ -8,6 +8,7 @@
 - Improved game refresh logic
 - Minor adjustment to low pt quality preset for better performance
 - Minor Internal code refactor
+- Separate ReSTIR DI samples for photo mode screenshots with its own setting
 
 ## v0.7.1
 

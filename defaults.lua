@@ -15,6 +15,8 @@ return {
     ptTweaks = true,
     rayNumber = 2,
     rayBounce = 2,
+    rayNumberPm = 2,
+    rayBouncePm = 2,
     selfReflection = true,
     globalLight = false,
     dlssdParticles = true

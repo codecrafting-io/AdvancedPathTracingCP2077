@@ -3,18 +3,22 @@ local nativeSettingsConfig = {
     tabLabel = 'Advanced Path Tracing',
     categories = {
         {
-            name = 'path_tracing',
-            label = 'Path Tracing'
+            name = 'global_settings',
+            label = 'Path Tracing Settings'
         },
         {
-            name = 'misc',
-            label = 'Misc'
+            name = 'photo_mode',
+            label = 'Screenshots Override'
+        },
+        {
+            name = 'helpers',
+            label = 'Helpers'
         }
     },
     options = {
         {
             index = 'ptPreset',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Global Preset',
             description = "Global preset Path Tracing quality.\n\nVanilla is the game's default mode\n\nVery Low is the lowest quality worth enabling PT, but lower is possible.\n\nLow increases very low quality to not be as noisy\n\nMedium uses ReSTIR DI/GI, similar quality to Vanilla, but up to 8% performance increase\n\nHigh further increase quality over medium\n\nUltra enables global light and changes to ReSTIR DI + ReGIR GI which can look better but with high cost\n\nPsycho flatlines your GPU. Changes back to ReSTIR DI to have way less noise and to be more like offline rendering. Results vary",
             range = {
@@ -34,7 +38,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'ptMode',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Mode',
             description = "Changes Path Tracing mode\n\nReSTIR DI - The older PT from update 2.0, used with DI and naive GI. Enables control of rays per pixel and bounces per ray (also for Photo Mode screenshots).\n\nReSTIR DI/GI - Reservoir Spatio Temporal Importance Resampling for Global Illumination, is a screen space light sampling used for illuminating secondary surfaces. This is the vanilla mode.\n\nReSTIR DI + ReGIR GI - Uses Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI\n\n ReGIR DI/GI - Uses ReGIR for both DI and GI",
             range = {
@@ -50,7 +54,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'ptQuality',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Quality',
             description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improves over Vanilla by loosing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
@@ -67,7 +71,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'rtxdiHistory',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Light Frame Accumulation',
             description = "Defines ReSTIR DI light reservoir frame accumulation\n\nVanilla: Default value\n\nDisabled: No accumulation. Increase the performance by up to 8% with minimal visual loss, but some surfaces may exhibit flickering noise\n\nOptimized: Not as high as vanilla, but more responsive with some accumulation to fix occasional noise flickering",
             range = {
@@ -82,37 +86,37 @@ local nativeSettingsConfig = {
         },
         {
             index = 'rayNumber',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Rays Per Pixel',
-            description = "Number of rays per pixel. Only works when using ReSTIR DI mode. Affects Photo Mode screenshots",
+            description = "Number of rays per pixel. Only works when using ReSTIR DI mode.",
             range = {
                 min = 1,
                 max = 8,
                 step = 1
             },
             stateCallback = function(state)
-                setRayNumber(state)
+                setRayNumber(state, false)
             end,
             typeFunction = 'addRangeInt',
         },
         {
             index = 'rayBounce',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Bounces Per Ray',
-            description = "Number of bounces per ray. Only works when using ReSTIR DI mode. Affects Photo Mode screenshots",
+            description = "Number of bounces per ray. Only works when using ReSTIR DI mode.",
             range = {
                 min = 0,
                 max = 8,
                 step = 1
             },
             stateCallback = function(state)
-                setRayBounce(state)
+                setRayBounce(state, false)
             end,
             typeFunction = 'addRangeInt',
         },
         {
             index = 'sharc',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'NVIDIA SHARC',
             description = "Enables NVIDIA's Spatial Hash Radiance Cache (SHARC) for light bounces. Helps stabilize light bounces in dark areas and during fast camera movement. Scales with PT quality with performance ranging from 1.5% (Vanilla) to 10% (Psycho). Disabled when using ReGIR. Performance and image quality varies",
             range = nil,
@@ -123,7 +127,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'ptTweaks',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Tweaks',
             description = "Adds missing PT Reflections through Screen Space Reflections\n\nReduce noise on some scenarios. Some scenes may appear a little darker\n\nUse PDF (Probability Density Function) for minor performance boost\n\nMinor reflections improvement on transparent surfaces\n\nImproved RT distance\n\nMinor GI/DI optimizations",
             range = nil,
@@ -134,7 +138,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'globalLight',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Enhanced Global Light',
             description = "Enables enhanced PT global light for sun/moon, with better radiance\n\nIt mostly affects the sunlight and shadows for the foliage animation (wind). However, the shadows may appear duplicated/misaligned.",
             range = nil,
@@ -145,7 +149,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'dlssdParticles',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Ray Reconstruction Particles',
             description = "Use Ray Reconstruction on particles, when it's not raining and outdoors",
             range = nil,
@@ -156,7 +160,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'selfReflection',
-            path = '/AdvancedPathTracing/path_tracing',
+            path = '/AdvancedPathTracing/global_settings',
             label = 'Self Reflection',
             description = "Enables self-reflaction of V without showing the head (internal game limitation). Also works with normal Ray Tracing",
             range = nil,
@@ -165,9 +169,43 @@ local nativeSettingsConfig = {
             end,
             typeFunction = 'addSwitch',
         },
+
+
+        {
+            index = 'rayNumberPm',
+            path = '/AdvancedPathTracing/photo_mode',
+            label = 'Rays Per Pixel',
+            description = "Number of rays per pixel (ReSTIR DI) for the Photo Mode screenshots",
+            range = {
+                min = 1,
+                max = 8,
+                step = 1
+            },
+            stateCallback = function(state)
+                setRayNumber(state, true)
+            end,
+            typeFunction = 'addRangeInt',
+        },
+        {
+            index = 'rayBouncePm',
+            path = '/AdvancedPathTracing/photo_mode',
+            label = 'Bounces Per Ray',
+            description = "Number of bounces per ray (ReSTIR DI) for the Photo Mode screenshots",
+            range = {
+                min = 0,
+                max = 8,
+                step = 1
+            },
+            stateCallback = function(state)
+                setRayBounce(state, true)
+            end,
+            typeFunction = 'addRangeInt',
+        },
+
+
         {
             index = 'nrdControl',
-            path = '/AdvancedPathTracing/misc',
+            path = '/AdvancedPathTracing/helpers',
             label = 'NRD Disable Helper',
             description = "Disables NRD denoisier from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
             range = nil,
@@ -178,7 +216,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'refreshGame',
-            path = '/AdvancedPathTracing/misc',
+            path = '/AdvancedPathTracing/helpers',
             label = 'Auto Refresh Game',
             description = "Enables auto refresh game, by rapidly pause/unpause the game, on closing the menu or loading saves to mitigate loss of performance. Refresh only happens after exiting menus, loading saves or teleports",
             range = nil,
@@ -189,7 +227,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'refreshInterval',
-            path = '/AdvancedPathTracing/misc',
+            path = '/AdvancedPathTracing/helpers',
             label = 'Refresh Game Interval (min)',
             description = "The amount of time in minutes to wait for the next refresh. Zero will refresh every time",
             range = {
@@ -204,7 +242,7 @@ local nativeSettingsConfig = {
         },
         {
             index = 'refreshGameNow',
-            path = '/AdvancedPathTracing/misc',
+            path = '/AdvancedPathTracing/helpers',
             label = '',
             description = 'Ignore the interval and refresh the game after exiting the menu. Also refreshes DLSS Ray Reconstruction',
             range = nil,
