@@ -175,13 +175,6 @@ return {
             },
 
             --SHARC
-            --[[
-            {
-                category    = "Editor/SHARC",
-                name        = "Enable",
-                value       = "true"
-            },
-            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -205,17 +198,17 @@ return {
             {
                 category    = "Editor/ReGIR",
                 name        = "BuildCandidatesCount",
-                value       = "8"
+                value       = "6"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "LightSlotsCount",
-                value       = "128"
+                value       = "96"
             },
             {
                 category    = "Editor/ReGIR",
                 name        = "ShadingCandidatesCount",
-                value       = "3"
+                value       = "2"
             },
 
             --ReSTIR
@@ -232,22 +225,22 @@ return {
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "MaxReservoirAge",
-                value       = "16"
+                value       = "12"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialSamplingRadius",
-                value       = "20.0"
+                value       = "12.0"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "2"
+                value       = "1"
             },
             {
                 category    = "Editor/ReSTIRGI",
                 name        = "SpatialNumSamples",
-                value       = "2"
+                value       = "1"
             },
 
             --RTXDI
@@ -259,31 +252,24 @@ return {
             {
                 category    = "Editor/RTXDI",
                 name        = "NumInitialSamples",
-                value       = "6"
+                value       = "2"
             },
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialNumDisocclusionBoostSamples",
-                value       = "4"
+                value       = "3"
             },
             {
                 category    = "Editor/RTXDI",
                 name        = "SpatialSamplingRadius",
-                value       = "16.0"
+                value       = "12.0"
             },
 
             --SHARC
-            --[[
-            {
-                category    = "Editor/SHARC",
-                name        = "Enable",
-                value       = "true"
-            },
-            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
-                value       = "2"
+                value       = "1"
             },
             {
                 category    = "Editor/SHARC",
@@ -293,7 +279,7 @@ return {
             {
                 category    = "Editor/SHARC",
                 name        = "SceneScale",
-                value       = "35.0"
+                value       = "32.0"
             }
         },
 
@@ -371,13 +357,6 @@ return {
             },
 
             --SHARC
-            --[[
-            {
-                category    = "Editor/SHARC",
-                name        = "Enable",
-                value       = "true"
-            },
-            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -469,13 +448,6 @@ return {
             },
 
             --SHARC
-            --[[
-            {
-                category    = "Editor/SHARC",
-                name        = "Enable",
-                value       = "false"
-            },
-            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -567,13 +539,6 @@ return {
             },
 
             --SHARC
-            --[[
-            {
-                category    = "Editor/SHARC",
-                name        = "Enable",
-                value       = "false"
-            },
-            --]]
             {
                 category    = "Editor/SHARC",
                 name        = "Bounces",
@@ -590,6 +555,7 @@ return {
                 value       = "100.0"
             }
         }
+
     },
     tweaks = {
         --Off

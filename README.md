@@ -55,6 +55,22 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - **Refresh Game Interval:** The amount of time in minutes to wait for the next refresh. Zero will refresh every time.
 - **Refresh Binding:** Configure a CET binding for refresh feature. It won't refresh if a limited gameplay scene is detected
 
+## Performance
+
+Coming soon
+
+## Image Comparisons
+
+- Global Preset: [Scene 1](https://imgsli.com/NDQ4MzQ5/5/6) and [Scene 2](https://imgsli.com/NDQ4MzUy). Vanilla, Balanced and High may look similar, but most of the differences can be seen in motion. More scenes coming soon.
+- [Path Tracing Modes](https://imgsli.com/NDQ3NDc1): ReGIR DI/GI is lighter than ReSTIR DI + ReGIR GI, but can loose specularity in some surfaces or have more noise
+- [Light Frame Accumulation](https://imgsli.com/NDQ3NDY4): Most surfaces don't have differences from Disabled to Vanilla and areas with dense vegetation shows a nice boost on performance
+- [Path Tracing Tweaks](https://imgsli.com/NDQ3NDY0)
+- [Nvidia SHARC](https://imgsli.com/NDQ3NDU5): Path Tracing Quality also affects SHARC quality
+- [Samples Per Pixel](https://imgsli.com/NDQ3NDcz): Ray/Bounce number (samples) only works with RTXDI mode. Lowering Samples per pixel (RayNumber) to 1 looses reflections
+- [Enhanced Global Light](https://imgsli.com/NDQ3NDU4): Vegetation shadow now will be affected by wind, but shadows may look duplicated
+
+Path Tracing Quality comparisons is better shown as a video, so coming soon
+
 ## Requirements
 
 - [Cyber Engine Tweaks (>= v1.30.1)](https://www.nexusmods.com/cyberpunk2077/mods/107)

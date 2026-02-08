@@ -2,9 +2,11 @@
 
 ## v0.8.0
 
+- Added image comparisons in the README
+- Added support for binding key for refresh feature
 - Improved BVH distance (Tweaks setting), affects reflection on buildings and some long distance shadows, for better support for Global Light
 - Improved game refresh logic
-- Added support for binding key for refresh feature
+- Minor adjustment to low pt quality preset for better performance
 - Minor Internal code refactor
 
 ## v0.7.1
