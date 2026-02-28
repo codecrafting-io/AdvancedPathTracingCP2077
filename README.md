@@ -112,10 +112,10 @@ The mod save your preferences in the `settings.json` file.
 | rayBounce | int | 2 | Number of bounces per ray when using ReSTIR DI mode |
 | rayNumberPm | int | 2 | Number of rays per pixel for Photo Mode screenshots |
 | rayBouncePm | int | 2 | Number of bounces per ray for Photo Mode screenshots |
-| sharc | boolean | false | Wheter or not to enable NVIDIA's SHARC |
+| sharc | boolean | false | Whether or not to enable NVIDIA's SHARC |
 | fastTimeout | float | 1.0 | Shortest timeout of a series internal timers |
 | slowTimeout | float | 30.0 | Timeout used in enableNRDControl |
-| refreshGame | int | false | Wheter or not Auto Refresh Game |
+| refreshGame | int | false | Whether or not Auto Refresh Game |
 | refreshPauseTimeout | float | 5.0 | The Auto Refresh Timeout |
 | refreshInterval | int | 30 | Amount of time in minutes to wait for the next refresh. Zero will refresh every time |
 | globalLight | boolean | false | Enables enhanced PT global light for sun/moon, with better radiance |

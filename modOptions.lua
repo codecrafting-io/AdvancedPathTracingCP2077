@@ -207,7 +207,7 @@ local nativeSettingsConfig = {
             index = 'nrdControl',
             path = '/AdvancedPathTracing/helpers',
             label = 'NRD Disable Helper',
-            description = "Disables NRD denoisier from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
+            description = "Disables NRD denoiser from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
             range = nil,
             stateCallback = function(state)
                 setNRDControl(state)
@@ -307,7 +307,7 @@ end
 ---Loads NativeSettings menus
 ---@param settings table --The settings values
 ---@param defaults table --The default settings values
----@return boolean -- Wheter or not NativeSettings were load
+---@return boolean -- Whether or not NativeSettings were load
 function ModOptionsShared.loadNativeSettings(settings, defaults)
     local nativeSettings = GetMod("nativeSettings")
 
