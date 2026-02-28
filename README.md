@@ -24,13 +24,13 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
   - **Psycho**: Flatlines your GPU 💀 🥵. Changes back to ReSTIR DI to have the cleanest image between all modes, with less noise. Acts more like offline rendering, although can look too bright or miss some contact shadows.
 - **Path Tracing Modes:**
   - **ReSTIR DI + ReGIR GI**: Uses the Reservoir-based Grid Importance Sampling, for a world space light sampling on top of ReSTIR, but only for GI. Can look better but with some extra noise when using Ray Reconstruction.
-  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may loose specular detail on some surfaces.
+  - **ReGIR DI/GI**: Uses ReGIR for both GI and DI. DI may lose specular detail on some surfaces.
   - **ReSTIR DI/GI**: Reservoir SpatioTemporal Importance samples for Global Illumination, is a screen space light sampling used to illuminate secondary surfaces. This is the vanilla mode
   - **ReSTIR DI**: This is the older PT from update 2.0, used with DI and naive GI. Allows control of rays per pixel and bounces per ray (also for Photo Mode screenshots)
 - **Path Tracing Quality:**
   - **Vanilla**: Default game quality
   - **Performance**: Faster but noisier
-  - **Balanced**: Improves over Vanilla by loosing up to 3%
+  - **Balanced**: Improves over Vanilla by losing up to 3%
   - **Quality**: Heavy but less noise and higher quality
   - **Psycho**: Flatline your GPU 💀
 - **Light Frame Accumulation:** Defines ReSTIR DI light reservoir frame accumulation:
@@ -48,7 +48,7 @@ This repository is for the development of the `Advanced Path Tracing` mod for th
 - **Rays per Pixel:** Number of and rays per pixel **when using ReSTIR DI** mode. Use the Screenshot override section to change this settings only for PhotoMode screenshots
 - **Bounces per Ray:** Number of and bounces per ray **when using ReSTIR DI** mode. Use the Screenshot override section to change this settings only for PhotoMode screenshots
 - **Enhanced Global Light:** Enables enhanced PT global light for sun/moon, with better radiance. It mostly affects the sunlight and shadows for the foliage animation (wind). However, shadows may appear duplicated/misaligned.
-- **Self Reflection:** Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
+- **Self Reflection:** Enable V self reflection without the head (game limitation😅🤷‍♂️). You are able to add the head by using the [Appearance Menu Mod](https://www.nexusmods.com/cyberpunk2077/mods/790). For showing the sleeves use the [Sleeves](https://www.nexusmods.com/cyberpunk2077/mods/3309?tab=files) or [third person mod](https://www.nexusmods.com/cyberpunk2077/mods/669).
 - **DLSS Ray Reconstruction Particles:** By default, the game separates particles for RR, so enable this if it's not raining or it's indoors
 - **NRD Disable Helper:** Path Tracing has two main denoisers, Ray Reconstruction (RR) and NVIDIA Real Time Denoiser (NRD). When using RR the NRD should be disabled, but sometimes it enables, this helps to keep NRD disabled over time.
 - **Refresh Game:** The game has a tendency to not have "full performance" when loading or exiting menus, this helps to mitigate the problem by pausing the game (no camera or player movement and no combat) for a few seconds. The refresh is done according to the "Refresh Game Interval" setting. The mod will skip the refresh if a limited gameplay scene is detected. Disabled by default.
@@ -62,11 +62,11 @@ Coming soon
 ## Image Comparisons
 
 - Global Preset: [Scene 1](https://imgsli.com/NDQ4MzQ5/5/6) and [Scene 2](https://imgsli.com/NDQ4MzUy). Vanilla, Balanced and High may look similar, but most of the differences can be seen in motion. More scenes coming soon.
-- [Path Tracing Modes](https://imgsli.com/NDQ3NDc1): ReGIR DI/GI is lighter than ReSTIR DI + ReGIR GI, but can loose specularity in some surfaces or have more noise
+- [Path Tracing Modes](https://imgsli.com/NDQ3NDc1): ReGIR DI/GI is lighter than ReSTIR DI + ReGIR GI, but can lose specularity in some surfaces or have more noise
 - [Light Frame Accumulation](https://imgsli.com/NDQ3NDY4): Most surfaces don't have differences from Disabled to Vanilla and areas with dense vegetation shows a nice boost on performance
 - [Path Tracing Tweaks](https://imgsli.com/NDQ3NDY0)
 - [Nvidia SHARC](https://imgsli.com/NDQ3NDU5): Path Tracing Quality also affects SHARC quality
-- [Samples Per Pixel](https://imgsli.com/NDQ3NDcz): Ray/Bounce number (samples) only works with RTXDI mode. Lowering Samples per pixel (RayNumber) to 1 looses reflections
+- [Samples Per Pixel](https://imgsli.com/NDQ3NDcz): Ray/Bounce number (samples) only works with RTXDI mode. Lowering Samples per pixel (RayNumber) to 1 loses reflections
 - [Enhanced Global Light](https://imgsli.com/NDQ3NDU4): Vegetation shadow now will be affected by wind, but shadows may look duplicated
 
 Path Tracing Quality comparisons is better shown as a video, so coming soon
