@@ -56,7 +56,7 @@ local nativeSettingsConfig = {
             index = 'ptQuality',
             path = '/AdvancedPathTracing/global_settings',
             label = 'Quality',
-            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improves over Vanilla by loosing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
+            description = "Adjust internal path tracing quality settings.\n\nVanilla: Default quality\n\nPerformance: Faster but noisier\n\nBalanced: Improves over Vanilla by losing up to 3%\n\nQuality: Heavier but less noise and higher quality.\n\nPsycho: Flatline your GPU",
             range = {
                 [1] = "Vanilla",
                 [2] = "Performance",
@@ -162,7 +162,7 @@ local nativeSettingsConfig = {
             index = 'selfReflection',
             path = '/AdvancedPathTracing/global_settings',
             label = 'Self Reflection',
-            description = "Enables self-reflaction of V without showing the head (internal game limitation). Also works with normal Ray Tracing",
+            description = "Enables self-reflection of V without showing the head (internal game limitation). Also works with normal Ray Tracing",
             range = nil,
             stateCallback = function(state)
                 setSelfReflection(state)
@@ -207,7 +207,7 @@ local nativeSettingsConfig = {
             index = 'nrdControl',
             path = '/AdvancedPathTracing/helpers',
             label = 'NRD Disable Helper',
-            description = "Disables NRD denoisier from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
+            description = "Disables NRD denoiser from time to time to mitigate Ray Reconstruction (RR) loss of performance over time. Only works with RR on",
             range = nil,
             stateCallback = function(state)
                 setNRDControl(state)
@@ -307,7 +307,7 @@ end
 ---Loads NativeSettings menus
 ---@param settings table --The settings values
 ---@param defaults table --The default settings values
----@return boolean -- Wheter or not NativeSettings were load
+---@return boolean -- Whether or not NativeSettings were load
 function ModOptionsShared.loadNativeSettings(settings, defaults)
     local nativeSettings = GetMod("nativeSettings")
 
